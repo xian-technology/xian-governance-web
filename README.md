@@ -1,58 +1,240 @@
-# Xian Governance Web
+# xian-governance-web
 
-Operational governance console for Xian validators. The backend is TypeScript/Express and read-only by default; transaction submission is done in the browser through the injected Xian wallet.
+`xian-governance-web` is the validator operations console for Xian
+governance. It gives validators and observers one browser surface for chain
+status, protocol proposals, validator-governance proposals, voting state,
+active validators, pending candidates, scheduled state patches, and local
+state-patch bundle verification.
 
-## Features
+The app is a TypeScript full-stack web app: a small Express API reads chain
+state through `@xian-tech/client`, while the React client submits governance
+transactions through the injected Xian wallet provider from
+`@xian-tech/provider`. The backend is read-only for governance actions; it
+does not hold validator keys and does not proxy signed transactions.
 
-- Governance dashboard with chain status, active validator count, pending proposals, expiring proposals, and scheduled state patches.
-- Protocol proposal overview for contract calls and state patches.
-- Validator governance overview from the `masternodes` contract, including per-voter records.
-- Proposal detail view with raw payload, voting weight, voter matrix, and off-chain reference links.
-- Wallet-driven proposal voting and proposal creation.
-- State patch bundle hash verifier that matches the chain-side canonical hash format.
-- Validator and candidate tables with operator metadata where available.
+## Governance Flow
 
-## Development
+```mermaid
+flowchart LR
+  Validator["Validator or observer"] --> React["React operations console"]
+  React --> API["Express governance API"]
+  API --> Client["@xian-tech/client"]
+  Client --> Node["Xian RPC node"]
+  React --> Wallet["Injected Xian wallet"]
+  Wallet --> Provider["@xian-tech/provider"]
+  Provider --> Node
+  API --> Protocol["governance contract"]
+  API --> Membership["masternodes contract"]
+  React --> Hash["State patch hash verifier"]
+```
 
-```sh
+## Quick Start
+
+This repo consumes the Xian JS packages from the sibling `xian-js` checkout.
+The expected local layout is:
+
+```text
+.../xian/
+  xian-js/
+  xian-governance-web/
+```
+
+Install dependencies and start the local development server:
+
+```bash
 npm install
 npm run dev
 ```
 
-The app listens on `http://127.0.0.1:4173` by default.
+The server binds to `http://127.0.0.1:4173` by default. In development,
+Express serves the API and mounts Vite middleware for the React app.
 
-## Configuration
+For a production build:
 
-Copy `.env.example` to `.env` when local defaults are not enough.
-
-| Variable | Purpose |
-| --- | --- |
-| `PORT` | HTTP port for the TypeScript server. |
-| `XIAN_NETWORK_ID` | Stable network identifier used by the API and UI. |
-| `XIAN_NETWORK_NAME` | Human-readable network name. |
-| `XIAN_CHAIN_ID` | Optional chain id override for wallet calls. |
-| `XIAN_RPC_URL` | Xian node RPC URL used for reads. |
-| `XIAN_DASHBOARD_URL` | Optional link target for the existing node dashboard. |
-| `XIAN_GOVERNANCE_CONTRACT` | Protocol governance contract name. |
-| `XIAN_MEMBERSHIP_CONTRACT` | Validator governance contract name. |
-
-## Scripts
-
-```sh
-npm run typecheck
-npm run test
+```bash
 npm run build
-npm run validate
 npm run start
 ```
 
-`npm run validate` runs type checks, Vitest, and the production build.
+`npm run build` compiles the Express server with `tsc` and writes the Vite
+client bundle to `dist/client`. `npm run start` runs `dist/server/main.js`;
+set `NODE_ENV=production` when running behind a production process manager so
+Express serves the built client bundle.
 
-## Architecture
+## Principles
 
-- `src/server` exposes the governance API and normalizes chain state for the UI.
-- `src/client` contains the React operations console.
-- `src/shared` contains shared API types and deterministic state patch hashing.
-- `tests` covers API behavior, UI rendering, and state patch hash compatibility.
+- **Validator operations, not marketing.** The first screen is a dense
+  governance dashboard with actionable proposal, validator, and state-patch
+  information.
+- **Wallet-first signing.** Votes and proposal creation are submitted through
+  the injected wallet provider. Users review and sign the exact chain call in
+  their wallet.
+- **Read-only backend.** The Express server reads chain state, normalizes it
+  for the UI, and exposes simulation. It does not store private keys or submit
+  validator transactions.
+- **Two governance layers, one model.** Protocol governance from
+  `governance` and validator governance from `masternodes` are normalized into
+  common proposal, vote, validator, and state-patch types under `src/shared/`.
+- **Direct RPC mode.** The current app reads current governance state directly
+  from a configured Xian RPC node. It is not a persistent historical indexer.
+- **SDK contract lives in `xian-js`.** RPC calls and injected-wallet behavior
+  come from the sibling JS / TS SDK packages rather than repo-local copies.
+- **State-patch hashes are deterministic.** The browser verifier uses the same
+  canonical JSON ordering and SHA-256 bundle hash format expected by the
+  chain-side state-patch workflow.
 
-The server does not hold validator keys and does not proxy signed transactions. Validators connect the browser wallet, review the transaction locally, and sign from the wallet.
+## Capabilities
+
+| Area | What the app does |
+| --- | --- |
+| Dashboard | Shows chain height, chain id, active validator count, total voting weight, pending proposals, expiring proposals, and scheduled patches. |
+| Proposals | Lists protocol and validator-governance proposals in one view, including status, type, title, vote totals, weights, and thresholds. |
+| Proposal detail | Shows proposal metadata, threshold progress, voter records, raw payload JSON, off-chain references, and wallet-backed yes / no actions. |
+| Proposal creation | Submits protocol contract-call proposals, protocol state-patch proposals, and validator-governance proposals through the injected wallet. |
+| Validators | Displays active validators and pending candidates from the `masternodes` read surface, including power, status, moniker, and endpoint metadata when available. |
+| State patches | Lists scheduled patches returned by `governance.get_patch` and verifies pasted bundle JSON against the canonical bundle hash. |
+| Simulation | Exposes a backend `/simulate` endpoint for read-only preflight calls through the configured Xian node. |
+
+## Configuration
+
+Copy `.env.example` to `.env` when the local defaults are not enough:
+
+```bash
+cp .env.example .env
+```
+
+| Variable | Purpose | Default |
+| --- | --- | --- |
+| `PORT` | HTTP port for the Express server. | `4173` |
+| `XIAN_NETWORK_ID` | Stable network id used by API routes and React Query keys. | `local` |
+| `XIAN_NETWORK_NAME` | Human-readable network name shown in the selector. | `Local Xian` |
+| `XIAN_CHAIN_ID` | Optional chain id override used when the node status cannot provide one. | unset |
+| `XIAN_RPC_URL` | Xian node RPC URL used for reads, ABCI queries, simulation, and wallet calls. | `http://127.0.0.1:26657` |
+| `XIAN_DASHBOARD_URL` | Optional link target for an existing node dashboard. | `http://127.0.0.1:8080` |
+| `XIAN_GOVERNANCE_CONTRACT` | Protocol-governance contract name. | `governance` |
+| `XIAN_MEMBERSHIP_CONTRACT` | Validator-governance / membership contract name. | `masternodes` |
+
+The current config loader builds a single network from environment variables.
+The shared `NetworkConfig` type already supports multiple networks, but
+multi-network environment parsing is not implemented yet.
+
+## Key Directories
+
+- `src/server/` — Express API and chain read layer:
+  - `main.ts` — runtime entrypoint, config loading, service wiring, and bind
+    address.
+  - `app.ts` — API routes, JSON middleware, error handling, and Vite /
+    production frontend mounting.
+  - `config.ts` — environment-driven network configuration.
+  - `governanceService.ts` — proposal, vote, validator, overview, state-patch,
+    and simulation normalization.
+  - `rpc.ts` — `@xian-tech/client` wrapper plus ABCI query helpers.
+- `src/client/` — React operations console:
+  - `App.tsx` — dashboard, proposal list/detail, validators, state patches,
+    proposal creation, and wallet-backed actions.
+  - `api.ts` — typed frontend API client.
+  - `wallet.ts` — injected-wallet discovery, account / chain tracking, voting
+    calls, and vote eligibility helpers.
+  - `styles.css`, `main.tsx` — app styling and Vite entrypoint.
+- `src/shared/` — code shared across client and server:
+  - `types.ts` — normalized governance API types.
+  - `format.ts` — value coercion, title generation, and display helpers.
+  - `statePatchHash.ts` — canonical state-patch bundle parsing and hashing.
+- `tests/` — Vitest coverage for API behavior, React rendering, wallet-facing
+  UI flows, and state-patch hash compatibility.
+- `docs/implementation-proposal.md` — product and technical proposal that
+  describes the broader governance-console target state.
+- `vite.config.ts`, `tsconfig.json`, `tsconfig.server.json` — Vite, Vitest,
+  browser TypeScript, and server TypeScript configuration.
+
+## API Surface
+
+The React app talks to the local Express API:
+
+| Route | Purpose |
+| --- | --- |
+| `GET /api/health` | Lightweight health check. |
+| `GET /api/networks` | Configured network list. |
+| `GET /api/networks/:networkId/overview` | Chain status, validator count, voting weight, pending proposals, expiring proposals, and scheduled patch count. |
+| `GET /api/networks/:networkId/proposals` | Unified protocol and validator-governance proposal list. |
+| `GET /api/networks/:networkId/proposals/:layer/:proposalId` | Proposal detail for `protocol` or `validator` governance. |
+| `GET /api/networks/:networkId/proposals/:layer/:proposalId/votes` | Voter records for one proposal. |
+| `GET /api/networks/:networkId/validators` | Active validators and pending candidates. |
+| `GET /api/networks/:networkId/state-patches` | State patches associated with protocol-governance proposals. |
+| `POST /api/networks/:networkId/simulate` | Read-only transaction simulation through the configured node. |
+
+## Chain Reads
+
+The service currently uses a direct-RPC strategy:
+
+- chain status from `XianClient.getStatus()`
+- protocol proposals from `governance.proposal_count` and
+  `governance.get_proposal`
+- protocol vote records from `governance.get_members` plus
+  `governance.proposal_votes` / `governance.proposal_vote_weights`
+- validator proposals from `masternodes.total_votes` and
+  `/masternodes_vote/<id>`
+- validator vote records from `/masternodes_vote_records/<id>`
+- active validators and candidates from `/masternodes_active` and
+  `/masternodes_candidates`
+- state-patch metadata from `governance.get_patch`
+
+This keeps the app useful against a plain node. Historical event timelines,
+transaction hashes, node readiness attestations, and BDS-backed backfills are
+future indexer work described in `docs/implementation-proposal.md`.
+
+## Validation
+
+```bash
+npm install
+npm run typecheck       # browser + server TypeScript
+npm run test            # Vitest unit / component / API tests
+npm run build           # server compile + Vite production build
+npm run validate        # typecheck + test + build
+```
+
+Run the app against a local Xian node for functional validation:
+
+```bash
+cd ../xian-stack
+python3 ./scripts/backend.py start --no-service-node --dashboard
+python3 ./scripts/backend.py endpoints --no-service-node --dashboard
+
+cd ../xian-governance-web
+npm run dev
+```
+
+Connect the browser wallet to the same chain id and RPC URL before testing
+votes or proposal creation.
+
+## Deployment Notes
+
+- The process binds to `127.0.0.1`, so production deployments normally place a
+  reverse proxy in front of it.
+- Set `NODE_ENV=production` before `npm run start` so the server serves
+  `dist/client` instead of mounting Vite middleware.
+- Configure `XIAN_RPC_URL` to a node reachable from the server and configure
+  the browser wallet to the same network before signing.
+- Keep TLS, CSP, authentication / network access policy, and validator
+  allowlisting at the reverse-proxy or hosting layer. This app does not add an
+  operator login boundary by itself.
+- Treat proposal summaries, URIs, and JSON payloads as untrusted input. The UI
+  renders them as text / JSON and only opens `http` or `https` off-chain
+  references.
+
+## Requirements
+
+- Node.js compatible with the installed Vite / TypeScript toolchain
+- npm
+- sibling `xian-js` checkout for local `@xian-tech/client`,
+  `@xian-tech/provider`, and `@xian-tech/types` file dependencies
+- reachable Xian RPC node
+- Xian browser wallet for voting and proposal creation
+
+## Related Repos
+
+- [`../xian-js/README.md`](../xian-js/README.md) — JS / TS SDK and injected provider consumed by this app
+- [`../xian-wallet-browser/README.md`](../xian-wallet-browser/README.md) — browser wallet used for governance signing
+- [`../xian-stack/README.md`](../xian-stack/README.md) — local Xian stack for development and validation
+- [`../xian-configs/README.md`](../xian-configs/README.md) — governance and `masternodes` contract configuration
+- [`../xian-docs-web/README.md`](../xian-docs-web/README.md) — public Xian documentation site
