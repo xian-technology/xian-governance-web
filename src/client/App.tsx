@@ -38,6 +38,14 @@ import type {
 
 type View = "dashboard" | "proposals" | "validators" | "patches" | "create";
 
+const VIEW_META: Record<View, { title: string; subtitle: string }> = {
+  dashboard: { title: "Dashboard", subtitle: "Network health and proposals at a glance" },
+  proposals: { title: "Proposals", subtitle: "Review, vote, and inspect governance proposals" },
+  validators: { title: "Validators", subtitle: "Active validators and pending candidates" },
+  patches: { title: "State Patches", subtitle: "Scheduled patches and bundle hash verification" },
+  create: { title: "Create Proposal", subtitle: "Author a new on-chain governance proposal" }
+};
+
 export function App() {
   const queryClient = useQueryClient();
   const wallet = useXianWallet();
@@ -122,54 +130,78 @@ export function App() {
     <div className="app-shell">
       <aside className="sidebar">
         <div className="brand">
-          <ShieldCheck size={24} />
-          <div>
+          <div className="brand-mark">
+            <ShieldCheck size={20} strokeWidth={2.25} />
+          </div>
+          <div className="brand-text">
             <strong>Xian Governance</strong>
             <span>Validator operations</span>
           </div>
         </div>
-        <nav>
-          <NavButton active={view === "dashboard"} icon={<Activity />} onClick={() => setView("dashboard")}>
-            Dashboard
-          </NavButton>
-          <NavButton active={view === "proposals"} icon={<Vote />} onClick={() => setView("proposals")}>
-            Proposals
-          </NavButton>
-          <NavButton active={view === "validators"} icon={<Users />} onClick={() => setView("validators")}>
-            Validators
-          </NavButton>
-          <NavButton active={view === "patches"} icon={<FileJson />} onClick={() => setView("patches")}>
-            State Patches
-          </NavButton>
-          <NavButton active={view === "create"} icon={<GitPullRequest />} onClick={() => setView("create")}>
-            Create
-          </NavButton>
-        </nav>
+        <div>
+          <div className="nav-section-label">Workspace</div>
+          <nav>
+            <NavButton active={view === "dashboard"} icon={<Activity />} onClick={() => setView("dashboard")}>
+              Dashboard
+            </NavButton>
+            <NavButton active={view === "proposals"} icon={<Vote />} onClick={() => setView("proposals")}>
+              Proposals
+            </NavButton>
+            <NavButton active={view === "validators"} icon={<Users />} onClick={() => setView("validators")}>
+              Validators
+            </NavButton>
+            <NavButton active={view === "patches"} icon={<FileJson />} onClick={() => setView("patches")}>
+              State Patches
+            </NavButton>
+            <NavButton active={view === "create"} icon={<GitPullRequest />} onClick={() => setView("create")}>
+              Create
+            </NavButton>
+          </nav>
+        </div>
+        <div className="sidebar-footer">
+          <span className="dot" />
+          <span>{overview.data?.chain.chainId ?? networkId}</span>
+        </div>
       </aside>
 
       <main className="workspace">
         <header className="topbar">
-          <div className="network-picker">
-            <RadioTower size={16} />
-            <select
-              value={networkId}
-              onChange={(event) => setSelectedNetwork(event.target.value)}
-            >
-              {networks.data?.networks.map((network) => (
-                <option key={network.id} value={network.id}>
-                  {network.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="wallet-box">
-            <div>
-              <span>{wallet.status === "connected" ? "Connected" : "Wallet"}</span>
-              <strong>{shortAddress(wallet.account)}</strong>
+          <div className="topbar-left">
+            <div className="page-title">
+              <strong>{VIEW_META[view].title}</strong>
+              <span>{VIEW_META[view].subtitle}</span>
             </div>
-            <button type="button" className="primary" onClick={wallet.connect}>
-              Connect
-            </button>
+          </div>
+          <div className="topbar-right">
+            <div className="network-picker">
+              <RadioTower size={15} />
+              <select
+                value={networkId}
+                onChange={(event) => setSelectedNetwork(event.target.value)}
+              >
+                {networks.data?.networks.map((network) => (
+                  <option key={network.id} value={network.id}>
+                    {network.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="wallet-box">
+              <div className="wallet-status">
+                <span>
+                  {wallet.status === "connected" ? <span className="live-dot" /> : null}
+                  {wallet.status === "connected" ? "Connected" : "Wallet"}
+                </span>
+                <strong>{shortAddress(wallet.account) || "—"}</strong>
+              </div>
+              <button
+                type="button"
+                className={wallet.status === "connected" ? "ghost" : "primary"}
+                onClick={wallet.connect}
+              >
+                {wallet.status === "connected" ? "Reconnect" : "Connect"}
+              </button>
+            </div>
           </div>
         </header>
 
