@@ -28,6 +28,10 @@ export function createApiApp(service: GovernanceService): express.Express {
     res.json(await service.proposals(param(req, "networkId")));
   }));
 
+  app.get("/api/networks/:networkId/history", asyncHandler(async (req, res) => {
+    res.json(await service.history(param(req, "networkId")));
+  }));
+
   app.get(
     "/api/networks/:networkId/proposals/:layer/:proposalId",
     asyncHandler(async (req, res) => {

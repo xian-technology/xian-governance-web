@@ -1,4 +1,10 @@
 import { XianClient } from "@xian-tech/client";
+import type {
+  XianEventListOptions,
+  XianIndexedEvent,
+  XianPageOptions,
+  XianRecentEventsResult
+} from "@xian-tech/client";
 
 import { isRecord } from "../shared/format.js";
 import type { ChainStatus, NetworkConfig } from "../shared/types.js";
@@ -59,28 +65,19 @@ export class XianReadClient {
   }
 
   async abciValue<T = unknown>(path: string): Promise<T | null> {
-    const url = new URL(`${this.network.rpcUrl}/abci_query`);
-    url.searchParams.set("path", `"${path}"`);
-    const response = await fetch(url, { method: "POST" });
-    if (!response.ok) {
-      throw new Error(`ABCI query failed with ${response.status}`);
-    }
-    const body = (await response.json()) as unknown;
-    if (!isRecord(body)) {
-      return null;
-    }
-    const result = isRecord(body.result) ? body.result : {};
-    const abciResponse = isRecord(result.response) ? result.response : {};
-    const value = abciResponse.value;
-    if (typeof value !== "string" || value.length === 0) {
-      return null;
-    }
-    const decoded = Buffer.from(value, "base64").toString("utf8");
-    try {
-      return JSON.parse(decoded) as T;
-    } catch {
-      return decoded as T;
-    }
+    return this.client.abciValue<T>(path);
+  }
+
+  async listEvents(
+    contract: string,
+    event: string,
+    options?: XianEventListOptions,
+  ): Promise<XianIndexedEvent[]> {
+    return this.client.listEvents(contract, event, options);
+  }
+
+  async recentEvents(options?: XianPageOptions): Promise<XianRecentEventsResult> {
+    return this.client.getRecentEvents(options);
   }
 
   async scanKeySuffixes(prefix: string, limit = 200): Promise<string[]> {

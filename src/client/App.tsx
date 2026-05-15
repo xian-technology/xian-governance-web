@@ -16,6 +16,7 @@ import { useMemo, useState } from "react";
 import type { ReactNode } from "react";
 
 import {
+  getHistory,
   getNetworks,
   getOverview,
   getProposal,
@@ -30,6 +31,8 @@ import {
   parseStatePatchBundle
 } from "../shared/statePatchHash";
 import type {
+  GovernanceHistoryEvent,
+  GovernanceHistoryResponse,
   GovernanceLayer,
   ProposalDetail,
   ProposalSummary,
@@ -68,6 +71,11 @@ export function App() {
     queryFn: () => getProposals(networkId),
     enabled: Boolean(networkId)
   });
+  const history = useQuery({
+    queryKey: ["history", networkId],
+    queryFn: () => getHistory(networkId),
+    enabled: Boolean(networkId)
+  });
   const validators = useQuery({
     queryKey: ["validators", networkId],
     queryFn: () => getValidators(networkId),
@@ -102,6 +110,7 @@ export function App() {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["proposals", networkId] }),
         queryClient.invalidateQueries({ queryKey: ["proposal", networkId] }),
+        queryClient.invalidateQueries({ queryKey: ["history", networkId] }),
         queryClient.invalidateQueries({ queryKey: ["overview", networkId] })
       ]);
     }
@@ -211,6 +220,7 @@ export function App() {
           <Dashboard
             overview={overview.data}
             proposals={proposals.data?.proposals ?? []}
+            history={history.data}
             needsVote={needsVote}
             onOpenProposal={(proposal) => {
               setSelectedProposal(proposal);
@@ -254,6 +264,7 @@ export function App() {
             wallet={wallet}
             onSubmitted={() => {
               void queryClient.invalidateQueries({ queryKey: ["proposals", networkId] });
+              void queryClient.invalidateQueries({ queryKey: ["history", networkId] });
               setView("proposals");
             }}
           />
@@ -285,11 +296,13 @@ function NavButton({
 function Dashboard({
   overview,
   proposals,
+  history,
   needsVote,
   onOpenProposal
 }: {
   overview?: Awaited<ReturnType<typeof getOverview>>;
   proposals: ProposalSummary[];
+  history?: GovernanceHistoryResponse;
   needsVote: ProposalSummary[];
   onOpenProposal: (proposal: { layer: GovernanceLayer; proposalId: number }) => void;
 }) {
@@ -309,6 +322,7 @@ function Dashboard({
         </div>
         <ProposalTable proposals={needsVote.length ? needsVote : pending.slice(0, 6)} onOpen={onOpenProposal} />
       </section>
+      <GovernanceHistoryFeed history={history} onOpenProposal={onOpenProposal} />
       <section className="panel">
         <div className="panel-title">
           <h2>Recent Proposals</h2>
@@ -316,6 +330,41 @@ function Dashboard({
         </div>
         <ProposalTable proposals={proposals.slice(0, 8)} onOpen={onOpenProposal} />
       </section>
+    </section>
+  );
+}
+
+function GovernanceHistoryFeed({
+  history,
+  onOpenProposal
+}: {
+  history?: GovernanceHistoryResponse;
+  onOpenProposal: (proposal: { layer: GovernanceLayer; proposalId: number }) => void;
+}) {
+  const events = history?.events ?? [];
+  return (
+    <section className="panel">
+      <div className="panel-title">
+        <h2>Recent Governance Events</h2>
+        <span>{history?.available === false ? "direct RPC" : `${events.length} indexed`}</span>
+      </div>
+      {history?.available === false ? (
+        <div className="empty">BDS history unavailable on this node.</div>
+      ) : null}
+      {history?.available !== false && events.length === 0 ? (
+        <div className="empty">No governance events indexed yet.</div>
+      ) : null}
+      {history?.available !== false && events.length > 0 ? (
+        <div className="event-feed">
+          {events.slice(0, 8).map((event, index) => (
+            <HistoryEventRow
+              key={eventKey(event, index)}
+              event={event}
+              onOpenProposal={onOpenProposal}
+            />
+          ))}
+        </div>
+      ) : null}
     </section>
   );
 }
@@ -484,6 +533,11 @@ function ProposalDetailPanel({
           <ExternalLink size={16} /> Open off-chain reference
         </a>
       ) : null}
+      <h3>Timeline</h3>
+      <ProposalTimeline
+        available={proposal.historyAvailable}
+        events={proposal.timeline ?? []}
+      />
       <h3>Votes</h3>
       <div className="vote-matrix">
         {proposal.votes.map((vote) => (
@@ -491,6 +545,7 @@ function ProposalDetailPanel({
             <span>{shortAddress(vote.voter, 8)}</span>
             <strong>{vote.vote ?? "not voted"}</strong>
             <small>weight {vote.weight}</small>
+            <small>{vote.votedAt ? formatDateTime(vote.votedAt) : shortHash(vote.txHash) ?? "no tx"}</small>
           </div>
         ))}
       </div>
@@ -498,6 +553,74 @@ function ProposalDetailPanel({
       <pre>{JSON.stringify(proposal.payload, null, 2)}</pre>
     </section>
   );
+}
+
+function ProposalTimeline({
+  available,
+  events
+}: {
+  available?: boolean;
+  events: GovernanceHistoryEvent[];
+}) {
+  if (available === false) {
+    return <div className="empty">BDS history unavailable on this node.</div>;
+  }
+  if (!events.length) {
+    return <div className="empty">No indexed events for this proposal.</div>;
+  }
+  return (
+    <div className="timeline">
+      {events.map((event, index) => (
+        <HistoryEventRow key={eventKey(event, index)} event={event} />
+      ))}
+    </div>
+  );
+}
+
+function HistoryEventRow({
+  event,
+  onOpenProposal
+}: {
+  event: GovernanceHistoryEvent;
+  onOpenProposal?: (proposal: { layer: GovernanceLayer; proposalId: number }) => void;
+}) {
+  const canOpen =
+    event.layer !== "unknown" && event.proposalId != null && onOpenProposal != null;
+  const content = (
+    <>
+      <span className="event-dot" />
+      <span className="event-copy">
+        <strong>{event.title}</strong>
+        <small>
+          {event.layer}
+          {event.proposalId == null ? "" : ` #${event.proposalId}`}
+          {event.actor ? ` / ${shortAddress(event.actor, 8)}` : ""}
+        </small>
+      </span>
+      <span className="event-meta">
+        <strong>{formatDateTime(event.createdAt) ?? "unknown time"}</strong>
+        <small>
+          {event.blockHeight == null ? "" : `block ${event.blockHeight}`}
+          {event.txHash ? ` / ${shortHash(event.txHash)}` : ""}
+        </small>
+      </span>
+    </>
+  );
+
+  if (canOpen) {
+    return (
+      <button
+        type="button"
+        className="event-row"
+        onClick={() =>
+          onOpenProposal({ layer: event.layer as GovernanceLayer, proposalId: event.proposalId! })
+        }
+      >
+        {content}
+      </button>
+    );
+  }
+  return <div className="event-row">{content}</div>;
 }
 
 function ValidatorsView({
@@ -874,6 +997,28 @@ function safeExternalUrl(value?: string | null) {
   } catch {
     return null;
   }
+}
+
+function eventKey(event: GovernanceHistoryEvent, index: number): string {
+  return `${event.txHash ?? "event"}-${event.id ?? index}-${event.event}`;
+}
+
+function formatDateTime(value?: string | null): string | null {
+  if (!value) {
+    return null;
+  }
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) {
+    return value;
+  }
+  return date.toLocaleString();
+}
+
+function shortHash(value?: string | null): string | null {
+  if (!value) {
+    return null;
+  }
+  return shortAddress(value, 8);
 }
 
 function ProgressBar({ value, max }: { value: number; max: number }) {

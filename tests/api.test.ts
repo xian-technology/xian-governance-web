@@ -50,6 +50,24 @@ function fakeService(): GovernanceService {
         }
       ]
     }),
+    history: async () => ({
+      available: true,
+      events: [
+        {
+          id: 1,
+          layer: "validator",
+          proposalId: 1,
+          contract: "masternodes",
+          event: "ValidatorProposalVoted",
+          title: "Vote cast #1",
+          txHash: "abc123",
+          blockHeight: 42,
+          createdAt: "2026-01-01T00:00:00Z",
+          actor: "node1",
+          data: { proposal_id: 1, voter: "node1", vote: "yes" }
+        }
+      ]
+    }),
     proposal: async () => ({
       networkId: "local",
       layer: "validator",
@@ -113,6 +131,12 @@ describe("api app", () => {
       .expect(200)
       .expect(({ body }) => {
         expect(body.votes[0].vote).toBe("yes");
+      });
+    await request(app)
+      .get("/api/networks/local/history")
+      .expect(200)
+      .expect(({ body }) => {
+        expect(body.events[0].event).toBe("ValidatorProposalVoted");
       });
     await request(app)
       .get("/api/networks/local/validators")

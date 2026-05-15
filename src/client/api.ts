@@ -1,5 +1,6 @@
 import type {
   GovernanceLayer,
+  GovernanceHistoryResponse,
   GovernanceOverview,
   NetworkConfig,
   ProposalDetail,
@@ -39,6 +40,10 @@ export function getOverview(networkId: string) {
 
 export function getProposals(networkId: string) {
   return apiGet<ProposalListResponse>(`/api/networks/${networkId}/proposals`);
+}
+
+export function getHistory(networkId: string) {
+  return apiGet<GovernanceHistoryResponse>(`/api/networks/${networkId}/history`);
 }
 
 export function getProposal(

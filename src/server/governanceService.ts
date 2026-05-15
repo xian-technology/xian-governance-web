@@ -1,5 +1,9 @@
+import type { XianIndexedEvent } from "@xian-tech/client";
+
 import { asNumber, asString, isRecord, titleFromPayload } from "../shared/format.js";
 import type {
+  GovernanceHistoryEvent,
+  GovernanceHistoryResponse,
   GovernanceLayer,
   GovernanceOverview,
   NetworkConfig,
@@ -14,6 +18,22 @@ import type {
   VoteRecord
 } from "../shared/types.js";
 import { XianReadClient } from "./rpc.js";
+
+const PROTOCOL_EVENTS = [
+  "ProposalSubmitted",
+  "ProposalVoted",
+  "ProposalApproved",
+  "ProposalExecuted",
+  "StatePatchScheduled"
+] as const;
+
+const VALIDATOR_EVENTS = [
+  "ValidatorProposalSubmitted",
+  "ValidatorProposalVoted",
+  "ValidatorProposalApproved",
+  "ValidatorProposalRejected",
+  "ValidatorProposalExpired"
+] as const;
 
 export class GovernanceService {
   private readonly clients = new Map<string, XianReadClient>();
@@ -63,8 +83,12 @@ export class GovernanceService {
       this.protocolProposals(networkId),
       this.validatorProposals(networkId)
     ]);
+    const proposals = await this.enrichSummariesWithRecentHistory(
+      networkId,
+      [...protocol, ...validator],
+    );
     return {
-      proposals: [...protocol, ...validator].sort((left, right) => {
+      proposals: proposals.sort((left, right) => {
         const leftTime = Date.parse(left.createdAt ?? "") || 0;
         const rightTime = Date.parse(right.createdAt ?? "") || 0;
         if (leftTime !== rightTime) {
@@ -73,6 +97,10 @@ export class GovernanceService {
         return right.proposalId - left.proposalId;
       })
     };
+  }
+
+  async history(networkId: string): Promise<GovernanceHistoryResponse> {
+    return this.recentGovernanceHistory(networkId);
   }
 
   async proposal(
@@ -218,9 +246,13 @@ export class GovernanceService {
       targetFunction: asString(raw.target_function),
       payload
     });
+    const history = await this.proposalHistory(networkId, "protocol", proposalId);
+    const historySummary = proposalHistorySummary(history.events, history.available);
     return {
       ...summary,
-      votes,
+      ...historySummary,
+      votes: mergeVoteHistory(votes, history.events, "protocol", proposalId),
+      timeline: history.events,
       payload,
       uri: asString(raw.uri),
       bundleHash: asString(raw.bundle_hash),
@@ -325,11 +357,104 @@ export class GovernanceService {
       arg: raw.arg,
       payload: raw
     });
+    const history = await this.proposalHistory(networkId, "validator", proposalId);
+    const historySummary = proposalHistorySummary(history.events, history.available);
     return {
       ...summary,
-      votes,
+      ...historySummary,
+      votes: mergeVoteHistory(votes, history.events, "validator", proposalId),
+      timeline: history.events,
       payload: raw,
       result: raw.result
+    };
+  }
+
+  private async enrichSummariesWithRecentHistory(
+    networkId: string,
+    proposals: ProposalSummary[],
+  ): Promise<ProposalSummary[]> {
+    const history = await this.recentGovernanceHistory(networkId);
+    if (!history.available || history.events.length === 0) {
+      return proposals;
+    }
+    const byProposal = new Map<string, GovernanceHistoryEvent[]>();
+    for (const event of history.events) {
+      if (event.proposalId == null || event.layer === "unknown") {
+        continue;
+      }
+      const key = `${event.layer}-${event.proposalId}`;
+      const current = byProposal.get(key) ?? [];
+      current.push(event);
+      byProposal.set(key, current);
+    }
+    return proposals.map((proposal) => {
+      const events = byProposal.get(`${proposal.layer}-${proposal.proposalId}`) ?? [];
+      return events.length
+        ? { ...proposal, ...proposalHistorySummary(events, true) }
+        : proposal;
+    });
+  }
+
+  private async recentGovernanceHistory(
+    networkId: string,
+  ): Promise<GovernanceHistoryResponse> {
+    const client = this.clientFor(networkId);
+    const network = this.networkById(networkId);
+    try {
+      const recent = await client.recentEvents({ limit: 100 });
+      if (!recent.available) {
+        return { available: false, events: [] };
+      }
+      const events = recent.items
+        .filter((event) =>
+          event.contract === network.governanceContract ||
+          event.contract === network.membershipContract
+        )
+        .map((event) =>
+          normalizeHistoryEvent(
+            event,
+            event.contract === network.governanceContract ? "protocol" : "validator",
+          )
+        )
+        .sort(compareHistoryEventsDesc)
+        .slice(0, 30);
+      return { available: true, events };
+    } catch {
+      return { available: false, events: [] };
+    }
+  }
+
+  private async proposalHistory(
+    networkId: string,
+    layer: GovernanceLayer,
+    proposalId: number,
+  ): Promise<{ available: boolean; events: GovernanceHistoryEvent[] }> {
+    const client = this.clientFor(networkId);
+    const network = this.networkById(networkId);
+    const contract =
+      layer === "protocol"
+        ? network.governanceContract
+        : network.membershipContract;
+    const eventNames = layer === "protocol" ? PROTOCOL_EVENTS : VALIDATOR_EVENTS;
+    let available = false;
+    const events: GovernanceHistoryEvent[] = [];
+    for (const eventName of eventNames) {
+      try {
+        const rawEvents = await client.listEvents(contract, eventName, { limit: 200 });
+        available = true;
+        for (const rawEvent of rawEvents) {
+          const event = normalizeHistoryEvent(rawEvent, layer);
+          if (event.proposalId === proposalId) {
+            events.push(event);
+          }
+        }
+      } catch {
+        // Direct RPC mode still works without BDS; history stays unavailable.
+      }
+    }
+    return {
+      available,
+      events: events.sort(compareHistoryEventsAsc)
     };
   }
 
@@ -348,6 +473,167 @@ export class GovernanceService {
     }
     return network;
   }
+}
+
+function normalizeHistoryEvent(
+  event: XianIndexedEvent,
+  layer: GovernanceLayer,
+): GovernanceHistoryEvent {
+  const data = {
+    ...(event.dataIndexed ?? {}),
+    ...(event.data ?? {})
+  };
+  const eventName = event.event ?? "UnknownEvent";
+  return {
+    id: event.id,
+    layer,
+    proposalId: maybeNumber(data.proposal_id),
+    contract: event.contract,
+    event: eventName,
+    title: historyEventTitle(eventName, data),
+    txHash: event.txHash,
+    blockHeight: maybeNumber(event.blockHeight),
+    createdAt: event.createdAt,
+    actor: eventActor(data, event),
+    data
+  };
+}
+
+function historyEventTitle(
+  eventName: string,
+  data: Record<string, unknown>,
+): string {
+  const proposalId = maybeNumber(data.proposal_id);
+  const suffix = proposalId == null ? "" : ` #${proposalId}`;
+  switch (eventName) {
+    case "ProposalSubmitted":
+    case "ValidatorProposalSubmitted":
+      return `Submitted${suffix}`;
+    case "ProposalVoted":
+    case "ValidatorProposalVoted":
+      return `Vote cast${suffix}`;
+    case "ProposalApproved":
+    case "ValidatorProposalApproved":
+      return `Approved${suffix}`;
+    case "ValidatorProposalRejected":
+      return `Rejected${suffix}`;
+    case "ValidatorProposalExpired":
+      return `Expired${suffix}`;
+    case "ProposalExecuted":
+      return `Executed${suffix}`;
+    case "StatePatchScheduled":
+      return `State patch scheduled${suffix}`;
+    default:
+      return eventName.replace(/([a-z])([A-Z])/g, "$1 $2") + suffix;
+  }
+}
+
+function eventActor(
+  data: Record<string, unknown>,
+  event: XianIndexedEvent,
+): string | null {
+  return (
+    asString(data.voter) ??
+    asString(data.proposer) ??
+    asString(data.approver) ??
+    asString(data.rejector) ??
+    asString(data.expirer) ??
+    asString(data.executor) ??
+    event.signer ??
+    event.caller ??
+    null
+  );
+}
+
+function proposalHistorySummary(
+  events: GovernanceHistoryEvent[],
+  available: boolean,
+): Pick<
+  ProposalSummary,
+  "historyAvailable" | "lastEventAt" | "lastTxHash" | "lastBlockHeight" | "eventCount"
+> {
+  const latest = [...events].sort(compareHistoryEventsDesc)[0];
+  return {
+    historyAvailable: available,
+    lastEventAt: latest?.createdAt ?? null,
+    lastTxHash: latest?.txHash ?? null,
+    lastBlockHeight: latest?.blockHeight ?? null,
+    eventCount: events.length
+  };
+}
+
+function mergeVoteHistory(
+  votes: VoteRecord[],
+  events: GovernanceHistoryEvent[],
+  layer: GovernanceLayer,
+  proposalId: number,
+): VoteRecord[] {
+  const byVoter = new Map(votes.map((vote) => [vote.voter, { ...vote }]));
+  const voteEventName = layer === "protocol" ? "ProposalVoted" : "ValidatorProposalVoted";
+  for (const event of events) {
+    if (event.event !== voteEventName || event.proposalId !== proposalId) {
+      continue;
+    }
+    const voter = asString(event.data.voter) ?? event.actor;
+    if (!voter) {
+      continue;
+    }
+    const existing =
+      byVoter.get(voter) ??
+      ({
+        proposalId,
+        layer,
+        voter,
+        vote: null,
+        weight: 0
+      } satisfies VoteRecord);
+    const vote = event.data.vote === "yes" || event.data.vote === "no"
+      ? event.data.vote
+      : existing.vote;
+    byVoter.set(voter, {
+      ...existing,
+      vote,
+      weight: existing.weight || asNumber(event.data.weight),
+      txHash: existing.txHash ?? event.txHash ?? null,
+      blockHeight: existing.blockHeight ?? event.blockHeight ?? null,
+      votedAt: existing.votedAt ?? event.createdAt ?? null
+    });
+  }
+  return [...byVoter.values()].sort((left, right) => {
+    if (right.weight !== left.weight) {
+      return right.weight - left.weight;
+    }
+    return left.voter.localeCompare(right.voter);
+  });
+}
+
+function compareHistoryEventsAsc(
+  left: GovernanceHistoryEvent,
+  right: GovernanceHistoryEvent,
+): number {
+  const leftHeight = left.blockHeight ?? Number.MAX_SAFE_INTEGER;
+  const rightHeight = right.blockHeight ?? Number.MAX_SAFE_INTEGER;
+  if (leftHeight !== rightHeight) {
+    return leftHeight - rightHeight;
+  }
+  const leftId = left.id ?? Number.MAX_SAFE_INTEGER;
+  const rightId = right.id ?? Number.MAX_SAFE_INTEGER;
+  if (leftId !== rightId) {
+    return leftId - rightId;
+  }
+  return sortableTimestamp(left.createdAt) - sortableTimestamp(right.createdAt);
+}
+
+function compareHistoryEventsDesc(
+  left: GovernanceHistoryEvent,
+  right: GovernanceHistoryEvent,
+): number {
+  return -compareHistoryEventsAsc(left, right);
+}
+
+function sortableTimestamp(value?: string | null): number {
+  const parsed = Date.parse(value ?? "");
+  return Number.isFinite(parsed) ? parsed : 0;
 }
 
 function normalizeProposal(input: {

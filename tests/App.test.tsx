@@ -58,7 +58,31 @@ describe("App", () => {
                 noWeight: 0,
                 requiredYesVotes: 2,
                 requiredYesWeight: 20,
-                totalWeightSnapshot: 20
+                totalWeightSnapshot: 20,
+                historyAvailable: true,
+                eventCount: 1,
+                lastTxHash: "abc123",
+                lastBlockHeight: 101
+              }
+            ]
+          });
+        }
+        if (url === "/api/networks/local/history") {
+          return json({
+            available: true,
+            events: [
+              {
+                id: 1,
+                layer: "validator",
+                proposalId: 1,
+                contract: "masternodes",
+                event: "ValidatorProposalVoted",
+                title: "Vote cast #1",
+                txHash: "abc123",
+                blockHeight: 101,
+                createdAt: "2026-01-01T00:00:00Z",
+                actor: "abc",
+                data: { proposal_id: 1, voter: "abc", vote: "yes" }
               }
             ]
           });
@@ -88,9 +112,29 @@ describe("App", () => {
                 layer: "validator",
                 voter: "abc",
                 vote: "yes",
-                weight: 10
+                weight: 10,
+                txHash: "abc123",
+                blockHeight: 101,
+                votedAt: "2026-01-01T00:00:00Z"
               }
-            ]
+            ],
+            timeline: [
+              {
+                id: 1,
+                layer: "validator",
+                proposalId: 1,
+                contract: "masternodes",
+                event: "ValidatorProposalVoted",
+                title: "Vote cast #1",
+                txHash: "abc123",
+                blockHeight: 101,
+                createdAt: "2026-01-01T00:00:00Z",
+                actor: "abc",
+                data: { proposal_id: 1, voter: "abc", vote: "yes" }
+              }
+            ],
+            historyAvailable: true,
+            eventCount: 1
           });
         }
         if (url === "/api/networks/local/validators") {
@@ -116,11 +160,13 @@ describe("App", () => {
     });
     expect(screen.getByText("Active Validators")).toBeInTheDocument();
     expect(screen.getAllByText("topic vote").length).toBeGreaterThan(0);
+    expect(await screen.findByText("Vote cast #1")).toBeInTheDocument();
     fireEvent.click(screen.getAllByText("topic vote")[0]);
     expect(await screen.findByRole("link", { name: /open off-chain reference/i })).toHaveAttribute(
       "href",
       "https://github.com/xian-network/governance/discussions/1",
     );
+    expect(screen.getByText("Timeline")).toBeInTheDocument();
   });
 });
 

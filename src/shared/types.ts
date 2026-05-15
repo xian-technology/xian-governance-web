@@ -54,6 +54,21 @@ export interface VoteRecord {
   weight: number;
   txHash?: string | null;
   blockHeight?: number | null;
+  votedAt?: string | null;
+}
+
+export interface GovernanceHistoryEvent {
+  id?: number | null;
+  layer: GovernanceLayer | "unknown";
+  proposalId?: number | null;
+  contract: string | null;
+  event: string;
+  title: string;
+  txHash?: string | null;
+  blockHeight?: number | null;
+  createdAt?: string | null;
+  actor?: string | null;
+  data: Record<string, unknown>;
 }
 
 export interface ProposalSummary {
@@ -81,11 +96,17 @@ export interface ProposalSummary {
   targetContract?: string | null;
   targetFunction?: string | null;
   arg?: unknown;
+  historyAvailable?: boolean;
+  lastEventAt?: string | null;
+  lastTxHash?: string | null;
+  lastBlockHeight?: number | null;
+  eventCount?: number;
 }
 
 export interface ProposalDetail extends ProposalSummary {
   votes: VoteRecord[];
   payload: unknown;
+  timeline?: GovernanceHistoryEvent[];
   uri?: string | null;
   bundleHash?: string | null;
   approvedAt?: string | null;
@@ -128,4 +149,9 @@ export interface ValidatorListResponse {
 
 export interface StatePatchListResponse {
   patches: StatePatchRecord[];
+}
+
+export interface GovernanceHistoryResponse {
+  available: boolean;
+  events: GovernanceHistoryEvent[];
 }
