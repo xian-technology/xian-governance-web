@@ -197,8 +197,8 @@ Run the app against a local Xian node for functional validation:
 
 ```bash
 cd ../xian-stack
-python3 ./scripts/backend.py start --no-service-node --dashboard
-python3 ./scripts/backend.py endpoints --no-service-node --dashboard
+python3 ./scripts/backend.py start --no-bds-enabled --dashboard
+python3 ./scripts/backend.py endpoints --no-bds-enabled --dashboard
 
 cd ../xian-governance-web
 npm run dev
