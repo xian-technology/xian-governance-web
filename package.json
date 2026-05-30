@@ -18,6 +18,7 @@
     "@xian-tech/client": "file:../xian-js/packages/client",
     "@xian-tech/provider": "file:../xian-js/packages/provider",
     "@xian-tech/types": "file:../xian-js/packages/types",
+    "@xian-tech/web-kit": "file:../xian-js/packages/web-kit",
     "cors": "^2.8.5",
     "express": "^5.2.1",
     "lucide-react": "^0.561.0",
