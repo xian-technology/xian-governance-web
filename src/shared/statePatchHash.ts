@@ -29,9 +29,14 @@ export function canonicalStatePatchPayload(bundle: StatePatchBundle): Record<str
     }))
     .sort((left, right) => left.key.localeCompare(right.key));
 
+  // `chain_id` must be emitted as an explicit `null` when absent so the
+  // serialized payload matches the chain-side canonical form
+  // (`json.dumps(..., sort_keys=True)` keeps the key with a `null` value).
+  // Using `undefined` here would drop the key from `JSON.stringify` and
+  // produce a different hash for any bundle that omits `chain_id`.
   return {
     activation_height: bundle.activation_height,
-    chain_id: bundle.chain_id,
+    chain_id: bundle.chain_id ?? null,
     changes: canonicalChanges,
     governance_contract: bundle.governance_contract ?? "governance",
     patch_id: bundle.patch_id,

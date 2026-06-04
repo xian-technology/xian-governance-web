@@ -6,11 +6,14 @@ import type {
   GovernanceHistoryResponse,
   GovernanceLayer,
   GovernanceOverview,
+  GovernanceParameters,
   NetworkConfig,
+  NetworkPolicy,
   ProposalDetail,
   ProposalListResponse,
   ProposalStatus,
   ProposalSummary,
+  ProposalViewerState,
   StatePatchListResponse,
   StatePatchRecord,
   ValidatorListResponse,
@@ -18,6 +21,22 @@ import type {
   VoteRecord
 } from "../shared/types.js";
 import { XianReadClient } from "./rpc.js";
+
+/**
+ * Cap how many proposal lookups run at once so a large governance history
+ * does not open hundreds of simultaneous RPC sockets against a single node.
+ */
+const PROPOSAL_FETCH_CONCURRENCY = 8;
+
+const GOVERNANCE_METADATA_KEYS = [
+  "approval_threshold_numerator",
+  "approval_threshold_denominator",
+  "emergency_threshold_numerator",
+  "emergency_threshold_denominator",
+  "proposal_expiry_days",
+  "min_patch_delay_blocks",
+  "emergency_patch_delay_blocks"
+] as const;
 
 const PROTOCOL_EVENTS = [
   "ProposalSubmitted",
@@ -37,6 +56,12 @@ const VALIDATOR_EVENTS = [
 
 export class GovernanceService {
   private readonly clients = new Map<string, XianReadClient>();
+  /**
+   * Per-network memo of whether BDS event endpoints answered. `undefined`
+   * means "not probed yet". Avoids hammering a non-BDS node with the full
+   * matrix of per-proposal event lookups that will always fail.
+   */
+  private readonly bdsAvailable = new Map<string, boolean>();
 
   constructor(readonly networks: NetworkConfig[]) {
     for (const network of networks) {
@@ -51,11 +76,12 @@ export class GovernanceService {
   async overview(networkId: string): Promise<GovernanceOverview> {
     const network = this.networkById(networkId);
     const client = this.clientFor(networkId);
-    const [chain, validators, proposals, patches] = await Promise.all([
+    const [chain, validators, proposals, patches, governance] = await Promise.all([
       client.getChainStatus(),
       this.validators(networkId),
       this.proposals(networkId),
-      this.statePatches(networkId)
+      this.statePatches(networkId),
+      this.governanceParameters(networkId)
     ]);
     const activeValidators = validators.active.length;
     const totalVotingWeight = validators.active.reduce(
@@ -74,18 +100,79 @@ export class GovernanceService {
       pendingProposals: pending.length,
       expiringSoon: pending.filter((proposal) => expiresSoon(proposal.expiresAt)).length,
       scheduledPatches: patches.patches.filter((patch) => patch.status === "approved")
-        .length
+        .length,
+      governance
     };
   }
 
-  async proposals(networkId: string): Promise<ProposalListResponse> {
+  async governanceParameters(networkId: string): Promise<GovernanceParameters> {
+    const client = this.clientFor(networkId);
+    const network = this.networkById(networkId);
+    const values = await Promise.all(
+      GOVERNANCE_METADATA_KEYS.map((key) =>
+        client.getState<number | string | null>(
+          network.governanceContract,
+          "metadata",
+          [key],
+        ),
+      ),
+    );
+    const byKey = new Map(GOVERNANCE_METADATA_KEYS.map((key, index) => [key, values[index]]));
+    return {
+      approvalThresholdNumerator: maybeNumber(byKey.get("approval_threshold_numerator")),
+      approvalThresholdDenominator: maybeNumber(
+        byKey.get("approval_threshold_denominator"),
+      ),
+      emergencyThresholdNumerator: maybeNumber(byKey.get("emergency_threshold_numerator")),
+      emergencyThresholdDenominator: maybeNumber(
+        byKey.get("emergency_threshold_denominator"),
+      ),
+      proposalExpiryDays: maybeNumber(byKey.get("proposal_expiry_days")),
+      minPatchDelayBlocks: maybeNumber(byKey.get("min_patch_delay_blocks")),
+      emergencyPatchDelayBlocks: maybeNumber(byKey.get("emergency_patch_delay_blocks"))
+    };
+  }
+
+  async policy(networkId: string): Promise<NetworkPolicy> {
+    const client = this.clientFor(networkId);
+    const network = this.networkById(networkId);
+    const [membership, governance, registrationFee, voteTypes] = await Promise.all([
+      client.abciValue<Record<string, unknown>>("/masternodes_policy").catch(() => null),
+      this.governanceParameters(networkId),
+      client
+        .getState<number | string | null>(network.membershipContract, "registration_fee")
+        .catch(() => null),
+      client
+        .getState<string[] | null>(network.membershipContract, "types")
+        .catch(() => null)
+    ]);
+    return {
+      membership: isRecord(membership) ? membership : null,
+      governance,
+      registrationFee: typeof registrationFee === "number" || typeof registrationFee === "string"
+        ? registrationFee
+        : null,
+      voteTypes: Array.isArray(voteTypes) ? voteTypes.filter((t): t is string => typeof t === "string") : []
+    };
+  }
+
+  async proposals(
+    networkId: string,
+    account?: string | null,
+  ): Promise<ProposalListResponse> {
+    // The list path skips per-proposal BDS history lookups (the expensive
+    // part); list-level history badges come from the single recent-events
+    // call inside `enrichSummariesWithRecentHistory`.
     const [protocol, validator] = await Promise.all([
       this.protocolProposals(networkId),
       this.validatorProposals(networkId)
     ]);
+    const summaries = [...protocol, ...validator].map((detail) =>
+      toSummary(detail, account),
+    );
     const proposals = await this.enrichSummariesWithRecentHistory(
       networkId,
-      [...protocol, ...validator],
+      summaries,
     );
     return {
       proposals: proposals.sort((left, right) => {
@@ -107,11 +194,16 @@ export class GovernanceService {
     networkId: string,
     layer: GovernanceLayer,
     proposalId: number,
+    account?: string | null,
   ): Promise<ProposalDetail | null> {
-    if (layer === "protocol") {
-      return this.protocolProposal(networkId, proposalId);
+    const detail =
+      layer === "protocol"
+        ? await this.protocolProposal(networkId, proposalId)
+        : await this.validatorProposal(networkId, proposalId);
+    if (!detail) {
+      return null;
     }
-    return this.validatorProposal(networkId, proposalId);
+    return { ...detail, viewer: computeViewer(detail, detail.votes, account) };
   }
 
   async proposalVotes(
@@ -183,20 +275,21 @@ export class GovernanceService {
     const count = asNumber(
       await client.getState(network.governanceContract, "proposal_count"),
     );
-    const proposals: ProposalDetail[] = [];
-    for (let proposalId = 1; proposalId <= count; proposalId += 1) {
-      const proposal = await this.protocolProposal(networkId, proposalId);
-      if (proposal) {
-        proposals.push(proposal);
-      }
-    }
-    return proposals;
+    const ids = range(1, count);
+    const proposals = await mapWithConcurrency(
+      ids,
+      PROPOSAL_FETCH_CONCURRENCY,
+      (proposalId) => this.protocolProposal(networkId, proposalId, { includeHistory: false }),
+    );
+    return proposals.filter((proposal): proposal is ProposalDetail => proposal !== null);
   }
 
   private async protocolProposal(
     networkId: string,
     proposalId: number,
+    options: { includeHistory?: boolean } = {},
   ): Promise<ProposalDetail | null> {
+    const includeHistory = options.includeHistory ?? true;
     const client = this.clientFor(networkId);
     const network = this.networkById(networkId);
     let raw: unknown;
@@ -246,7 +339,9 @@ export class GovernanceService {
       targetFunction: asString(raw.target_function),
       payload
     });
-    const history = await this.proposalHistory(networkId, "protocol", proposalId);
+    const history = includeHistory
+      ? await this.proposalHistory(networkId, "protocol", proposalId)
+      : { available: false, events: [] };
     const historySummary = proposalHistorySummary(history.events, history.available);
     return {
       ...summary,
@@ -308,20 +403,21 @@ export class GovernanceService {
     const count = asNumber(
       await client.getState(network.membershipContract, "total_votes"),
     );
-    const proposals: ProposalDetail[] = [];
-    for (let proposalId = 1; proposalId <= count; proposalId += 1) {
-      const proposal = await this.validatorProposal(networkId, proposalId);
-      if (proposal) {
-        proposals.push(proposal);
-      }
-    }
-    return proposals;
+    const ids = range(1, count);
+    const proposals = await mapWithConcurrency(
+      ids,
+      PROPOSAL_FETCH_CONCURRENCY,
+      (proposalId) => this.validatorProposal(networkId, proposalId, { includeHistory: false }),
+    );
+    return proposals.filter((proposal): proposal is ProposalDetail => proposal !== null);
   }
 
   private async validatorProposal(
     networkId: string,
     proposalId: number,
+    options: { includeHistory?: boolean } = {},
   ): Promise<ProposalDetail | null> {
+    const includeHistory = options.includeHistory ?? true;
     const client = this.clientFor(networkId);
     const raw = await client
       .abciValue<unknown>(`/masternodes_vote/${proposalId}`)
@@ -342,7 +438,9 @@ export class GovernanceService {
       proposalId,
       kind: "validator_vote",
       type,
-      summary: type.replaceAll("_", " "),
+      // `masternodes` proposals carry no on-chain summary; leave it empty so
+      // `titleFromPayload` derives a descriptive title from type + arg.
+      summary: "",
       proposer: Array.isArray(raw.voters) ? asString(raw.voters[0]) : null,
       status: normalizeStatus(raw.status),
       createdAt: normalizeDate(raw.created_at),
@@ -357,7 +455,9 @@ export class GovernanceService {
       arg: raw.arg,
       payload: raw
     });
-    const history = await this.proposalHistory(networkId, "validator", proposalId);
+    const history = includeHistory
+      ? await this.proposalHistory(networkId, "validator", proposalId)
+      : { available: false, events: [] };
     const historySummary = proposalHistorySummary(history.events, history.available);
     return {
       ...summary,
@@ -402,6 +502,7 @@ export class GovernanceService {
     const network = this.networkById(networkId);
     try {
       const recent = await client.recentEvents({ limit: 100 });
+      this.bdsAvailable.set(networkId, recent.available);
       if (!recent.available) {
         return { available: false, events: [] };
       }
@@ -420,6 +521,7 @@ export class GovernanceService {
         .slice(0, 30);
       return { available: true, events };
     } catch {
+      this.bdsAvailable.set(networkId, false);
       return { available: false, events: [] };
     }
   }
@@ -429,6 +531,11 @@ export class GovernanceService {
     layer: GovernanceLayer,
     proposalId: number,
   ): Promise<{ available: boolean; events: GovernanceHistoryEvent[] }> {
+    // Skip the per-event query matrix when this node has already proven it
+    // has no BDS event endpoints.
+    if (this.bdsAvailable.get(networkId) === false) {
+      return { available: false, events: [] };
+    }
     const client = this.clientFor(networkId);
     const network = this.networkById(networkId);
     const contract =
@@ -451,6 +558,9 @@ export class GovernanceService {
       } catch {
         // Direct RPC mode still works without BDS; history stays unavailable.
       }
+    }
+    if (available) {
+      this.bdsAvailable.set(networkId, true);
     }
     return {
       available,
@@ -744,10 +854,95 @@ function normalizePatch(value: unknown): StatePatchRecord | null {
     bundleHash: asString(value.bundle_hash),
     activationHeight: maybeNumber(value.activation_height),
     emergency: value.emergency === true,
+    createdAt: normalizeDate(value.created_at),
+    approvedAt: normalizeDate(value.approved_at),
+    appliedAtNanos: maybeNumber(value.applied_at_nanos),
     appliedBlockHeight: maybeNumber(value.applied_block_height),
     appliedBlockHash: asString(value.applied_block_hash),
     executionHash: asString(value.execution_hash)
   };
+}
+
+/** Inclusive integer range `[start, end]`; empty when `end < start`. */
+function range(start: number, end: number): number[] {
+  if (!Number.isFinite(end) || end < start) {
+    return [];
+  }
+  const out: number[] = [];
+  for (let value = start; value <= end; value += 1) {
+    out.push(value);
+  }
+  return out;
+}
+
+/** Map with a bounded number of in-flight async tasks, preserving order. */
+async function mapWithConcurrency<T, R>(
+  items: T[],
+  limit: number,
+  mapper: (item: T, index: number) => Promise<R>,
+): Promise<R[]> {
+  const results = new Array<R>(items.length);
+  let cursor = 0;
+  const workerCount = Math.max(1, Math.min(limit, items.length));
+  const workers = Array.from({ length: workerCount }, async () => {
+    for (;;) {
+      const index = cursor;
+      cursor += 1;
+      if (index >= items.length) {
+        return;
+      }
+      results[index] = await mapper(items[index]!, index);
+    }
+  });
+  await Promise.all(workers);
+  return results;
+}
+
+/**
+ * Compute a connected account's relationship to a proposal from its
+ * snapshotted vote matrix. Mirrors the chain's eligibility rules: an account
+ * can still vote only when the proposal is pending, it holds snapshot weight,
+ * and it has not already voted.
+ */
+function computeViewer(
+  proposal: ProposalSummary,
+  votes: VoteRecord[],
+  account?: string | null,
+): ProposalViewerState | null {
+  if (!account) {
+    return null;
+  }
+  const record = votes.find((vote) => vote.voter === account) ?? null;
+  const weight = record?.weight ?? 0;
+  const vote = record?.vote ?? null;
+  return {
+    account,
+    eligible: proposal.status === "pending" && weight > 0 && vote === null,
+    hasVoted: vote !== null,
+    vote,
+    weight,
+    isProposer: proposal.proposer === account
+  };
+}
+
+/**
+ * Reduce a fully-loaded proposal detail to the list summary, attaching
+ * per-viewer eligibility and dropping heavy detail-only fields (votes,
+ * timeline, payload) from the list payload.
+ */
+function toSummary(detail: ProposalDetail, account?: string | null): ProposalSummary {
+  const {
+    votes,
+    payload: _payload,
+    timeline: _timeline,
+    uri: _uri,
+    bundleHash: _bundleHash,
+    approvedAt: _approvedAt,
+    executedAt: _executedAt,
+    result: _result,
+    ...summary
+  } = detail;
+  return { ...summary, viewer: computeViewer(summary, votes, account) };
 }
 
 function normalizeStatus(value: unknown): ProposalStatus {

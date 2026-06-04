@@ -7,9 +7,30 @@ import { isRecord } from "../shared/format.js";
 import type { GovernanceLayer } from "../shared/types.js";
 import type { GovernanceService } from "./governanceService.js";
 
-export function createApiApp(service: GovernanceService): express.Express {
+export interface ApiOptions {
+  /**
+   * Cross-origin allowlist. The client is served by this same Express app,
+   * so cross-origin access is opt-in. When empty, no `Access-Control-Allow-Origin`
+   * is sent (same-origin only); use `["*"]` to allow any origin.
+   */
+  corsOrigins?: string[];
+  /**
+   * When false (default in production), API error responses omit internal
+   * error text and return a generic message.
+   */
+  exposeErrors?: boolean;
+}
+
+export function createApiApp(
+  service: GovernanceService,
+  options: ApiOptions = {},
+): express.Express {
   const app = express();
-  app.use(cors());
+  const corsOrigins = options.corsOrigins ?? [];
+  if (corsOrigins.length > 0) {
+    app.use(cors({ origin: corsOrigins.includes("*") ? true : corsOrigins }));
+  }
+  const exposeErrors = options.exposeErrors ?? process.env.NODE_ENV !== "production";
   app.use(express.json({ limit: "1mb" }));
 
   app.get("/api/health", (_req, res) => {
@@ -25,7 +46,11 @@ export function createApiApp(service: GovernanceService): express.Express {
   }));
 
   app.get("/api/networks/:networkId/proposals", asyncHandler(async (req, res) => {
-    res.json(await service.proposals(param(req, "networkId")));
+    res.json(await service.proposals(param(req, "networkId"), queryAccount(req)));
+  }));
+
+  app.get("/api/networks/:networkId/policy", asyncHandler(async (req, res) => {
+    res.json(await service.policy(param(req, "networkId")));
   }));
 
   app.get("/api/networks/:networkId/history", asyncHandler(async (req, res) => {
@@ -40,6 +65,7 @@ export function createApiApp(service: GovernanceService): express.Express {
         param(req, "networkId"),
         layer,
         Number(param(req, "proposalId")),
+        queryAccount(req),
       );
       if (!proposal) {
         res.status(404).json({ error: "proposal not found" });
@@ -84,20 +110,43 @@ export function createApiApp(service: GovernanceService): express.Express {
 
   app.use((error: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
     const message = error instanceof Error ? error.message : "unknown error";
-    const status = message.startsWith("unknown network") ? 404 : 500;
+    const status = message.startsWith("unknown network")
+      ? 404
+      : message.startsWith("unknown governance layer")
+        ? 400
+        : 502;
+    if (status >= 500 && !exposeErrors) {
+      res.status(status).json({ error: "upstream chain request failed" });
+      return;
+    }
     res.status(status).json({ error: message });
   });
 
   return app;
 }
 
+function queryAccount(req: express.Request): string | null {
+  const value = req.query.account;
+  if (typeof value === "string" && value.trim().length > 0) {
+    return value.trim();
+  }
+  return null;
+}
+
 export async function attachFrontend(app: express.Express): Promise<void> {
   if (process.env.NODE_ENV === "production") {
     const __dirname = path.dirname(fileURLToPath(import.meta.url));
     const clientDir = path.resolve(__dirname, "../client");
+    const indexFile = path.join(clientDir, "index.html");
     app.use(express.static(clientDir));
-    app.get("*", (_req, res) => {
-      res.sendFile(path.join(clientDir, "index.html"));
+    // SPA fallback. Express 5 (path-to-regexp v8) rejects the bare "*" route,
+    // so use a middleware that serves index.html for non-API GET requests.
+    app.use((req, res, next) => {
+      if (req.method !== "GET" || req.path.startsWith("/api/")) {
+        next();
+        return;
+      }
+      res.sendFile(indexFile);
     });
     return;
   }

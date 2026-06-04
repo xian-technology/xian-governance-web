@@ -162,7 +162,7 @@ describe("App", () => {
     expect(screen.getAllByText("topic vote").length).toBeGreaterThan(0);
     expect(await screen.findByText("Vote cast #1")).toBeInTheDocument();
     fireEvent.click(screen.getAllByText("topic vote")[0]);
-    expect(await screen.findByRole("link", { name: /open off-chain reference/i })).toHaveAttribute(
+    expect(await screen.findByRole("link", { name: /open reference/i })).toHaveAttribute(
       "href",
       "https://github.com/xian-network/governance/discussions/1",
     );

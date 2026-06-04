@@ -57,6 +57,21 @@ export interface VoteRecord {
   votedAt?: string | null;
 }
 
+/**
+ * Per-account view of a proposal, computed server-side from the snapshotted
+ * vote matrix when a viewer account is supplied. Lets the UI answer
+ * "can this connected validator still act on this proposal?" without
+ * re-deriving eligibility from raw state on the client.
+ */
+export interface ProposalViewerState {
+  account: string;
+  eligible: boolean;
+  hasVoted: boolean;
+  vote: "yes" | "no" | null;
+  weight: number;
+  isProposer: boolean;
+}
+
 export interface GovernanceHistoryEvent {
   id?: number | null;
   layer: GovernanceLayer | "unknown";
@@ -101,6 +116,7 @@ export interface ProposalSummary {
   lastTxHash?: string | null;
   lastBlockHeight?: number | null;
   eventCount?: number;
+  viewer?: ProposalViewerState | null;
 }
 
 export interface ProposalDetail extends ProposalSummary {
@@ -123,9 +139,34 @@ export interface StatePatchRecord {
   bundleHash?: string | null;
   activationHeight?: number | null;
   emergency?: boolean;
+  createdAt?: string | null;
+  approvedAt?: string | null;
+  appliedAtNanos?: number | null;
   appliedBlockHeight?: number | null;
   appliedBlockHash?: string | null;
   executionHash?: string | null;
+}
+
+/**
+ * Protocol-governance parameters read from `governance.metadata`, plus the
+ * derived approval ratios. Used by the create-proposal wizard to validate
+ * state-patch activation heights and to display thresholds.
+ */
+export interface GovernanceParameters {
+  approvalThresholdNumerator: number | null;
+  approvalThresholdDenominator: number | null;
+  emergencyThresholdNumerator: number | null;
+  emergencyThresholdDenominator: number | null;
+  proposalExpiryDays: number | null;
+  minPatchDelayBlocks: number | null;
+  emergencyPatchDelayBlocks: number | null;
+}
+
+export interface NetworkPolicy {
+  membership: Record<string, unknown> | null;
+  governance: GovernanceParameters;
+  registrationFee: number | string | null;
+  voteTypes: string[];
 }
 
 export interface GovernanceOverview {
@@ -136,6 +177,7 @@ export interface GovernanceOverview {
   pendingProposals: number;
   expiringSoon: number;
   scheduledPatches: number;
+  governance: GovernanceParameters;
 }
 
 export interface ProposalListResponse {

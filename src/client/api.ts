@@ -3,6 +3,7 @@ import type {
   GovernanceHistoryResponse,
   GovernanceOverview,
   NetworkConfig,
+  NetworkPolicy,
   ProposalDetail,
   ProposalListResponse,
   StatePatchListResponse,
@@ -38,8 +39,14 @@ export function getOverview(networkId: string) {
   return apiGet<GovernanceOverview>(`/api/networks/${networkId}/overview`);
 }
 
-export function getProposals(networkId: string) {
-  return apiGet<ProposalListResponse>(`/api/networks/${networkId}/proposals`);
+export function getProposals(networkId: string, account?: string | null) {
+  return apiGet<ProposalListResponse>(
+    `/api/networks/${networkId}/proposals${accountQuery(account)}`,
+  );
+}
+
+export function getPolicy(networkId: string) {
+  return apiGet<NetworkPolicy>(`/api/networks/${networkId}/policy`);
 }
 
 export function getHistory(networkId: string) {
@@ -50,10 +57,15 @@ export function getProposal(
   networkId: string,
   layer: GovernanceLayer,
   proposalId: number,
+  account?: string | null,
 ) {
   return apiGet<ProposalDetail>(
-    `/api/networks/${networkId}/proposals/${layer}/${proposalId}`,
+    `/api/networks/${networkId}/proposals/${layer}/${proposalId}${accountQuery(account)}`,
   );
+}
+
+function accountQuery(account?: string | null): string {
+  return account ? `?account=${encodeURIComponent(account)}` : "";
 }
 
 export function getProposalVotes(

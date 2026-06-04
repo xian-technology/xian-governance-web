@@ -4,7 +4,7 @@ import { GovernanceService } from "./governanceService.js";
 
 const config = loadConfig();
 const service = new GovernanceService(config.networks);
-const app = createApiApp(service);
+const app = createApiApp(service, { corsOrigins: config.corsOrigins });
 await attachFrontend(app);
 
 app.listen(config.port, "127.0.0.1", () => {

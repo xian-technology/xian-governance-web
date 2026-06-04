@@ -3,6 +3,7 @@ import type { NetworkConfig } from "../shared/types.js";
 export interface AppConfig {
   port: number;
   networks: NetworkConfig[];
+  corsOrigins: string[];
 }
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
@@ -11,9 +12,14 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
   const chainId = env.XIAN_CHAIN_ID;
   const networkId = env.XIAN_NETWORK_ID ?? "local";
   const networkName = env.XIAN_NETWORK_NAME ?? "Local Xian";
+  const corsOrigins = (env.CORS_ORIGINS ?? "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter((origin) => origin.length > 0);
 
   return {
     port: Number(env.PORT ?? 4173),
+    corsOrigins,
     networks: [
       {
         id: networkId,
