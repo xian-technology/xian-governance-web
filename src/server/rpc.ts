@@ -9,6 +9,8 @@ import type {
 import { isRecord } from "../shared/format.js";
 import type { ChainStatus, NetworkConfig } from "../shared/types.js";
 
+const READ_RETRY_DELAYS_MS = [250, 750];
+
 export class XianReadClient {
   readonly client: XianClient;
 
@@ -20,7 +22,7 @@ export class XianReadClient {
   }
 
   async getChainStatus(): Promise<ChainStatus> {
-    const status = await this.client.getStatus();
+    const status = await withReadRetry(() => this.client.getStatus());
     const result = isRecord(status.result) ? status.result : {};
     const nodeInfo = isRecord(result.node_info) ? result.node_info : {};
     const syncInfo = isRecord(result.sync_info) ? result.sync_info : {};
@@ -44,12 +46,15 @@ export class XianReadClient {
     method: string,
     kwargs: Record<string, unknown> = {},
   ): Promise<T> {
-    return this.client.call({
-      sender: "governance-web",
-      contract,
-      function: method,
-      kwargs
-    }) as Promise<T>;
+    return withReadRetry(
+      () =>
+        this.client.call({
+          sender: "governance-web",
+          contract,
+          function: method,
+          kwargs
+        }) as Promise<T>,
+    );
   }
 
   async getState<T = unknown>(
@@ -58,14 +63,16 @@ export class XianReadClient {
     keys: string[] = [],
   ): Promise<T | null> {
     try {
-      return (await this.client.getState(contract, variable, keys)) as T | null;
+      return (await withReadRetry(() =>
+        this.client.getState(contract, variable, keys),
+      )) as T | null;
     } catch {
       return null;
     }
   }
 
   async abciValue<T = unknown>(path: string): Promise<T | null> {
-    return this.client.abciValue<T>(path);
+    return withReadRetry(() => this.client.abciValue<T>(path));
   }
 
   async listEvents(
@@ -73,11 +80,11 @@ export class XianReadClient {
     event: string,
     options?: XianEventListOptions,
   ): Promise<XianIndexedEvent[]> {
-    return this.client.listEvents(contract, event, options);
+    return withReadRetry(() => this.client.listEvents(contract, event, options));
   }
 
   async recentEvents(options?: XianPageOptions): Promise<XianRecentEventsResult> {
-    return this.client.getRecentEvents(options);
+    return withReadRetry(() => this.client.getRecentEvents(options));
   }
 
   async scanKeySuffixes(prefix: string, limit = 200): Promise<string[]> {
@@ -101,4 +108,44 @@ export class XianReadClient {
       after = result.next_after;
     }
   }
+}
+
+async function withReadRetry<T>(operation: () => Promise<T>): Promise<T> {
+  let lastError: unknown;
+  for (let attempt = 0; attempt <= READ_RETRY_DELAYS_MS.length; attempt += 1) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error;
+      if (attempt >= READ_RETRY_DELAYS_MS.length || !isRetryableReadError(error)) {
+        throw error;
+      }
+      await sleep(READ_RETRY_DELAYS_MS[attempt] ?? 0);
+    }
+  }
+  throw lastError;
+}
+
+function isRetryableReadError(error: unknown): boolean {
+  if (!(error instanceof Error)) {
+    return false;
+  }
+  const message = error.message.toLowerCase();
+  const name = error.name.toLowerCase();
+  return (
+    name.includes("transport") ||
+    name.includes("timeout") ||
+    message.includes("request failed") ||
+    message.includes("timed out") ||
+    message.includes("aborted") ||
+    message.includes("econnreset") ||
+    message.includes("socket hang up") ||
+    message.includes("returned 502") ||
+    message.includes("returned 503") ||
+    message.includes("returned 504")
+  );
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

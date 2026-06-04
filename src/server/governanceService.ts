@@ -26,7 +26,7 @@ import { XianReadClient } from "./rpc.js";
  * Cap how many proposal lookups run at once so a large governance history
  * does not open hundreds of simultaneous RPC sockets against a single node.
  */
-const PROPOSAL_FETCH_CONCURRENCY = 8;
+const PROPOSAL_FETCH_CONCURRENCY = 4;
 
 const GOVERNANCE_METADATA_KEYS = [
   "approval_threshold_numerator",
@@ -54,8 +54,18 @@ const VALIDATOR_EVENTS = [
   "ValidatorProposalExpired"
 ] as const;
 
+const PROPOSAL_SUMMARY_CACHE_MS = 10_000;
+
+type ProposalFetchOptions = {
+  includeVotes?: boolean;
+};
+
 export class GovernanceService {
   private readonly clients = new Map<string, XianReadClient>();
+  private readonly proposalSummaryCache = new Map<
+    string,
+    { expiresAt: number; promise: Promise<ProposalDetail[]> }
+  >();
   /**
    * Per-network memo of whether BDS event endpoints answered. `undefined`
    * means "not probed yet". Avoids hammering a non-BDS node with the full
@@ -76,19 +86,20 @@ export class GovernanceService {
   async overview(networkId: string): Promise<GovernanceOverview> {
     const network = this.networkById(networkId);
     const client = this.clientFor(networkId);
-    const [chain, validators, proposals, patches, governance] = await Promise.all([
+    const [chain, validators, proposals, governance] = await Promise.all([
       client.getChainStatus(),
       this.validators(networkId),
-      this.proposals(networkId),
-      this.statePatches(networkId),
+      this.proposalDetails(networkId, { includeVotes: false }),
       this.governanceParameters(networkId)
     ]);
+    const protocol = proposals.filter((proposal) => proposal.layer === "protocol");
+    const patches = await this.patchRecordsForProtocol(networkId, protocol);
     const activeValidators = validators.active.length;
     const totalVotingWeight = validators.active.reduce(
       (sum, validator) => sum + validator.power,
       0,
     );
-    const pending = proposals.proposals.filter(
+    const pending = proposals.filter(
       (proposal) => proposal.status === "pending",
     );
 
@@ -99,8 +110,7 @@ export class GovernanceService {
       totalVotingWeight,
       pendingProposals: pending.length,
       expiringSoon: pending.filter((proposal) => expiresSoon(proposal.expiresAt)).length,
-      scheduledPatches: patches.patches.filter((patch) => patch.status === "approved")
-        .length,
+      scheduledPatches: patches.filter((patch) => patch.status === "approved").length,
       governance
     };
   }
@@ -137,7 +147,15 @@ export class GovernanceService {
     const client = this.clientFor(networkId);
     const network = this.networkById(networkId);
     const [membership, governance, registrationFee, voteTypes] = await Promise.all([
-      client.abciValue<Record<string, unknown>>("/masternodes_policy").catch(() => null),
+      client
+        .call<Record<string, unknown>>(
+          network.membershipContract,
+          "get_policy_config",
+          {},
+        )
+        .catch(() =>
+          client.abciValue<Record<string, unknown>>("/masternodes_policy").catch(() => null),
+        ),
       this.governanceParameters(networkId),
       client
         .getState<number | string | null>(network.membershipContract, "registration_fee")
@@ -163,13 +181,9 @@ export class GovernanceService {
     // The list path skips per-proposal BDS history lookups (the expensive
     // part); list-level history badges come from the single recent-events
     // call inside `enrichSummariesWithRecentHistory`.
-    const [protocol, validator] = await Promise.all([
-      this.protocolProposals(networkId),
-      this.validatorProposals(networkId)
-    ]);
-    const summaries = [...protocol, ...validator].map((detail) =>
-      toSummary(detail, account),
-    );
+    const includeVotes = Boolean(account);
+    const details = await this.proposalDetails(networkId, { includeVotes });
+    const summaries = details.map((detail) => toSummary(detail, account));
     const proposals = await this.enrichSummariesWithRecentHistory(
       networkId,
       summaries,
@@ -217,9 +231,16 @@ export class GovernanceService {
 
   async validators(networkId: string): Promise<ValidatorListResponse> {
     const client = this.clientFor(networkId);
+    const network = this.networkById(networkId);
     const [activeRaw, candidatesRaw] = await Promise.all([
-      client.abciValue<unknown[]>("/masternodes_active").catch(() => []),
-      client.abciValue<unknown[]>("/masternodes_candidates").catch(() => [])
+      client
+        .call<unknown[]>(network.membershipContract, "get_active_validators", {})
+        .catch(() => client.abciValue<unknown[]>("/masternodes_active").catch(() => [])),
+      client
+        .call<unknown[]>(network.membershipContract, "get_pending_candidates", {})
+        .catch(() =>
+          client.abciValue<unknown[]>("/masternodes_candidates").catch(() => []),
+        )
     ]);
     return {
       active: Array.isArray(activeRaw)
@@ -232,7 +253,16 @@ export class GovernanceService {
   }
 
   async statePatches(networkId: string): Promise<StatePatchListResponse> {
-    const protocol = await this.protocolProposals(networkId);
+    const protocol = (await this.proposalDetails(networkId, { includeVotes: false }))
+      .filter((proposal) => proposal.layer === "protocol");
+    const patches = await this.patchRecordsForProtocol(networkId, protocol);
+    return { patches };
+  }
+
+  private async patchRecordsForProtocol(
+    networkId: string,
+    protocol: ProposalDetail[],
+  ): Promise<StatePatchRecord[]> {
     const client = this.clientFor(networkId);
     const patchIds = protocol
       .map((proposal) => proposal.patchId)
@@ -251,9 +281,7 @@ export class GovernanceService {
         }
       }),
     );
-    return {
-      patches: patches.filter((patch): patch is StatePatchRecord => patch !== null)
-    };
+    return patches.filter((patch): patch is StatePatchRecord => patch !== null);
   }
 
   async simulate(
@@ -269,7 +297,46 @@ export class GovernanceService {
     });
   }
 
-  private async protocolProposals(networkId: string): Promise<ProposalDetail[]> {
+  private async proposalDetails(
+    networkId: string,
+    options: ProposalFetchOptions = {},
+  ): Promise<ProposalDetail[]> {
+    if (options.includeVotes) {
+      return this.fetchProposalDetails(networkId, options);
+    }
+
+    const key = networkId;
+    const cached = this.proposalSummaryCache.get(key);
+    if (cached && cached.expiresAt > Date.now()) {
+      return cached.promise;
+    }
+
+    const promise = this.fetchProposalDetails(networkId, options).catch((error) => {
+      this.proposalSummaryCache.delete(key);
+      throw error;
+    });
+    this.proposalSummaryCache.set(key, {
+      expiresAt: Date.now() + PROPOSAL_SUMMARY_CACHE_MS,
+      promise
+    });
+    return promise;
+  }
+
+  private async fetchProposalDetails(
+    networkId: string,
+    options: ProposalFetchOptions = {},
+  ): Promise<ProposalDetail[]> {
+    const [protocol, validator] = await Promise.all([
+      this.protocolProposals(networkId, options),
+      this.validatorProposals(networkId, options)
+    ]);
+    return [...protocol, ...validator];
+  }
+
+  private async protocolProposals(
+    networkId: string,
+    options: ProposalFetchOptions = {},
+  ): Promise<ProposalDetail[]> {
     const client = this.clientFor(networkId);
     const network = this.networkById(networkId);
     const count = asNumber(
@@ -279,7 +346,11 @@ export class GovernanceService {
     const proposals = await mapWithConcurrency(
       ids,
       PROPOSAL_FETCH_CONCURRENCY,
-      (proposalId) => this.protocolProposal(networkId, proposalId, { includeHistory: false }),
+      (proposalId) =>
+        this.protocolProposal(networkId, proposalId, {
+          includeHistory: false,
+          includeVotes: options.includeVotes ?? true
+        }),
     );
     return proposals.filter((proposal): proposal is ProposalDetail => proposal !== null);
   }
@@ -287,9 +358,10 @@ export class GovernanceService {
   private async protocolProposal(
     networkId: string,
     proposalId: number,
-    options: { includeHistory?: boolean } = {},
+    options: { includeHistory?: boolean; includeVotes?: boolean } = {},
   ): Promise<ProposalDetail | null> {
     const includeHistory = options.includeHistory ?? true;
+    const includeVotes = options.includeVotes ?? true;
     const client = this.clientFor(networkId);
     const network = this.networkById(networkId);
     let raw: unknown;
@@ -313,7 +385,7 @@ export class GovernanceService {
       target_function: raw.target_function,
       kwargs: raw.kwargs
     };
-    const votes = await this.protocolVoteRecords(networkId, proposalId);
+    const votes = includeVotes ? await this.protocolVoteRecords(networkId, proposalId) : [];
     const summary = normalizeProposal({
       networkId,
       layer: "protocol",
@@ -397,7 +469,10 @@ export class GovernanceService {
     return records.filter((record) => record.weight > 0 || record.vote !== null);
   }
 
-  private async validatorProposals(networkId: string): Promise<ProposalDetail[]> {
+  private async validatorProposals(
+    networkId: string,
+    options: ProposalFetchOptions = {},
+  ): Promise<ProposalDetail[]> {
     const client = this.clientFor(networkId);
     const network = this.networkById(networkId);
     const count = asNumber(
@@ -407,7 +482,11 @@ export class GovernanceService {
     const proposals = await mapWithConcurrency(
       ids,
       PROPOSAL_FETCH_CONCURRENCY,
-      (proposalId) => this.validatorProposal(networkId, proposalId, { includeHistory: false }),
+      (proposalId) =>
+        this.validatorProposal(networkId, proposalId, {
+          includeHistory: false,
+          includeVotes: options.includeVotes ?? true
+        }),
     );
     return proposals.filter((proposal): proposal is ProposalDetail => proposal !== null);
   }
@@ -415,20 +494,28 @@ export class GovernanceService {
   private async validatorProposal(
     networkId: string,
     proposalId: number,
-    options: { includeHistory?: boolean } = {},
+    options: { includeHistory?: boolean; includeVotes?: boolean } = {},
   ): Promise<ProposalDetail | null> {
     const includeHistory = options.includeHistory ?? true;
+    const includeVotes = options.includeVotes ?? true;
     const client = this.clientFor(networkId);
+    const network = this.networkById(networkId);
     const raw = await client
-      .abciValue<unknown>(`/masternodes_vote/${proposalId}`)
+      .call<unknown>(network.membershipContract, "get_vote", { proposal_id: proposalId })
+      .catch(() => client.abciValue<unknown>(`/masternodes_vote/${proposalId}`))
       .catch(() => null);
     if (!isRecord(raw)) {
       return null;
     }
     const type = String(raw.type ?? "unknown");
-    const votesRaw = await client
-      .abciValue<unknown[]>(`/masternodes_vote_records/${proposalId}`)
-      .catch(() => []);
+    const votesRaw = includeVotes
+      ? await client
+        .call<unknown[]>(network.membershipContract, "get_vote_records", {
+          proposal_id: proposalId
+        })
+        .catch(() => client.abciValue<unknown[]>(`/masternodes_vote_records/${proposalId}`))
+        .catch(() => [])
+      : [];
     const votes = Array.isArray(votesRaw)
       ? votesRaw.map((record) => normalizeVoteRecord(record, "validator", proposalId))
       : [];

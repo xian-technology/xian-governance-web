@@ -30,6 +30,7 @@ import {
   canExpire,
   canVote,
   ChainMismatchError,
+  resolveGovernanceContracts,
   resolveSigningChainId,
   submitExpire,
   submitVote,
@@ -139,7 +140,13 @@ export function App() {
         throw new Error("connect wallet first");
       }
       const chainId = resolveSigningChainId(wallet.chainId, overview.data?.chain.chainId);
-      return submitVote(wallet.wallet, chainId, proposal, support);
+      return submitVote(
+        wallet.wallet,
+        chainId,
+        resolveGovernanceContracts(overview.data?.network),
+        proposal,
+        support,
+      );
     },
     onSuccess: invalidateProposalData
   });
@@ -150,7 +157,13 @@ export function App() {
         throw new Error("connect wallet first");
       }
       const chainId = resolveSigningChainId(wallet.chainId, overview.data?.chain.chainId);
-      return submitExpire(wallet.wallet, chainId, proposal.layer, proposal.proposalId);
+      return submitExpire(
+        wallet.wallet,
+        chainId,
+        resolveGovernanceContracts(overview.data?.network),
+        proposal.layer,
+        proposal.proposalId,
+      );
     },
     onSuccess: invalidateProposalData
   });

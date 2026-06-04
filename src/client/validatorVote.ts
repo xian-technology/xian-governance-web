@@ -14,6 +14,8 @@ export interface FieldSpec {
   required?: boolean;
   hint?: string;
   options?: string[];
+  min?: number;
+  max?: number;
 }
 
 export type VoteArgShape = "account" | "int" | "fields" | "raw";
@@ -98,9 +100,17 @@ export const VOTE_TYPE_SPECS: VoteTypeSpec[] = [
     shape: "fields",
     fields: [
       { name: "member", label: "Validator account", kind: "account", required: true },
-      { name: "slash_bps", label: "Slash (bps)", kind: "bps", required: true, hint: "1–10000" },
+      {
+        name: "slash_bps",
+        label: "Slash (bps)",
+        kind: "bps",
+        required: true,
+        min: 1,
+        max: 10000,
+        hint: "1-10000"
+      },
       { name: "reason", label: "Reason", kind: "text" },
-      { name: "infraction_height", label: "Infraction height", kind: "int" }
+      { name: "infraction_height", label: "Infraction height", kind: "int", min: 0 }
     ]
   },
   {
@@ -111,7 +121,7 @@ export const VOTE_TYPE_SPECS: VoteTypeSpec[] = [
     shape: "fields",
     fields: [
       { name: "member", label: "Validator account", kind: "account", required: true },
-      { name: "power", label: "Power", kind: "int", required: true, hint: "> 0" }
+      { name: "power", label: "Power", kind: "int", required: true, min: 1, hint: "> 0" }
     ]
   },
   {
@@ -119,7 +129,13 @@ export const VOTE_TYPE_SPECS: VoteTypeSpec[] = [
     label: "Change registration fee",
     description: "Set the validator registration fee.",
     shape: "int",
-    scalar: { name: "fee", label: "Registration fee", kind: "int", required: true }
+    scalar: {
+      name: "fee",
+      label: "Registration fee",
+      kind: "int",
+      required: true,
+      min: 0
+    }
   },
   {
     value: "update_policy",
@@ -129,21 +145,27 @@ export const VOTE_TYPE_SPECS: VoteTypeSpec[] = [
     shape: "fields",
     fields: [
       { name: "selection_mode", label: "Selection mode", kind: "enum", options: SELECTION_MODES },
-      { name: "max_validators", label: "Max validators", kind: "int" },
+      { name: "max_validators", label: "Max validators", kind: "int", min: 1 },
       { name: "power_mode", label: "Power mode", kind: "enum", options: POWER_MODES },
-      { name: "rebalance_interval", label: "Rebalance interval", kind: "int" },
-      { name: "activation_delay_epochs", label: "Activation delay (epochs)", kind: "int" },
-      { name: "unbonding_period_days", label: "Unbonding period (days)", kind: "int" },
-      { name: "min_self_bond", label: "Min self bond", kind: "int" },
-      { name: "min_total_bond", label: "Min total bond", kind: "int" },
-      { name: "max_commission_bps", label: "Max commission (bps)", kind: "bps" },
-      { name: "max_active_set_churn", label: "Max active-set churn", kind: "int" },
-      { name: "min_bond_margin_bps", label: "Min bond margin (bps)", kind: "bps" },
+      { name: "rebalance_interval", label: "Rebalance interval", kind: "int", min: 1 },
+      { name: "activation_delay_epochs", label: "Activation delay (epochs)", kind: "int", min: 0 },
+      { name: "unbonding_period_days", label: "Unbonding period (days)", kind: "int", min: 0 },
+      { name: "min_self_bond", label: "Min self bond", kind: "int", min: 0 },
+      { name: "min_total_bond", label: "Min total bond", kind: "int", min: 0 },
+      { name: "max_commission_bps", label: "Max commission (bps)", kind: "bps", min: 0, max: 10000 },
+      { name: "max_active_set_churn", label: "Max active-set churn", kind: "int", min: 0 },
+      { name: "min_bond_margin_bps", label: "Min bond margin (bps)", kind: "bps", min: 0, max: 10000 },
       { name: "manual_override_enabled", label: "Manual override enabled", kind: "bool" },
       { name: "slash_destination", label: "Slash destination", kind: "text" },
-      { name: "duplicate_vote_slash_bps", label: "Duplicate-vote slash (bps)", kind: "bps" },
+      { name: "duplicate_vote_slash_bps", label: "Duplicate-vote slash (bps)", kind: "bps", min: 0, max: 10000 },
       { name: "duplicate_vote_jail", label: "Duplicate-vote jail", kind: "bool" },
-      { name: "light_client_attack_slash_bps", label: "Light-client-attack slash (bps)", kind: "bps" },
+      {
+        name: "light_client_attack_slash_bps",
+        label: "Light-client-attack slash (bps)",
+        kind: "bps",
+        min: 0,
+        max: 10000
+      },
       { name: "light_client_attack_jail", label: "Light-client-attack jail", kind: "bool" }
     ]
   },
@@ -229,13 +251,15 @@ function coerceField(field: FieldSpec, rawValue: string): unknown {
       if (!Number.isInteger(parsed)) {
         throw new Error(`${field.label} must be an integer`);
       }
+      validateRange(field, parsed);
       return parsed;
     }
     case "bps": {
       const parsed = Number(value);
-      if (!Number.isInteger(parsed) || parsed < 0 || parsed > 10000) {
-        throw new Error(`${field.label} must be an integer between 0 and 10000`);
+      if (!Number.isInteger(parsed)) {
+        throw new Error(`${field.label} must be an integer`);
       }
+      validateRange({ min: 0, max: 10000, ...field }, parsed);
       return parsed;
     }
     case "bool":
@@ -257,6 +281,29 @@ function coerceField(field: FieldSpec, rawValue: string): unknown {
     default:
       return value;
   }
+}
+
+function validateRange(field: FieldSpec, value: number): void {
+  const { min, max } = field;
+  if (min != null && value < min) {
+    throw new Error(`${field.label} must be ${rangeLabel(min, max)}`);
+  }
+  if (max != null && value > max) {
+    throw new Error(`${field.label} must be ${rangeLabel(min, max)}`);
+  }
+}
+
+function rangeLabel(min?: number, max?: number): string {
+  if (min != null && max != null) {
+    return `an integer between ${min} and ${max}`;
+  }
+  if (min != null) {
+    return `an integer >= ${min}`;
+  }
+  if (max != null) {
+    return `an integer <= ${max}`;
+  }
+  return "an integer";
 }
 
 function parseJson(value: string): unknown {

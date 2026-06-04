@@ -28,7 +28,28 @@ describe("validator vote arg builder", () => {
     const spec = getVoteTypeSpec("slash_member")!;
     expect(() =>
       buildValidatorArg(spec, { member: "node-1-account", slash_bps: "20000" }, ""),
-    ).toThrow(/between 0 and 10000/);
+    ).toThrow(/between 1 and 10000/);
+  });
+
+  it("rejects zero for slash_member basis points", () => {
+    const spec = getVoteTypeSpec("slash_member")!;
+    expect(() =>
+      buildValidatorArg(spec, { member: "node-1-account", slash_bps: "0" }, ""),
+    ).toThrow(/between 1 and 10000/);
+  });
+
+  it("rejects non-positive validator power", () => {
+    const spec = getVoteTypeSpec("set_member_power")!;
+    expect(() =>
+      buildValidatorArg(spec, { member: "node-1-account", power: "0" }, ""),
+    ).toThrow(/>= 1/);
+  });
+
+  it("rejects non-positive update_policy fields that must be positive", () => {
+    const spec = getVoteTypeSpec("update_policy")!;
+    expect(() => buildValidatorArg(spec, { max_validators: "0" }, "")).toThrow(
+      />= 1/,
+    );
   });
 
   it("only includes filled update_policy fields and coerces types", () => {

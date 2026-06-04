@@ -4,6 +4,7 @@ import { simulate } from "./api";
 import { CopyButton } from "./components";
 import {
   ChainMismatchError,
+  resolveGovernanceContracts,
   resolveSigningChainId,
   type useXianWallet
 } from "./wallet";
@@ -40,6 +41,7 @@ export function CreateProposal({
   onSubmitted: () => void;
 }) {
   const chainId = overview?.chain.chainId ?? wallet.chainId;
+  const contracts = resolveGovernanceContracts(overview?.network);
   const [template, setTemplate] = useState<Template>("contract_call");
 
   // contract_call
@@ -80,7 +82,7 @@ export function CreateProposal({
       if (!targetContract.trim()) throw new Error("Target contract is required");
       if (!targetFunction.trim()) throw new Error("Target function is required");
       return {
-        contract: "governance",
+        contract: contracts.governanceContract,
         function: "propose_contract_call",
         kwargs: {
           target_contract: targetContract.trim(),
@@ -104,7 +106,7 @@ export function CreateProposal({
         );
       }
       return {
-        contract: "governance",
+        contract: contracts.governanceContract,
         function: "propose_state_patch",
         kwargs: {
           patch_id: patchId.trim(),
@@ -119,7 +121,7 @@ export function CreateProposal({
     if (!voteSpec) throw new Error("Unknown vote type");
     const arg = buildValidatorArg(voteSpec, fieldValues, rawArgJson);
     return {
-      contract: "masternodes",
+      contract: contracts.membershipContract,
       function: "propose_vote",
       kwargs: { type_of_vote: voteSpec.value, arg }
     };
@@ -149,7 +151,9 @@ export function CreateProposal({
     voteType,
     fieldValues,
     rawArgJson,
-    minActivationHeight
+    minActivationHeight,
+    contracts.governanceContract,
+    contracts.membershipContract
   ]);
 
   async function runSimulation() {
@@ -225,21 +229,21 @@ export function CreateProposal({
         <TemplateCard
           active={template === "contract_call"}
           title="Protocol Contract Call"
-          contract="governance"
+          contract={contracts.governanceContract}
           fn="propose_contract_call"
           onClick={() => setTemplate("contract_call")}
         />
         <TemplateCard
           active={template === "state_patch"}
           title="Protocol State Patch"
-          contract="governance"
+          contract={contracts.governanceContract}
           fn="propose_state_patch"
           onClick={() => setTemplate("state_patch")}
         />
         <TemplateCard
           active={template === "validator_vote"}
           title="Validator Governance"
-          contract="masternodes"
+          contract={contracts.membershipContract}
           fn="propose_vote"
           onClick={() => setTemplate("validator_vote")}
         />
