@@ -33,26 +33,6 @@ export function ProgressBar({ value, max }: { value: number; max: number }) {
   );
 }
 
-export function EmptyOrLoading({
-  loading,
-  empty,
-  loadingText = "Loading…",
-  children
-}: {
-  loading: boolean;
-  empty: boolean;
-  loadingText?: string;
-  children: ReactNode;
-}) {
-  if (loading) {
-    return <div className="empty">{loadingText}</div>;
-  }
-  if (empty) {
-    return children as ReactNode;
-  }
-  return children as ReactNode;
-}
-
 export function ReferenceLinks({
   uri,
   summary
