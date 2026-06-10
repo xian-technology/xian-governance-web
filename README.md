@@ -235,7 +235,7 @@ votes or proposal creation.
 - reachable Xian RPC node
 - Xian browser wallet for voting and proposal creation
 
-## Related Repos
+## Related Docs
 
 - [`../xian-js/README.md`](../xian-js/README.md) — JS / TS SDK and injected provider consumed by this app
 - [`../xian-wallet-browser/README.md`](../xian-wallet-browser/README.md) — browser wallet used for governance signing
