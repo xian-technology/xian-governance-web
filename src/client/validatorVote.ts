@@ -172,9 +172,11 @@ export const VOTE_TYPE_SPECS: VoteTypeSpec[] = [
   {
     value: "reward_change",
     label: "Reward change",
-    description: "Update the rewards split configuration (raw payload).",
+    description:
+      "Update the rewards split configuration (raw payload): " +
+      "[validators, burn, foundation, developer], four ratios summing to 1.",
     shape: "raw",
-    rawPlaceholder: '{"validators": 0.5, "foundation": 0.5}'
+    rawPlaceholder: "[0.30, 0.01, 0.01, 0.68]"
   },
   {
     value: "dao_payout",
