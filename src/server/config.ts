@@ -28,7 +28,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
         rpcUrl,
         dashboardUrl,
         governanceContract: env.XIAN_GOVERNANCE_CONTRACT ?? "governance",
-        membershipContract: env.XIAN_MEMBERSHIP_CONTRACT ?? "masternodes"
+        membershipContract: env.XIAN_MEMBERSHIP_CONTRACT ?? "validators"
       }
     ]
   };

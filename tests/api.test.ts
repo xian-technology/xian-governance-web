@@ -9,7 +9,7 @@ const network = {
   name: "Local",
   rpcUrl: "http://127.0.0.1:26657",
   governanceContract: "governance",
-  membershipContract: "masternodes"
+  membershipContract: "validators"
 };
 
 function fakeService(): GovernanceService {
@@ -57,7 +57,7 @@ function fakeService(): GovernanceService {
           id: 1,
           layer: "validator",
           proposalId: 1,
-          contract: "masternodes",
+          contract: "validators",
           event: "ValidatorProposalVoted",
           title: "Vote cast #1",
           txHash: "abc123",

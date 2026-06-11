@@ -36,11 +36,11 @@ describe("wallet governance calls", () => {
   it("defaults missing contract names", () => {
     expect(resolveGovernanceContracts(null)).toEqual({
       governanceContract: "governance",
-      membershipContract: "masternodes"
+      membershipContract: "validators"
     });
     expect(resolveGovernanceContracts({ governanceContract: "gov" })).toEqual({
       governanceContract: "gov",
-      membershipContract: "masternodes"
+      membershipContract: "validators"
     });
   });
 

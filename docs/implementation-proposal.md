@@ -39,7 +39,7 @@ Supported proposal kinds:
 
 Important semantics:
 
-- membership comes from `masternodes`
+- membership comes from `validators`
 - current active validators can propose and vote
 - validator voting weights are snapshotted at proposal creation
 - proposer automatically casts the first `yes`
@@ -73,9 +73,9 @@ The contract also emits:
 - `ProposalExecuted`
 - `StatePatchScheduled`
 
-### 2. Validator Governance: `masternodes`
+### 2. Validator Governance: `validators`
 
-Canonical source: `xian-configs/contracts/members.s.py`
+Canonical source: `xian-configs/contracts/validators.s.py`
 
 Supported vote types:
 
@@ -114,7 +114,7 @@ Useful contract exports:
 
 Important gap:
 
-- `masternodes.votes:<proposal_id>` stores aggregate counts and a `voters`
+- `validators.votes:<proposal_id>` stores aggregate counts and a `voters`
   list, but not each voter's yes/no choice.
 - To show "what each validator voted" for validator-governance proposals, the
   site needs either transaction-history reconstruction from BDS or a small
@@ -197,7 +197,7 @@ Every proposal page should include:
   - contract and function for contract calls
   - JSON kwargs, formatted and validated
   - state-patch patch id, bundle hash, activation height, URI
-  - validator vote type and argument for `masternodes`
+  - validator vote type and argument for `validators`
 - risk and effect preview:
   - "Executes immediately on approval" for contract calls
   - "Schedules patch at block N" for state patches
@@ -299,7 +299,7 @@ For validator governance:
 await wallet.sendCall(
   {
     chainId,
-    contract: "masternodes",
+    contract: "validators",
     function: "propose_vote",
     kwargs: { type_of_vote, arg },
   },
@@ -329,8 +329,8 @@ Columns:
 - open proposals not voted
 - patch bundle readiness
 
-Use `masternodes.get_active_validators()`, `masternodes.get_pending_candidates()`,
-and `/masternodes_validator/<account>`.
+Use `validators.get_active_validators()`, `validators.get_pending_candidates()`,
+and `/validators_validator/<account>`.
 
 ### State Patches
 
@@ -402,7 +402,7 @@ Recommended node-linking levels:
    - no node health checks
 
 2. Wallet plus profile endpoint
-   - validator updates `masternodes.update_profile(network_endpoint=...)`
+   - validator updates `validators.update_profile(network_endpoint=...)`
    - app probes read-only endpoints
    - works for public RPC/dashboard nodes
 
@@ -468,11 +468,11 @@ Core RPC and ABCI:
 - `/status`
 - `/abci_query?path="/get/<state-key>"`
 - `/abci_query?path="/keys/<prefix>/limit=<n>/after=<cursor>"`
-- `/abci_query?path="/masternodes_policy"`
-- `/abci_query?path="/masternodes_active"`
-- `/abci_query?path="/masternodes_candidates"`
-- `/abci_query?path="/masternodes_validator/<account>"`
-- `/abci_query?path="/masternodes_open_votes/limit=<n>/offset=<n>"`
+- `/abci_query?path="/validators_policy"`
+- `/abci_query?path="/validators_active"`
+- `/abci_query?path="/validators_candidates"`
+- `/abci_query?path="/validators_validator/<account>"`
+- `/abci_query?path="/validators_open_votes/limit=<n>/offset=<n>"`
 - `/abci_query?path="/state_patch_bundles"`
 - `/abci_query?path="/scheduled_state_patches/<height>"`
 - `/abci_query?path="/simulate_tx/<encoded_payload>"`
@@ -495,10 +495,10 @@ Contract calls through `XianClient.call(...)`:
 - `governance.get_proposal`
 - `governance.get_patch`
 - `governance.get_members`
-- `masternodes.get_active_validators`
-- `masternodes.get_pending_candidates`
-- `masternodes.get_validator`
-- `masternodes.get_policy_config`
+- `validators.get_active_validators`
+- `validators.get_pending_candidates`
+- `validators.get_validator`
+- `validators.get_policy_config`
 
 ### Normalized Data Model
 
@@ -577,21 +577,21 @@ Protocol governance:
 
 Validator governance:
 
-1. Poll `masternodes.total_votes`.
-2. Read `masternodes.votes:<id>` for each proposal.
+1. Poll `validators.total_votes`.
+2. Read `validators.votes:<id>` for each proposal.
 3. For individual yes/no votes:
-   - preferred for new proposals: read `masternodes.vote_records:<id>:<voter>`
-     and `masternodes.vote_weights:<id>:<voter>`, or use
-     `/masternodes_vote_records/<id>`
+   - preferred for new proposals: read `validators.vote_records:<id>:<voter>`
+     and `validators.vote_weights:<id>:<voter>`, or use
+     `/validators_vote_records/<id>`
    - fallback for old proposals: reconstruct from BDS transaction payloads to
-     `masternodes.propose_vote` and `masternodes.vote`
+     `validators.propose_vote` and `validators.vote`
 4. Reconcile aggregate counts with contract state.
 
 Validator state:
 
-1. Poll `/masternodes_active` and `/masternodes_candidates`.
-2. Poll `/masternodes_policy`.
-3. Refresh individual `/masternodes_validator/<account>` records.
+1. Poll `/validators_active` and `/validators_candidates`.
+2. Poll `/validators_policy`.
+3. Refresh individual `/validators_validator/<account>` records.
 4. Probe validator endpoints on a slower cadence.
 
 ## Contract/API Improvements
@@ -612,7 +612,7 @@ Useful additions to `governance.s.py`:
 
 ### Validator Governance
 
-Added target additions to `members.s.py`:
+Added target additions to `validators.s.py`:
 
 - `vote_records = Hash(default_value=None)`
 - store `vote_records[proposal_id, voter] = "yes" | "no"`
@@ -634,8 +634,8 @@ Useful exports:
 
 Added useful query endpoints:
 
-- `/masternodes_vote/<id>`
-- `/masternodes_vote_records/<id>`
+- `/validators_vote/<id>`
+- `/validators_vote_records/<id>`
 
 Potential future protocol-governance query endpoints:
 
@@ -693,7 +693,7 @@ MVP should include:
   - validator `remove_member`
   - raw validator vote type
 - voter matrix for protocol governance from state/events
-- voter matrix for validator governance through `members.s.py` vote records
+- voter matrix for validator governance through `validators.s.py` vote records
 - validators list
 - state-patch list and detail
 - local patch bundle hash verifier
@@ -774,7 +774,7 @@ MVP can defer:
    team preference matter more than full-stack type sharing.
 
 3. BDS should not be required for core current-governance functionality. The
-   contract/API improvement adds future per-voter `masternodes` vote records.
+   contract/API improvement adds future per-voter `validators` vote records.
    BDS is still useful for historical backfills, transaction hashes, event
    timelines, and block-level audit detail.
 
@@ -805,7 +805,7 @@ connect the wallet/account that is in the active validator set. Node connection
 should be a separate read-only health/readiness feature tied to the validator's
 on-chain profile endpoint or optional signed attestations.
 
-Per-voter `masternodes` vote records and events are now part of the target chain
+Per-voter `validators` vote records and events are now part of the target chain
 interface for new proposals. For proposals created before that interface exists
 on a live network, the indexer can still use BDS transaction reconstruction as a
 historical best-effort fallback.

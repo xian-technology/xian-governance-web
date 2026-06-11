@@ -27,7 +27,7 @@ const network = {
   name: "Local",
   rpcUrl: "http://127.0.0.1:26657",
   governanceContract: "governance",
-  membershipContract: "masternodes"
+  membershipContract: "validators"
 };
 
 describe("XianReadClient", () => {
@@ -42,7 +42,7 @@ describe("XianReadClient", () => {
 
     const client = new XianReadClient(network);
 
-    await expect(client.call("masternodes", "get_policy_config")).resolves.toEqual({
+    await expect(client.call("validators", "get_policy_config")).resolves.toEqual({
       ok: true
     });
     expect(mocks.call).toHaveBeenCalledTimes(2);
@@ -53,7 +53,7 @@ describe("XianReadClient", () => {
 
     const client = new XianReadClient(network);
 
-    await expect(client.call("masternodes", "missing_view")).rejects.toThrow(
+    await expect(client.call("validators", "missing_view")).rejects.toThrow(
       "ABCI query failed",
     );
     expect(mocks.call).toHaveBeenCalledTimes(1);

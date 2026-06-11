@@ -154,7 +154,7 @@ export class GovernanceService {
           {},
         )
         .catch(() =>
-          client.abciValue<Record<string, unknown>>("/masternodes_policy").catch(() => null),
+          client.abciValue<Record<string, unknown>>("/validators_policy").catch(() => null),
         ),
       this.governanceParameters(networkId),
       client
@@ -235,11 +235,11 @@ export class GovernanceService {
     const [activeRaw, candidatesRaw] = await Promise.all([
       client
         .call<unknown[]>(network.membershipContract, "get_active_validators", {})
-        .catch(() => client.abciValue<unknown[]>("/masternodes_active").catch(() => [])),
+        .catch(() => client.abciValue<unknown[]>("/validators_active").catch(() => [])),
       client
         .call<unknown[]>(network.membershipContract, "get_pending_candidates", {})
         .catch(() =>
-          client.abciValue<unknown[]>("/masternodes_candidates").catch(() => []),
+          client.abciValue<unknown[]>("/validators_candidates").catch(() => []),
         )
     ]);
     return {
@@ -502,7 +502,7 @@ export class GovernanceService {
     const network = this.networkById(networkId);
     const raw = await client
       .call<unknown>(network.membershipContract, "get_vote", { proposal_id: proposalId })
-      .catch(() => client.abciValue<unknown>(`/masternodes_vote/${proposalId}`))
+      .catch(() => client.abciValue<unknown>(`/validators_vote/${proposalId}`))
       .catch(() => null);
     if (!isRecord(raw)) {
       return null;
@@ -513,7 +513,7 @@ export class GovernanceService {
         .call<unknown[]>(network.membershipContract, "get_vote_records", {
           proposal_id: proposalId
         })
-        .catch(() => client.abciValue<unknown[]>(`/masternodes_vote_records/${proposalId}`))
+        .catch(() => client.abciValue<unknown[]>(`/validators_vote_records/${proposalId}`))
         .catch(() => [])
       : [];
     const votes = Array.isArray(votesRaw)
@@ -525,7 +525,7 @@ export class GovernanceService {
       proposalId,
       kind: "validator_vote",
       type,
-      // `masternodes` proposals carry no on-chain summary; leave it empty so
+      // `validators` proposals carry no on-chain summary; leave it empty so
       // `titleFromPayload` derives a descriptive title from type + arg.
       summary: "",
       proposer: Array.isArray(raw.voters) ? asString(raw.voters[0]) : null,

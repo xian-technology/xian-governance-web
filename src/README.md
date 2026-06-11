@@ -9,7 +9,7 @@ sides use.
 ## Contents
 
 - `server/` — Express API: `app.ts` routing, `governanceService.ts`
-  normalization of `governance` / `masternodes` reads, `rpc.ts` node access
+  normalization of `governance` / `validators` reads, `rpc.ts` node access
   through `@xian-tech/client`, `config.ts` environment loading, `main.ts`
   entrypoint.
 - `client/` — React console: `App.tsx` views, `CreateProposal.tsx` typed

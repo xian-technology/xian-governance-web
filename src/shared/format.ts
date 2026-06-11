@@ -67,8 +67,8 @@ function isValidatorVoteType(type: string): boolean {
 }
 
 /**
- * Build a human-scannable title for a `masternodes` vote from its type and
- * raw `arg`. `masternodes` proposals carry no on-chain summary, so without
+ * Build a human-scannable title for a `validators` vote from its type and
+ * raw `arg`. `validators` proposals carry no on-chain summary, so without
  * this every `slash_member` / `update_policy` row would look identical.
  */
 function validatorVoteTitle(type: string, arg: unknown): string {

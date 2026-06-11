@@ -1,4 +1,4 @@
-// Typed schema + argument builder for `masternodes.propose_vote`.
+// Typed schema + argument builder for `validators.propose_vote`.
 //
 // Each validator-governance vote type expects a differently-shaped `arg`.
 // Encoding that shape here lets the create wizard render typed inputs and
@@ -174,7 +174,7 @@ export const VOTE_TYPE_SPECS: VoteTypeSpec[] = [
     label: "Reward change",
     description: "Update the rewards split configuration (raw payload).",
     shape: "raw",
-    rawPlaceholder: '{"masternodes": 0.5, "foundation": 0.5}'
+    rawPlaceholder: '{"validators": 0.5, "foundation": 0.5}'
   },
   {
     value: "dao_payout",

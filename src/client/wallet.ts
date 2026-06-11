@@ -18,7 +18,7 @@ export type GovernanceContracts = Pick<
 
 const DEFAULT_GOVERNANCE_CONTRACTS: GovernanceContracts = {
   governanceContract: "governance",
-  membershipContract: "masternodes"
+  membershipContract: "validators"
 };
 
 export function resolveGovernanceContracts(
