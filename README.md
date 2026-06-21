@@ -144,6 +144,8 @@ multi-network environment parsing is not implemented yet.
   - `statePatchHash.ts` — canonical state-patch bundle parsing and hashing.
 - `tests/` — Vitest coverage for API behavior, React rendering, wallet-facing
   UI flows, and state-patch hash compatibility.
+- `docs/ARCHITECTURE.md` — component boundaries and dependency direction.
+- `docs/BACKLOG.md` — repo-local follow-ups.
 - `docs/implementation-proposal.md` — product and technical proposal that
   describes the broader governance-console target state.
 - `vite.config.ts`, `tsconfig.json`, `tsconfig.server.json` — Vite, Vitest,
@@ -242,3 +244,5 @@ votes or proposal creation.
 - [`../xian-stack/README.md`](../xian-stack/README.md) — local Xian stack for development and validation
 - [`../xian-configs/README.md`](../xian-configs/README.md) — governance and `validators` contract configuration
 - [`../xian-docs-web/README.md`](../xian-docs-web/README.md) — public Xian documentation site
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — governance web component boundaries and runtime flow
+- [docs/BACKLOG.md](docs/BACKLOG.md) — repo-local follow-ups
