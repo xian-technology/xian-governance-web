@@ -7,7 +7,8 @@ client helpers, wallet integration, and the canonical state-patch hash.
 
 ## Contents
 
-- `api.test.ts`, `rpc.test.ts` — server API and node-read behavior.
+- `api.test.ts`, `rpc.test.ts`, `config.test.ts` — server API,
+  environment configuration, and node-read behavior.
 - `App.test.tsx` — client rendering and view behavior.
 - `wallet.test.ts`, `validatorVote.test.ts` — injected-wallet flows and vote
   submission payloads.

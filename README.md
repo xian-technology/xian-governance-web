@@ -107,11 +107,13 @@ cp .env.example .env
 | Variable | Purpose | Default |
 | --- | --- | --- |
 | `PORT` | HTTP port for the Express server. | `4173` |
+| `XIAN_GOVERNANCE_HOST` | HTTP bind host for the Express server. Overrides `HOST` when both are set. Use an unbracketed IPv6 literal such as `::1` for IPv6 binds. | `127.0.0.1` |
+| `HOST` | Generic HTTP bind-host fallback when `XIAN_GOVERNANCE_HOST` is unset. | unset |
 | `XIAN_NETWORK_ID` | Stable network id used by API routes and React Query keys. | `local` |
 | `XIAN_NETWORK_NAME` | Human-readable network name shown in the selector. | `Local Xian` |
 | `XIAN_CHAIN_ID` | Optional chain id override used when the node status cannot provide one. | unset |
-| `XIAN_RPC_URL` | Xian node RPC URL used for reads, ABCI queries, simulation, and wallet calls. | `http://127.0.0.1:26657` |
-| `XIAN_DASHBOARD_URL` | Optional link target for an existing node dashboard. | `http://127.0.0.1:8080` |
+| `XIAN_RPC_URL` | Xian node RPC URL used for reads, ABCI queries, simulation, and wallet calls. Bracket IPv6 literals, for example `http://[::1]:26657`. | `http://127.0.0.1:26657` |
+| `XIAN_DASHBOARD_URL` | Optional link target for an existing node dashboard. Bracket IPv6 literals, for example `http://[::1]:8080`. | `http://127.0.0.1:8080` |
 | `XIAN_GOVERNANCE_CONTRACT` | Protocol-governance contract name. | `governance` |
 | `XIAN_MEMBERSHIP_CONTRACT` | Validator-governance / membership contract name. | `validators` |
 | `CORS_ORIGINS` | Comma-separated cross-origin allowlist for the API. Empty means same-origin only; `*` allows any origin. | unset (same-origin) |
@@ -215,12 +217,14 @@ votes or proposal creation.
 
 ## Deployment Notes
 
-- The process binds to `127.0.0.1`, so production deployments normally place a
-  reverse proxy in front of it.
+- The process binds to `XIAN_GOVERNANCE_HOST` or `HOST`, defaulting to
+  `127.0.0.1`, so production deployments normally place a reverse proxy in
+  front of it. For IPv6 loopback binds, set `XIAN_GOVERNANCE_HOST=::1`.
 - Set `NODE_ENV=production` before `npm run start` so the server serves
   `dist/client` instead of mounting Vite middleware.
 - Configure `XIAN_RPC_URL` to a node reachable from the server and configure
-  the browser wallet to the same network before signing.
+  the browser wallet to the same network before signing. Use bracketed IPv6
+  literals in configured URLs, such as `http://[::1]:26657`.
 - Keep TLS, CSP, authentication / network access policy, and validator
   allowlisting at the reverse-proxy or hosting layer. This app does not add an
   operator login boundary by itself.
