@@ -38,6 +38,19 @@ export interface VoteTypeSpec {
 const SELECTION_MODES = ["manual", "auto_top_n", "hybrid"];
 const POWER_MODES = ["equal", "requested", "stake_weighted"];
 
+export const RECOVERY_VOTE_TYPES = [
+  "add_member",
+  "remove_member",
+  "jail_member",
+  "unjail_member",
+  "slash_member",
+  "set_member_power",
+  "change_registration_fee",
+  "chi_cost_change",
+  "change_types",
+  "update_policy"
+] as const;
+
 export const VOTE_TYPE_SPECS: VoteTypeSpec[] = [
   {
     value: "topic_vote",
@@ -134,7 +147,7 @@ export const VOTE_TYPE_SPECS: VoteTypeSpec[] = [
       label: "Registration fee",
       kind: "int",
       required: true,
-      min: 0
+      min: 1
     }
   },
   {
@@ -184,7 +197,7 @@ export const VOTE_TYPE_SPECS: VoteTypeSpec[] = [
     description: "Transfer funds out of the DAO (raw payload).",
     dangerous: true,
     shape: "raw",
-    rawPlaceholder: '{"amount": 1000, "to": "<account>"}'
+    rawPlaceholder: '{"contract_name": "currency", "amount": 1000, "to": "<account>"}'
   },
   {
     value: "chi_cost_change",
@@ -196,10 +209,12 @@ export const VOTE_TYPE_SPECS: VoteTypeSpec[] = [
   {
     value: "change_types",
     label: "Change vote types",
-    description: "Replace the list of allowed validator vote types (raw payload).",
+    description:
+      "Replace configurable vote types. Membership, safety, power, fee, chi-cost, vote-surface, and policy recovery types are immutable.",
     dangerous: true,
     shape: "raw",
-    rawPlaceholder: '["add_member", "remove_member", "topic_vote"]'
+    rawPlaceholder:
+      '["add_member","remove_member","jail_member","unjail_member","slash_member","set_member_power","change_registration_fee","chi_cost_change","change_types","update_policy","topic_vote"]'
   }
 ];
 
@@ -217,7 +232,9 @@ export function buildValidatorArg(
   rawJson: string,
 ): unknown {
   if (spec.shape === "raw") {
-    return parseJson(rawJson);
+    const arg = parseJson(rawJson);
+    validateRawArgument(spec.value, arg);
+    return arg;
   }
   if (spec.shape === "account") {
     return coerceField(spec.scalar!, values[spec.scalar!.name] ?? "");
@@ -313,5 +330,72 @@ function parseJson(value: string): unknown {
     return JSON.parse(value);
   } catch {
     throw new Error("Argument JSON is not valid JSON");
+  }
+}
+
+function validateRawArgument(type: string, arg: unknown): void {
+  if (type === "reward_change") {
+    if (!Array.isArray(arg) || arg.length !== 4) {
+      throw new Error("Reward split must contain exactly four values");
+    }
+    if (arg.some((value) => typeof value !== "number" || !Number.isFinite(value) || value <= 0)) {
+      throw new Error("Reward split values must be positive numbers");
+    }
+    const total = arg.reduce<number>((sum, value) => sum + Number(value), 0);
+    if (Math.abs(total - 1) > 1e-12) {
+      throw new Error("Reward split values must sum to 1");
+    }
+    return;
+  }
+
+  if (type === "dao_payout") {
+    if (!isPlainRecord(arg)) {
+      throw new Error("DAO payout must be an object");
+    }
+    const allowedKeys = new Set(["contract_name", "amount", "to"]);
+    if (Object.keys(arg).some((key) => !allowedKeys.has(key))) {
+      throw new Error("DAO payout contains an unexpected field");
+    }
+    requireNonEmptyString(arg.contract_name, "Contract name");
+    requireNonEmptyString(arg.to, "DAO recipient");
+    if (typeof arg.amount !== "number" || !Number.isFinite(arg.amount) || arg.amount <= 0) {
+      throw new Error("DAO amount must be a positive number");
+    }
+    return;
+  }
+
+  if (type === "chi_cost_change") {
+    if (typeof arg !== "number" || !Number.isFinite(arg) || arg <= 0) {
+      throw new Error("Chi cost must be a positive number");
+    }
+    return;
+  }
+
+  if (type === "change_types") {
+    if (!Array.isArray(arg) || arg.length === 0) {
+      throw new Error("Vote types must be a non-empty list");
+    }
+    const values = arg.map((value) => {
+      requireNonEmptyString(value, "Vote type");
+      return value as string;
+    });
+    if (new Set(values).size !== values.length) {
+      throw new Error("Vote types must not contain duplicates");
+    }
+    for (const recoveryType of RECOVERY_VOTE_TYPES) {
+      if (!values.includes(recoveryType)) {
+        throw new Error(`Vote types must retain recovery type ${recoveryType}`);
+      }
+    }
+  }
+}
+
+function isPlainRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function requireNonEmptyString(value: unknown, label: string): void {
+  if (typeof value !== "string" || value.length === 0) {
+    throw new Error(`${label} must be a non-empty string`);
   }
 }

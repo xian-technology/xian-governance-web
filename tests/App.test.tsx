@@ -3,6 +3,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { App } from "../src/client/App";
+import { RECOVERY_VOTE_TYPES } from "../src/client/validatorVote";
 
 function renderApp() {
   const queryClient = new QueryClient({
@@ -138,7 +139,58 @@ describe("App", () => {
           });
         }
         if (url === "/api/networks/local/validators") {
-          return json({ active: [], candidates: [] });
+          return json({
+            active: [
+              {
+                account: "node-active",
+                moniker: "active-validator",
+                status: "active",
+                active: true,
+                power: 10,
+                totalBond: 1500,
+                pendingUnbondCount: 0
+              }
+            ],
+            candidates: [
+              {
+                account: "node-candidate",
+                moniker: "candidate-validator",
+                status: "approved",
+                active: false,
+                power: 0,
+                totalBond: 1200,
+                selectionEligibleAtLastRebalance: true,
+                lastRebalanceEpoch: 12,
+                eligibleAtEpoch: 12
+              }
+            ],
+            inactive: [
+              {
+                account: "node-retired",
+                moniker: "retired-validator",
+                status: "withdrawn",
+                active: false,
+                power: 0,
+                totalBond: 0,
+                totalSlashed: 25,
+                pendingUnbondCount: 2,
+                pendingUnbondTotal: 500,
+                nextUnbondUnlockAt: "2026-01-09T00:00:00Z",
+                lastEvidenceId: "evidence-77",
+                lastEvidenceType: "DUPLICATE_VOTE",
+                lastEvidenceHeight: 77
+              }
+            ]
+          });
+        }
+        if (url === "/api/networks/local/policy") {
+          return json({
+            membership: { selection_mode: "manual" },
+            governance: {},
+            registrationFee: 1000,
+            voteTypes: [...RECOVERY_VOTE_TYPES, "topic_vote"],
+            recoveryVoteTypes: RECOVERY_VOTE_TYPES
+          });
         }
         if (url === "/api/networks/local/state-patches") {
           return json({ patches: [] });
@@ -167,6 +219,30 @@ describe("App", () => {
       "https://github.com/xian-network/governance/discussions/1",
     );
     expect(screen.getByText("Timeline")).toBeInTheDocument();
+  });
+
+  it("shows actionable validator lifecycle, evidence, and unbond state", async () => {
+    renderApp();
+
+    fireEvent.click(screen.getByRole("button", { name: "Validators" }));
+    expect(await screen.findByText("Exited / Removed")).toBeInTheDocument();
+    expect(await screen.findByText("retired-validator")).toBeInTheDocument();
+    expect(screen.getByText("rebalance eligible")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText("retired-validator"));
+    expect(await screen.findByText("Operator next step:")).toBeInTheDocument();
+    expect(screen.getByText("Pending Unbond Total")).toBeInTheDocument();
+    expect(screen.getByText(/DUPLICATE_VOTE \/ evidence-77/)).toBeInTheDocument();
+    expect(screen.getByText("Evidence height")).toBeInTheDocument();
+  });
+
+  it("identifies immutable recovery vote types in network settings", async () => {
+    renderApp();
+
+    fireEvent.click(screen.getByRole("button", { name: "Settings" }));
+    expect(await screen.findByText(/10 recovery vote types are immutable/i)).toBeInTheDocument();
+    expect(screen.getByText("change_types · immutable recovery")).toBeInTheDocument();
+    expect(screen.getByText("topic_vote")).toBeInTheDocument();
   });
 });
 

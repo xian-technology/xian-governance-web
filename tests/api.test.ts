@@ -106,7 +106,8 @@ function fakeService(): GovernanceService {
     ],
     validators: async () => ({
       active: [{ account: "node1", active: true, power: 10 }],
-      candidates: []
+      candidates: [],
+      inactive: [{ account: "node-old", active: false, power: 0, status: "left" }]
     }),
     statePatches: async () => ({ patches: [] }),
     simulate: async () => ({ result: "ok" })
@@ -143,6 +144,7 @@ describe("api app", () => {
       .expect(200)
       .expect(({ body }) => {
         expect(body.active[0].account).toBe("node1");
+        expect(body.inactive[0].status).toBe("left");
       });
   });
 });
