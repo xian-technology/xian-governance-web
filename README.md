@@ -90,8 +90,8 @@ Express serves the built client bundle.
 | Dashboard | Shows chain height, chain id, active validator count, total voting weight, pending / expiring proposals, scheduled patches, and a "needs your vote" queue derived from the connected account's eligibility. |
 | Proposals | Lists protocol and validator-governance proposals in one filterable view (layer, status, type, needs-my-vote, emergency, expiring-soon, free-text search) with status, type, generated title, vote totals, weights, and thresholds. |
 | Proposal detail | Shows proposal metadata, threshold progress, an effect/risk preview, per-account eligibility, a voter matrix that distinguishes "not voted" from "ineligible", off-chain references (explicit URI plus links detected in summaries), raw payload JSON, and wallet-backed yes / no / expire actions. Signing is blocked on a wallet/network chain-id mismatch. |
-| Proposal creation | Typed wizard for protocol contract-call, protocol state-patch, and all validator-governance vote types, with local validation, state-patch activation-height checks, an exact-call preview, and a `/simulate` preflight before signing through the injected wallet. |
-| Validators | Displays active validators and pending candidates from the `validators` read surface, with a detail panel covering power, bonds, commission, reward key, endpoint, and jail state. |
+| Proposal creation | Typed wizard for protocol contract-call, protocol state-patch, and all validator-governance vote types, with local validation, immutable recovery-vote enforcement, state-patch activation-height checks, an exact-call preview, and a `/simulate` preflight before signing through the injected wallet. |
+| Validators | Displays active, candidate, and exited/removed validators from the complete registry, with operational attention counts and detail covering lifecycle timestamps, selection eligibility, power, bonds/delegation, pending unbonds, commission/rewards, jail/unjail, slash totals, and last evidence. |
 | State patches | Lists scheduled patches returned by `governance.get_patch` with a detail panel, and verifies pasted bundle JSON against the canonical bundle hash — including a direct match check against a selected patch's on-chain `bundle_hash`. |
 | Network settings | Shows governance parameters, validator-set policy (`validators.get_policy_config`), registration fee, and allowed vote types. |
 | Simulation | Exposes a backend `/simulate` endpoint for read-only preflight calls through the configured Xian node. |
@@ -163,11 +163,11 @@ The React app talks to the local Express API:
 | `GET /api/networks` | Configured network list. |
 | `GET /api/networks/:networkId/overview` | Chain status, validator count, voting weight, pending proposals, expiring proposals, scheduled patch count, and governance parameters. |
 | `GET /api/networks/:networkId/proposals` | Unified protocol and validator-governance proposal list. Accepts `?account=` to attach per-viewer eligibility (`viewer`). |
-| `GET /api/networks/:networkId/policy` | Validator-set policy (`validators.get_policy_config`), governance parameters, registration fee, and allowed vote types. |
+| `GET /api/networks/:networkId/policy` | Validator-set policy (`validators.get_policy_config`), governance parameters, registration fee, allowed vote types, and the contract-declared immutable recovery subset. |
 | `GET /api/networks/:networkId/history` | Recent normalized governance events (BDS when available). |
 | `GET /api/networks/:networkId/proposals/:layer/:proposalId` | Proposal detail for `protocol` or `validator` governance. Accepts `?account=` for viewer eligibility. |
 | `GET /api/networks/:networkId/proposals/:layer/:proposalId/votes` | Voter records for one proposal. |
-| `GET /api/networks/:networkId/validators` | Active validators and pending candidates. |
+| `GET /api/networks/:networkId/validators` | Active validators, pending/approved candidates, and inactive terminal records with normalized lifecycle, staking, slashing, evidence, and unbond state. |
 | `GET /api/networks/:networkId/state-patches` | State patches associated with protocol-governance proposals. |
 | `POST /api/networks/:networkId/simulate` | Read-only transaction simulation through the configured node. |
 
@@ -183,8 +183,9 @@ The service currently uses a direct-RPC strategy:
 - validator proposals from `validators.total_votes` and
   `/validators_vote/<id>`
 - validator vote records from `/validators_vote_records/<id>`
-- active validators and candidates from `/validators_active` and
-  `/validators_candidates`
+- complete validator registry from `validators.get_validators()`, with
+  active/candidate fallbacks from `/validators_active` and
+  `/validators_candidates` for older nodes
 - state-patch metadata from `governance.get_patch`
 
 This keeps the app useful against a plain node. Historical event timelines,

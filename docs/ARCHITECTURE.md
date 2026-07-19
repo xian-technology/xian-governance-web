@@ -13,8 +13,8 @@ actions through the injected Xian browser wallet provider.
 - `src/server/config.ts`: environment-driven network configuration.
 - `src/server/rpc.ts`: `@xian-tech/client` wrapper and ABCI query helpers.
 - `src/server/governanceService.ts`: normalized governance read model for
-  proposals, validators, votes, state patches, policy, history, and
-  simulation.
+  proposals, complete validator lifecycle/stake/slash state, votes, state
+  patches, policy, history, and simulation.
 - `src/client/App.tsx`: React operations console, proposal workflows,
   validator views, state-patch verification, and wallet-backed actions.
 - `src/client/wallet.ts`: injected wallet discovery and request submission.

@@ -33,6 +33,14 @@ export interface ValidatorRecord {
   active: boolean;
   jailed?: boolean;
   jailReason?: string | null;
+  lastJailedAt?: string | null;
+  lastUnjailedAt?: string | null;
+  totalSlashed?: number | string | null;
+  lastSlashedAt?: string | null;
+  lastEvidenceId?: string | null;
+  lastEvidenceType?: string | null;
+  lastEvidenceHeight?: number | null;
+  lastEvidenceAt?: string | null;
   power: number;
   requestedPower?: number | null;
   rewardKey?: string | null;
@@ -44,6 +52,17 @@ export interface ValidatorRecord {
   totalBond?: number | string | null;
   commissionBps?: number | null;
   delegatorCount?: number | null;
+  pendingUnbondCount?: number | null;
+  pendingUnbondTotal?: number | string | null;
+  nextUnbondUnlockAt?: string | null;
+  pendingRegistration?: boolean;
+  pendingLeaveAt?: string | null;
+  lastRebalanceEpoch?: number | null;
+  eligibleAtEpoch?: number | null;
+  selectionEligibleAtLastRebalance?: boolean;
+  registeredAt?: string | null;
+  joinedAt?: string | null;
+  leftAt?: string | null;
 }
 
 export interface VoteRecord {
@@ -167,6 +186,7 @@ export interface NetworkPolicy {
   governance: GovernanceParameters;
   registrationFee: number | string | null;
   voteTypes: string[];
+  recoveryVoteTypes: string[];
 }
 
 export interface GovernanceOverview {
@@ -187,6 +207,7 @@ export interface ProposalListResponse {
 export interface ValidatorListResponse {
   active: ValidatorRecord[];
   candidates: ValidatorRecord[];
+  inactive: ValidatorRecord[];
 }
 
 export interface StatePatchListResponse {

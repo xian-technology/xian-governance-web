@@ -146,31 +146,36 @@ export class GovernanceService {
   async policy(networkId: string): Promise<NetworkPolicy> {
     const client = this.clientFor(networkId);
     const network = this.networkById(networkId);
-    const [membership, governance, registrationFee, voteTypes] = await Promise.all([
-      client
-        .call<Record<string, unknown>>(
-          network.membershipContract,
-          "get_policy_config",
-          {},
-        )
-        .catch(() =>
-          client.abciValue<Record<string, unknown>>("/validators_policy").catch(() => null),
-        ),
-      this.governanceParameters(networkId),
-      client
-        .getState<number | string | null>(network.membershipContract, "registration_fee")
-        .catch(() => null),
-      client
-        .getState<string[] | null>(network.membershipContract, "types")
-        .catch(() => null)
-    ]);
+    const [membership, governance, registrationFee, voteTypes, recoveryVoteTypes] =
+      await Promise.all([
+        client
+          .call<Record<string, unknown>>(
+            network.membershipContract,
+            "get_policy_config",
+            {},
+          )
+          .catch(() =>
+            client.abciValue<Record<string, unknown>>("/validators_policy").catch(() => null),
+          ),
+        this.governanceParameters(networkId),
+        client
+          .getState<number | string | null>(network.membershipContract, "registration_fee")
+          .catch(() => null),
+        client
+          .getState<string[] | null>(network.membershipContract, "types")
+          .catch(() => null),
+        client
+          .call<unknown[]>(network.membershipContract, "get_recovery_vote_types", {})
+          .catch(() => [])
+      ]);
     return {
       membership: isRecord(membership) ? membership : null,
       governance,
       registrationFee: typeof registrationFee === "number" || typeof registrationFee === "string"
         ? registrationFee
         : null,
-      voteTypes: Array.isArray(voteTypes) ? voteTypes.filter((t): t is string => typeof t === "string") : []
+      voteTypes: stringValues(voteTypes),
+      recoveryVoteTypes: stringValues(recoveryVoteTypes)
     };
   }
 
@@ -232,7 +237,7 @@ export class GovernanceService {
   async validators(networkId: string): Promise<ValidatorListResponse> {
     const client = this.clientFor(networkId);
     const network = this.networkById(networkId);
-    const [activeRaw, candidatesRaw] = await Promise.all([
+    const [activeRaw, candidatesRaw, allRaw] = await Promise.all([
       client
         .call<unknown[]>(network.membershipContract, "get_active_validators", {})
         .catch(() => client.abciValue<unknown[]>("/validators_active").catch(() => [])),
@@ -240,15 +245,27 @@ export class GovernanceService {
         .call<unknown[]>(network.membershipContract, "get_pending_candidates", {})
         .catch(() =>
           client.abciValue<unknown[]>("/validators_candidates").catch(() => []),
-        )
+        ),
+      client
+        .call<unknown[]>(network.membershipContract, "get_validators", {})
+        .catch(() => [])
     ]);
+    const active = Array.isArray(activeRaw)
+      ? activeRaw.map((record) => normalizeValidator(record, true))
+      : [];
+    const candidates = Array.isArray(candidatesRaw)
+      ? candidatesRaw.map((record) => normalizeValidator(record, false))
+      : [];
+    const complete = Array.isArray(allRaw) && allRaw.length > 0
+      ? allRaw.map((record) => normalizeValidator(record, false))
+      : mergeValidators(active, candidates);
+    const visibleAccounts = new Set(
+      [...active, ...candidates].map((validator) => validator.account),
+    );
     return {
-      active: Array.isArray(activeRaw)
-        ? activeRaw.map((record) => normalizeValidator(record, true))
-        : [],
-      candidates: Array.isArray(candidatesRaw)
-        ? candidatesRaw.map((record) => normalizeValidator(record, false))
-        : []
+      active,
+      candidates,
+      inactive: complete.filter((validator) => !visibleAccounts.has(validator.account))
     };
   }
 
@@ -889,7 +906,10 @@ function normalizeProposal(input: {
   };
 }
 
-function normalizeValidator(value: unknown, defaultActive: boolean): ValidatorRecord {
+export function normalizeValidator(
+  value: unknown,
+  defaultActive: boolean,
+): ValidatorRecord {
   const record = isRecord(value) ? value : {};
   return {
     account: String(record.account ?? "unknown"),
@@ -898,6 +918,14 @@ function normalizeValidator(value: unknown, defaultActive: boolean): ValidatorRe
     active: typeof record.active === "boolean" ? record.active : defaultActive,
     jailed: record.jailed === true,
     jailReason: asString(record.jail_reason),
+    lastJailedAt: normalizeDate(record.last_jailed_at),
+    lastUnjailedAt: normalizeDate(record.last_unjailed_at),
+    totalSlashed: asString(record.total_slashed) ?? maybeNumber(record.total_slashed),
+    lastSlashedAt: normalizeDate(record.last_slashed_at),
+    lastEvidenceId: asString(record.last_evidence_id),
+    lastEvidenceType: asString(record.last_evidence_type),
+    lastEvidenceHeight: maybeNumber(record.last_evidence_height),
+    lastEvidenceAt: normalizeDate(record.last_evidence_at),
     power: asNumber(record.power),
     requestedPower: maybeNumber(record.requested_power),
     rewardKey: asString(record.reward_key),
@@ -908,8 +936,31 @@ function normalizeValidator(value: unknown, defaultActive: boolean): ValidatorRe
     totalDelegated: asString(record.total_delegated) ?? maybeNumber(record.total_delegated),
     totalBond: asString(record.total_bond) ?? maybeNumber(record.total_bond),
     commissionBps: maybeNumber(record.commission_bps),
-    delegatorCount: maybeNumber(record.delegator_count)
+    delegatorCount: maybeNumber(record.delegator_count),
+    pendingUnbondCount: maybeNumber(record.pending_unbond_count),
+    pendingUnbondTotal:
+      asString(record.pending_unbond_total) ?? maybeNumber(record.pending_unbond_total),
+    nextUnbondUnlockAt: normalizeDate(record.next_unbond_unlock_at),
+    pendingRegistration: record.pending_registration === true,
+    pendingLeaveAt: normalizeDate(record.pending_leave_at),
+    lastRebalanceEpoch: maybeNumber(record.last_rebalance_epoch),
+    eligibleAtEpoch: maybeNumber(record.eligible_at_epoch),
+    selectionEligibleAtLastRebalance:
+      record.selection_eligible_at_last_rebalance === true,
+    registeredAt: normalizeDate(record.registered_at),
+    joinedAt: normalizeDate(record.joined_at),
+    leftAt: normalizeDate(record.left_at)
   };
+}
+
+function mergeValidators(...groups: ValidatorRecord[][]): ValidatorRecord[] {
+  const validators = new Map<string, ValidatorRecord>();
+  for (const group of groups) {
+    for (const validator of group) {
+      validators.set(validator.account, validator);
+    }
+  }
+  return [...validators.values()];
 }
 
 function normalizeVoteRecord(
@@ -1063,6 +1114,19 @@ function normalizeDate(value: unknown): string | null {
 function maybeNumber(value: unknown): number | null {
   const parsed = asNumber(value, Number.NaN);
   return Number.isFinite(parsed) ? parsed : null;
+}
+
+function stringValues(value: unknown): string[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+  const values: string[] = [];
+  for (const item of value) {
+    if (typeof item === "string") {
+      values.push(item);
+    }
+  }
+  return values;
 }
 
 function pad(value: unknown): string {

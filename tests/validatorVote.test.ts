@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildValidatorArg,
   getVoteTypeSpec,
+  RECOVERY_VOTE_TYPES,
   VOTE_TYPE_SPECS
 } from "../src/client/validatorVote";
 
@@ -45,6 +46,11 @@ describe("validator vote arg builder", () => {
     ).toThrow(/>= 1/);
   });
 
+  it("rejects a zero registration fee that would make register unusable", () => {
+    const spec = getVoteTypeSpec("change_registration_fee")!;
+    expect(() => buildValidatorArg(spec, { fee: "0" }, "")).toThrow(/>= 1/);
+  });
+
   it("rejects non-positive update_policy fields that must be positive", () => {
     const spec = getVoteTypeSpec("update_policy")!;
     expect(() => buildValidatorArg(spec, { max_validators: "0" }, "")).toThrow(
@@ -68,10 +74,51 @@ describe("validator vote arg builder", () => {
 
   it("parses raw JSON for raw-shaped votes", () => {
     const spec = getVoteTypeSpec("change_types")!;
-    expect(buildValidatorArg(spec, {}, '["add_member","topic_vote"]')).toEqual([
-      "add_member",
-      "topic_vote"
-    ]);
+    const requested = [...RECOVERY_VOTE_TYPES, "topic_vote"];
+    expect(buildValidatorArg(spec, {}, JSON.stringify(requested))).toEqual(requested);
+  });
+
+  it("validates raw vote payloads before simulation or signing", () => {
+    const rewards = getVoteTypeSpec("reward_change")!;
+    expect(() => buildValidatorArg(rewards, {}, "[0.5,0.5,0,0]")).toThrow(
+      /positive numbers/,
+    );
+
+    const dao = getVoteTypeSpec("dao_payout")!;
+    expect(() =>
+      buildValidatorArg(dao, {}, '{"amount":1000,"to":"recipient"}'),
+    ).toThrow(/contract name/i);
+    expect(
+      buildValidatorArg(
+        dao,
+        {},
+        '{"contract_name":"currency","amount":1000,"to":"recipient"}',
+      ),
+    ).toEqual({ contract_name: "currency", amount: 1000, to: "recipient" });
+
+    const chi = getVoteTypeSpec("chi_cost_change")!;
+    expect(() => buildValidatorArg(chi, {}, "0")).toThrow(/positive number/);
+
+    const types = getVoteTypeSpec("change_types")!;
+    expect(() => buildValidatorArg(types, {}, '["topic_vote","topic_vote"]')).toThrow(
+      /duplicates/,
+    );
+  });
+
+  it("requires every immutable recovery vote type", () => {
+    const spec = getVoteTypeSpec("change_types")!;
+    for (const recoveryType of RECOVERY_VOTE_TYPES) {
+      const remaining = RECOVERY_VOTE_TYPES.filter((type) => type !== recoveryType);
+      expect(() => buildValidatorArg(spec, {}, JSON.stringify(remaining))).toThrow(
+        new RegExp(recoveryType),
+      );
+    }
+  });
+
+  it("allows configurable non-recovery vote types to change", () => {
+    const spec = getVoteTypeSpec("change_types")!;
+    const requested = [...RECOVERY_VOTE_TYPES, "topic_vote"];
+    expect(buildValidatorArg(spec, {}, JSON.stringify(requested))).toEqual(requested);
   });
 
   it("covers every chain-supported vote type", () => {

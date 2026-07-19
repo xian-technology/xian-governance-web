@@ -69,7 +69,7 @@ type View = "dashboard" | "proposals" | "validators" | "patches" | "create" | "s
 const VIEW_META: Record<View, { title: string; subtitle: string }> = {
   dashboard: { title: "Dashboard", subtitle: "Network health and proposals at a glance" },
   proposals: { title: "Proposals", subtitle: "Review, vote, and inspect governance proposals" },
-  validators: { title: "Validators", subtitle: "Active validators and pending candidates" },
+  validators: { title: "Validators", subtitle: "Lifecycle, stake, slashing, and selection state" },
   patches: { title: "State Patches", subtitle: "Scheduled patches and bundle hash verification" },
   create: { title: "Create Proposal", subtitle: "Author a new on-chain governance proposal" },
   settings: { title: "Network Settings", subtitle: "Governance and validator-set policy" }
@@ -307,6 +307,7 @@ export function App() {
           <ValidatorsView
             active={validators.data?.active ?? []}
             candidates={validators.data?.candidates ?? []}
+            inactive={validators.data?.inactive ?? []}
             loading={validators.isLoading}
           />
         ) : null}
@@ -962,16 +963,42 @@ function HistoryEventRow({
 function ValidatorsView({
   active,
   candidates,
+  inactive,
   loading
 }: {
   active: ValidatorRecord[];
   candidates: ValidatorRecord[];
+  inactive: ValidatorRecord[];
   loading: boolean;
 }) {
   const [selected, setSelected] = useState<ValidatorRecord | null>(null);
+  const validators = [...active, ...candidates, ...inactive];
+  const jailedCount = validators.filter((validator) => validator.jailed).length;
+  const leavingCount = validators.filter(
+    (validator) => validator.status === "leaving" || validator.pendingLeaveAt,
+  ).length;
+  const pendingUnbondCount = validators.reduce(
+    (total, validator) => total + (validator.pendingUnbondCount ?? 0),
+    0,
+  );
+  const slashHistoryCount = validators.filter(
+    (validator) => Number(validator.totalSlashed ?? 0) > 0 || validator.lastEvidenceId,
+  ).length;
   return (
     <section className="view-stack">
       {selected ? <ValidatorDetail validator={selected} onClose={() => setSelected(null)} /> : null}
+      <section className="panel">
+        <div className="panel-title">
+          <h2>Operational Attention</h2>
+          <span>current on-chain state</span>
+        </div>
+        <div className="detail-grid">
+          <Metric label="Jailed" value={jailedCount} hint="requires governance review" />
+          <Metric label="Leaving" value={leavingCount} hint="leave delay in progress" />
+          <Metric label="Pending Unbonds" value={pendingUnbondCount} hint="claim after unlock" />
+          <Metric label="Slash / Evidence" value={slashHistoryCount} hint="records needing review" />
+        </div>
+      </section>
       <section className="panel">
         <div className="panel-title">
           <h2>Active Validators</h2>
@@ -985,6 +1012,13 @@ function ValidatorsView({
           <span>{candidates.length}</span>
         </div>
         <ValidatorTable validators={candidates} loading={loading} onSelect={setSelected} />
+      </section>
+      <section className="panel">
+        <div className="panel-title">
+          <h2>Exited / Removed</h2>
+          <span>{inactive.length}</span>
+        </div>
+        <ValidatorTable validators={inactive} loading={loading} onSelect={setSelected} />
       </section>
     </section>
   );
@@ -1009,9 +1043,9 @@ function ValidatorTable({
     <div className="table">
       <div className="table-head validator-grid">
         <span>Validator</span>
-        <span>Status</span>
-        <span>Power</span>
-        <span>Endpoint</span>
+        <span>Lifecycle</span>
+        <span>Total Bond</span>
+        <span>Attention</span>
       </div>
       {validators.map((validator) => (
         <button
@@ -1025,8 +1059,8 @@ function ValidatorTable({
             <small>{shortAddress(validator.account, 10)}</small>
           </span>
           <span>{validator.jailed ? "jailed" : validator.status ?? "unknown"}</span>
-          <span>{validator.power}</span>
-          <span>{validator.networkEndpoint ?? "not set"}</span>
+          <span>{String(validator.totalBond ?? "—")}</span>
+          <span>{validatorAttention(validator)}</span>
         </button>
       ))}
     </div>
@@ -1051,23 +1085,109 @@ function ValidatorDetail({
       <div className="detail-grid">
         <Metric label="Status" value={validator.jailed ? "jailed" : validator.status ?? "unknown"} />
         <Metric label="Active" value={validator.active ? "yes" : "no"} />
+        <Metric
+          label="Eligible At Last Rebalance"
+          value={validator.selectionEligibleAtLastRebalance ? "yes" : "no"}
+        />
+        <Metric label="Last Rebalance Epoch" value={validator.lastRebalanceEpoch ?? "—"} />
+        <Metric label="Eligible Epoch" value={validator.eligibleAtEpoch ?? "—"} />
         <Metric label="Power" value={validator.power} />
         <Metric label="Requested Power" value={validator.requestedPower ?? "—"} />
+        <Metric label="Registration Bond" value={String(validator.registrationBond ?? "—")} />
         <Metric label="Self Bond" value={String(validator.selfBond ?? "—")} />
         <Metric label="Total Delegated" value={String(validator.totalDelegated ?? "—")} />
         <Metric label="Total Bond" value={String(validator.totalBond ?? "—")} />
         <Metric label="Commission (bps)" value={validator.commissionBps ?? "—"} />
         <Metric label="Delegators" value={validator.delegatorCount ?? "—"} />
+        <Metric label="Pending Unbonds" value={validator.pendingUnbondCount ?? 0} />
+        <Metric label="Pending Unbond Total" value={String(validator.pendingUnbondTotal ?? 0)} />
+        <Metric label="Total Slashed" value={String(validator.totalSlashed ?? 0)} />
         <Metric label="Reward Key" value={shortAddress(validator.rewardKey, 8)} />
+      </div>
+      <div className={`notice ${validator.jailed ? "error" : validator.pendingLeaveAt ? "warning" : ""}`}>
+        <strong>Operator next step:</strong> {validatorNextStep(validator)}
       </div>
       <div className="kv-list">
         <KeyValue label="Account" value={validator.account} copy />
         <KeyValue label="Endpoint" value={validator.networkEndpoint ?? "not set"} copy={Boolean(validator.networkEndpoint)} />
         <KeyValue label="Metadata URI" value={validator.metadataUri ?? "not set"} />
         {validator.jailed ? <KeyValue label="Jail reason" value={validator.jailReason ?? "—"} /> : null}
+        <KeyValue label="Registered" value={formatDateTime(validator.registeredAt) ?? "—"} />
+        <KeyValue label="Joined" value={formatDateTime(validator.joinedAt) ?? "—"} />
+        <KeyValue label="Pending leave" value={formatDateTime(validator.pendingLeaveAt) ?? "—"} />
+        <KeyValue label="Left" value={formatDateTime(validator.leftAt) ?? "—"} />
+        <KeyValue label="Next unbond unlock" value={formatDateTime(validator.nextUnbondUnlockAt) ?? "—"} />
+        <KeyValue label="Last jailed" value={formatDateTime(validator.lastJailedAt) ?? "—"} />
+        <KeyValue label="Last unjailed" value={formatDateTime(validator.lastUnjailedAt) ?? "—"} />
+        <KeyValue label="Last slash" value={formatDateTime(validator.lastSlashedAt) ?? "—"} />
+        <KeyValue
+          label="Last evidence"
+          value={validator.lastEvidenceId
+            ? `${validator.lastEvidenceType ?? "unknown"} / ${validator.lastEvidenceId}`
+            : "—"}
+          copy={Boolean(validator.lastEvidenceId)}
+        />
+        <KeyValue label="Evidence height" value={String(validator.lastEvidenceHeight ?? "—")} />
+        <KeyValue label="Evidence observed" value={formatDateTime(validator.lastEvidenceAt) ?? "—"} />
       </div>
     </section>
   );
+}
+
+function validatorAttention(validator: ValidatorRecord): string {
+  if (validator.jailed) {
+    return "unjail review";
+  }
+  if (validator.pendingLeaveAt || validator.status === "leaving") {
+    return "exit timer";
+  }
+  if ((validator.pendingUnbondCount ?? 0) > 0) {
+    return `${validator.pendingUnbondCount} unbond${validator.pendingUnbondCount === 1 ? "" : "s"}`;
+  }
+  if (Number(validator.totalSlashed ?? 0) > 0 || validator.lastEvidenceId) {
+    return "slash history";
+  }
+  if (validator.pendingRegistration || validator.status === "pending") {
+    return "await admission";
+  }
+  if (!validator.active && validator.status === "approved") {
+    return validator.selectionEligibleAtLastRebalance
+      ? "rebalance eligible"
+      : "eligibility wait";
+  }
+  if (["left", "removed", "withdrawn"].includes(validator.status ?? "")) {
+    return "exited";
+  }
+  return "none";
+}
+
+function validatorNextStep(validator: ValidatorRecord): string {
+  if (validator.jailed) {
+    return "Review the jail reason and evidence, then use an approved unjail_member proposal before expecting selection."
+  }
+  if (validator.pendingLeaveAt || validator.status === "leaving") {
+    const leaveAt = formatDateTime(validator.pendingLeaveAt) ?? "the on-chain leave time";
+    return `Call leave() only after ${leaveAt}, then track every pending unbond through its unlock and claim.`;
+  }
+  if ((validator.pendingUnbondCount ?? 0) > 0) {
+    const unlockAt = formatDateTime(validator.nextUnbondUnlockAt) ?? "its recorded unlock time";
+    return `Track ${validator.pendingUnbondCount} pending unbond record(s) and claim them after ${unlockAt}.`;
+  }
+  if (validator.pendingRegistration || validator.status === "pending") {
+    return "Confirm profile, bond gates, and selection mode; then obtain governance approval or wait for the eligible rebalance epoch."
+  }
+  if (!validator.active && validator.status === "approved") {
+    return validator.selectionEligibleAtLastRebalance
+      ? "The candidate met the recorded selection gates at the last rebalance; verify the next rebalance and active-set churn limit."
+      : `Wait until eligible epoch ${validator.eligibleAtEpoch ?? "—"} and verify bond and jail gates.`;
+  }
+  if (Number(validator.totalSlashed ?? 0) > 0 || validator.lastEvidenceId) {
+    return "Reconcile the evidence identifier, slash destination, affected stake, and incident record before closing the event."
+  }
+  if (["left", "removed", "withdrawn"].includes(validator.status ?? "")) {
+    return "Confirm the registration-bond refund and that every validator/delegator unbond is tracked to claim."
+  }
+  return "No validator-lifecycle action is indicated by the current on-chain record.";
 }
 
 function KeyValue({ label, value, copy }: { label: string; value: string; copy?: boolean }) {
@@ -1269,9 +1389,17 @@ function SettingsView({
           {policy.voteTypes.map((type) => (
             <span key={type} className="tag">
               {type}
+              {policy.recoveryVoteTypes.includes(type) ? " · immutable recovery" : ""}
             </span>
           ))}
         </div>
+        {policy.recoveryVoteTypes.length > 0 ? (
+          <div className="notice">
+            <strong>{policy.recoveryVoteTypes.length} recovery vote types are immutable.</strong>{" "}
+            A change_types proposal may configure the remaining types but cannot remove
+            membership, safety, power, fee, chi-cost, vote-surface, or policy recovery.
+          </div>
+        ) : null}
       </section>
     </section>
   );

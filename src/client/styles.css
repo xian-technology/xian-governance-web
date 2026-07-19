@@ -686,7 +686,7 @@ button.table-row:hover > svg { color: var(--brand); transform: translateX(2px); 
 }
 
 .validator-grid {
-  grid-template-columns: minmax(0, 1.4fr) 110px 80px minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.4fr) 110px 110px minmax(0, 1fr);
 }
 
 .validator-grid strong {
