@@ -187,9 +187,9 @@ export const VOTE_TYPE_SPECS: VoteTypeSpec[] = [
     label: "Reward change",
     description:
       "Update the rewards split configuration (raw payload): " +
-      "[validators, burn, foundation, developer], four ratios summing to 1.",
+      "[validators, burn, foundation, developer], four non-negative ratios summing to 1.",
     shape: "raw",
-    rawPlaceholder: "[0.30, 0.01, 0.01, 0.68]"
+    rawPlaceholder: "[0.70, 0, 0, 0.30]"
   },
   {
     value: "dao_payout",
@@ -338,8 +338,8 @@ function validateRawArgument(type: string, arg: unknown): void {
     if (!Array.isArray(arg) || arg.length !== 4) {
       throw new Error("Reward split must contain exactly four values");
     }
-    if (arg.some((value) => typeof value !== "number" || !Number.isFinite(value) || value <= 0)) {
-      throw new Error("Reward split values must be positive numbers");
+    if (arg.some((value) => typeof value !== "number" || !Number.isFinite(value) || value < 0)) {
+      throw new Error("Reward split values must be non-negative numbers");
     }
     const total = arg.reduce<number>((sum, value) => sum + Number(value), 0);
     if (Math.abs(total - 1) > 1e-12) {

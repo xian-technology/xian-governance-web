@@ -80,8 +80,14 @@ describe("validator vote arg builder", () => {
 
   it("validates raw vote payloads before simulation or signing", () => {
     const rewards = getVoteTypeSpec("reward_change")!;
-    expect(() => buildValidatorArg(rewards, {}, "[0.5,0.5,0,0]")).toThrow(
-      /positive numbers/,
+    expect(buildValidatorArg(rewards, {}, "[0.70,0,0,0.30]")).toEqual([
+      0.70,
+      0,
+      0,
+      0.30
+    ]);
+    expect(() => buildValidatorArg(rewards, {}, "[0.5,0.6,-0.1,0]")).toThrow(
+      /non-negative numbers/,
     );
 
     const dao = getVoteTypeSpec("dao_payout")!;
