@@ -27,7 +27,7 @@ export function canonicalStatePatchPayload(bundle: StatePatchBundle): Record<str
       key: change.key,
       value: change.value
     }))
-    .sort((left, right) => left.key.localeCompare(right.key));
+    .sort((left, right) => compareCodePoints(left.key, right.key));
 
   // `chain_id` must be emitted as an explicit `null` when absent so the
   // serialized payload matches the chain-side canonical form
@@ -48,7 +48,7 @@ export function canonicalStatePatchPayload(bundle: StatePatchBundle): Record<str
 
 export function computeStatePatchBundleHash(bundle: StatePatchBundle): string {
   const canonical = canonicalStatePatchPayload(bundle);
-  const serialized = JSON.stringify(sortKeysDeep(canonical));
+  const serialized = canonicalJson(canonical);
   return bytesToHex(sha256(new TextEncoder().encode(serialized)));
 }
 
@@ -74,7 +74,7 @@ export function parseStatePatchBundle(value: unknown): StatePatchBundle {
     }
     return {
       key: change.key,
-      value: change.value,
+      value: change.value ?? null,
       comment: typeof change.comment === "string" ? change.comment : undefined
     };
   });
@@ -93,16 +93,29 @@ export function parseStatePatchBundle(value: unknown): StatePatchBundle {
   };
 }
 
-function sortKeysDeep(value: unknown): unknown {
+function compareCodePoints(left: string, right: string): number {
+  const a = Array.from(left, (character) => character.codePointAt(0)!);
+  const b = Array.from(right, (character) => character.codePointAt(0)!);
+  for (let index = 0; index < Math.min(a.length, b.length); index++) {
+    if (a[index] !== b[index]) return a[index]! - b[index]!;
+  }
+  return a.length - b.length;
+}
+
+function canonicalJson(value: unknown): string {
   if (Array.isArray(value)) {
-    return value.map((item) => sortKeysDeep(item));
+    return `[${value.map(canonicalJson).join(",")}]`;
   }
   if (isRecord(value)) {
-    return Object.fromEntries(
-      Object.keys(value)
-        .sort()
-        .map((key) => [key, sortKeysDeep(value[key])]),
+    // Emit pairs directly: JS object enumeration reorders integer-index keys.
+    const pairs = Object.keys(value).sort(compareCodePoints).map(
+      (key) => `${canonicalJson(key)}:${canonicalJson(value[key])}`,
     );
+    return `{${pairs.join(",")}}`;
   }
-  return value;
+  // Python's node-side json.dumps uses ensure_ascii=True, including surrogate
+  // pairs for non-BMP characters. Replace UTF-16 units, not Unicode code points.
+  return JSON.stringify(value).replace(/[\u007f-\uffff]/g, (character) =>
+    `\\u${character.charCodeAt(0).toString(16).padStart(4, "0")}`,
+  );
 }

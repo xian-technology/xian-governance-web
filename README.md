@@ -81,7 +81,10 @@ Express serves the built client bundle.
   come from the sibling JS / TS SDK packages rather than repo-local copies.
 - **State-patch hashes are deterministic.** The browser verifier uses the same
   canonical JSON ordering and SHA-256 bundle hash format expected by the
-  chain-side state-patch workflow.
+  chain-side state-patch workflow for supported JSON values. It uses Unicode
+  code-point ordering and ASCII escaping, including nested numeric-looking keys.
+  Verify original bundles containing large integers or floating-point JSON
+  values with node-side tooling; JavaScript parsing loses numeric information.
 
 ## Capabilities
 

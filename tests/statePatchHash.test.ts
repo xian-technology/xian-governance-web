@@ -85,3 +85,37 @@ describe("state patch bundle hashing", () => {
     );
   });
 });
+
+it.each([
+  [[{ key: "con_x.A", value: 1 }, { key: "con_x.a", value: 2 }], "3ada35bf935299853b9215421fbb70e90c532b8dd2f51a8d99de7df249c48a2d"],
+  [[{ key: "con_x.x", value: "é" }], "6bd58fd560689a04155bb3c59bd483aaf6b70a12ca16f7a69ecc006fbbf5e69f"],
+  [[{ key: "con_x.x", value: { "2": 2, "10": 10 } }], "77d9f9601896b0075bac6fc0a6e69aca06e2558d522a5b3d18df151df730b9f3"],
+])("matches the node canonical hash for edge-case change values: %j", (changes, expected) => {
+  // Digests from xian.utils.state_patches._hash_from_bundle_payload.
+  const bundle = parseStatePatchBundle({version: 1, patch_id: "audit-patch", activation_height: 12, changes});
+  expect(computeStatePatchBundleHash(bundle)).toBe(expected);
+});
+
+it("treats an omitted change value as null, matching the node loader", () => {
+  const bundle = {version: 1, patch_id: "audit-null", activation_height: 12};
+  const missing = parseStatePatchBundle({...bundle, changes: [{key: "con_x.value"}]});
+  const explicit = parseStatePatchBundle({...bundle, changes: [{key: "con_x.value", value: null}]});
+  expect(computeStatePatchBundleHash(missing)).toBe(computeStatePatchBundleHash(explicit));
+});
+
+it("matches the node for prefix keys, non-BMP ordering and escaped strings", () => {
+  const bundle = parseStatePatchBundle({
+    version: 1,
+    patch_id: "audit-unicode",
+    activation_height: 12,
+    changes: [
+      {key: "con_x.\u{10000}", value: ["é", "\u007f", "😀"]},
+      {key: "con_x.\ue000", value: null},
+      {key: "con_x.ab", value: true},
+      {key: "con_x.a", value: false},
+    ],
+  });
+  expect(computeStatePatchBundleHash(bundle)).toBe(
+    "e9624585837c09200170f46daae31a58e063f256d43f5ff86de253efc27389cc",
+  );
+});
