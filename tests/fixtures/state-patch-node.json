@@ -1,0 +1,2058 @@
+[
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 9007199254740993}]}",
+    "hash": "d3f9b2943dce9e6c0336de648d293dc776ff390b7a6fd33f5f480ccd0aad596a"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 10000000000000000000000000000000000000000}]}",
+    "hash": "ef9b583f3c2de5d7d1c8dc9a02aae1c8971c4f453a3f5fa485cb6ad032d33dad"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.0}]}",
+    "hash": "4c6be4f23f4ff9dd90675a7b4a8e41710268ad8cfa5965addf05f9834e3da2ed"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -0.0}]}",
+    "hash": "ed39d78ed8805e9b1020f12d3c9db98c2a3da7cf795746730f499cd7672d0aae"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1e-07}]}",
+    "hash": "89bbd5d29bb68312a0ea51337065b37d4b5a6b43dcd70dd6861a505a875b553c"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1e-05}]}",
+    "hash": "6178fc4d27fa980fda441d62a20b730c59a1a5d6add32e71c4015490b2ecf1ab"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 0.0001}]}",
+    "hash": "3ba4b9a94d8d696df7cbbd2505cef446bfdfc1c2364d19f7e6bbd55e0c67a8d0"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1e+16}]}",
+    "hash": "2c70fb6f3305aa0153a1294452d9a111a477439daa3c423b598648c8086baf15"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1e+20}]}",
+    "hash": "f1a1d9964f5f4664bf53ff9ee4654bd43ab18be0babe6cc7794ff4ab2678549d"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1e+21}]}",
+    "hash": "00dfde1d7f9448dfa607d19caec1e1bec8d82426ec496121c7d10e9544dbbde0"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.2345678901234567}]}",
+    "hash": "f60c172fd2652971341c447e4d4af86e5795e7c87eed0c3969b20486b59753fe"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 5e-324}]}",
+    "hash": "70b9684890b6a4532ef18d041a2d2c315a14c6b59acfbeced1dfd0e1da449ad2"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.7976931348623157e+308}]}",
+    "hash": "f00a1df8e7f0a603a3f18ae9f2d4d1161932d37ba7de153a44b1b6f3263a7865"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -8.464298283667324e+88}]}",
+    "hash": "ec1737b0068016d34e67b16d6783612970f6f975f78651a8c49554a229ca9cd4"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.669948003055423e+288}]}",
+    "hash": "1b08bdf298689fda81a155758974cfa65895a4b6ee272d18551354cf3922abd6"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.8802289770338898e-170}]}",
+    "hash": "a6f306249f40657e0ad8d6a3c297f1abefc28286481e20b153b3c0c5f67daf05"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -5.5236035542445766e-114}]}",
+    "hash": "d93c28b79f49598ad419769b9ed327f0eb7a601f00ac3be6a0d686c396baad60"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.987777411584648e-285}]}",
+    "hash": "931bd8a66e750ab63922b3c830857aa0e65f2f9cfdf4799343bae9618846a9aa"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.6179224970542942e-164}]}",
+    "hash": "765930f92fcd733c8551de4b54080ec64d6458d785196bc91391d85a6a5d71fc"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 9.104263095038878e+164}]}",
+    "hash": "da06aba3132c405d821e4e904b0eca4170a561e33e3fc0bf91e2a58111654a8b"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.627501011274244e+247}]}",
+    "hash": "8d180339b637ce6b75ed6c027ea57ca18491243ad3ecb071640571fb80dbe825"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.5301049663916954e+250}]}",
+    "hash": "b042646f1738dc7a1c85f6572144ab3aaf4451e7663e1301791a74544ffceefc"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.3572808403160476e+265}]}",
+    "hash": "deb4851d361b598558b69a7b9f86dfb3bef6374ccc07e3d697d6e3dd1211c6ed"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.4997736463784184e-64}]}",
+    "hash": "cc476fa814467ddbc001da428375774201c2d8096a83e9bf0d8b573253cfdbfa"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.103742263017668e-50}]}",
+    "hash": "1d82a9fa1adcdbe85a91decf6cdcbe60dd56c70b7b9094096e1b6a53e192300b"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -7.524275585885567e+71}]}",
+    "hash": "85d048ec5f4252f0f92e0da71978c038587c91b2303726fde54b139d0ccbbf5e"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -7.296002422837041e+58}]}",
+    "hash": "6fcef6834c1b17b598831346043d69d5077d5f54837e0ca656b4baac2e7159da"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.5933846115625576e-05}]}",
+    "hash": "4976422624b11ea57558be8650cadaf6dce96e177fe2ced1a38e01896c5a0238"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -7.330643632144808e-127}]}",
+    "hash": "14aa92e5977a2daf30e9492fbd1a0d358cf2a518cf0563956a07d5bec6e34581"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.9758219002370357e-37}]}",
+    "hash": "2d93ce2c6577d7007e622ac3d71af594361c512154acacd9330e1d112e378b80"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -9.62767268953056e-150}]}",
+    "hash": "bed3e2ee58a86adcbdc3ac8fe6ace219abeb9bf721851e127979f0a59f5baa02"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.877655192012426e+39}]}",
+    "hash": "d47088b015a885f8444229925848032cf6d6ecb6279ccb625d0f5fa0bbe0a423"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 25295321.318443526}]}",
+    "hash": "c18a8d56fac4122bf8a248e19351fa334c388375cce162b75a4365af9eefc5a5"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -8.33731206305361e-62}]}",
+    "hash": "e1432ad2718b8b330589ec6d260dd8b29be5812d292aab253a3f12ac52cf7ecb"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -8.812281742146023e+95}]}",
+    "hash": "4b624a95e8d0aab4730e1bd8591bfe61a2eb69df14f0e65f7a1062de78454f01"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.5472065500180548e-55}]}",
+    "hash": "89794fa1a26315b135c2c80eed1202dd899a4591c9317b0f4ad300853722967d"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -8.340499586407307e+128}]}",
+    "hash": "d53c619f029cde124c6c903cd613a62bd4643315106efe95fdc9196ce89a778d"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.9340158268021242e+186}]}",
+    "hash": "255384db3d389f577d2433d67beecff23566e11f33696bc14cd34a5040e80a9e"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -0.0012498986636457412}]}",
+    "hash": "df7bd0a49da49aeb347b929b433ec7a0c034094163058fc7306cc3a89cfed58e"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -5.726342876404216e-177}]}",
+    "hash": "8ca4940bf3b73e48adf71041bafe79bc197c6d925edf805bc498ad1bdb5ed1aa"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.0928644660957966e-35}]}",
+    "hash": "0cca84335d03badaf6127a0925bc0ac95791625d671c210eb22727d3ca1c9a3f"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.9102295399779044e-304}]}",
+    "hash": "76733c7b0d1f89061da547f239e46be934dfeb7509e7a7e900994bafbb0ae39b"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.8105016373161205e-199}]}",
+    "hash": "2861b947c508857438113fc2e07a1d51f33ed4861cfad4b7118436ff4d1ec4ce"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.4002193361275523e+292}]}",
+    "hash": "d37c1d3e4de8f78af43d8aa79330f39f39406759d8ca2706304fccdb04fff20b"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.3202719083292952e-61}]}",
+    "hash": "2c8f22544974ddd01cf5973ec92b41572b0c089d9a08d8d0bf4024c26e4b8f55"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.4801201654084738e+286}]}",
+    "hash": "b536c396ed95df9e6179e2e634d94342cfba75aa8994b669cc5fde705afd8603"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 8.074053625452509e-63}]}",
+    "hash": "417fd367cd4be61cf3acb8da036cc920c400cd5e51b566f579edc2474de367c7"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.9685805664922973e+78}]}",
+    "hash": "14f3d6449ca7bf33893bc2953a3c4a3f4b3e5931e5311a78a9c0bbd1c00da40b"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.698340161085812e+171}]}",
+    "hash": "741e011ca36252e7898d9cb52225ced856e41a72524e4dc1edc5ade4d7cc196d"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 8.918692557034014e+174}]}",
+    "hash": "00b555400ca99c845400a40dbaedbeeab067c8209a934a4ee8394213e2cc2273"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 6.162362050066451e-51}]}",
+    "hash": "b591075bc7d944c22a1af8545b095c3ca2cd51eb79266d519ffb71800a7d7e30"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.7708843288811854e-83}]}",
+    "hash": "372331c7cd95a6be088a59d6b70c8ba0ee4b2d2f5cd4164dc9adc502ba316dc1"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -9.076243858477271e+139}]}",
+    "hash": "6466bd422c820f209621b88736fcf1d66ea2bfcd4e1929583a0ce94d798e5228"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -5.813544086735171e-263}]}",
+    "hash": "7650870ef5e3e92d40a9bc173d422c144c7786a7369d6fd52d951d514971efc7"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.198312201540615e+237}]}",
+    "hash": "acc3057decf1e52db0185a01022ce2535091ea1b0be86c59f79713de50b10e4c"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 4.143426193890452e+36}]}",
+    "hash": "5b6198a1b732b41ebf8d59e98bff1c322f803df396541859263b6a888d020181"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 5.563875209541936e+46}]}",
+    "hash": "c03e6bc02dbb95594920248f1b61cc961a67b817ca8a6f2b431a17fc38c86947"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.496556658386568e-28}]}",
+    "hash": "42e279fdbb034ba26a1746458c3150850039c4dd7213d8ce14f2354aec6b281d"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -9.534886182651982e+216}]}",
+    "hash": "c604daf23881e608b86fee911df495a90c937883342bceedea352570250c61ed"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -7.468914777967392e+168}]}",
+    "hash": "aa1396033eb8506848f6e2b079aac13376b312dd2d51069c33a6c1012800d4de"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.922797177940488e-96}]}",
+    "hash": "7fd1deb04d6a40fd27202cd32a0f933314875283f31530e8d6e7550c99743af2"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.875274178919969e+303}]}",
+    "hash": "e7d58a1eeeaef48c60b6379dc05fa095db9f92c282b1f15286c12926c9773593"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.4200434058910554e+62}]}",
+    "hash": "e9690af2b24edb996f0fffde9c5df2314c0ffbb1010238577557a47b44d4dcef"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -7.2534319901569415e-22}]}",
+    "hash": "8a1ff338a2d6a1e74c4289bc6fe84f8f95c4e7ff2c5b3bb08ad393b940a9aeee"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -4.985998839318312e+145}]}",
+    "hash": "1a5a344e1fbac56109cc6b041eecb226338e21332ac675139df62fce47ea2159"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.0826744188762338e+197}]}",
+    "hash": "f284236221ab1f342f41af754eb0104505cf62b163dae3125d4ae764b250a84a"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 8.498233692618487e-83}]}",
+    "hash": "78e0a2d722653c50feb61a9dc19b233594f08735833f90af18af25c88ff7ab4f"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.915019756821219e+193}]}",
+    "hash": "81512b1ee0c697995fd4da757478548e3de66db72ba83ea286c33932a57cadf5"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.1466072401153147e+139}]}",
+    "hash": "733e89e2d54320463c9269b05841042a7c78d769175f9395da321c459f2e5aa9"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.645524965456033e+263}]}",
+    "hash": "513d160dff4bf0ef7d856c93b73c4dd76057357b8444ff891cbf3c8662f32bbb"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -7.232046988113312e+31}]}",
+    "hash": "24a8c95f1b4912703b4c845a246fc56e79748a86c5f9eb52ec3fea9d56903ef6"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.8721125531334824e+83}]}",
+    "hash": "ffc05fe176279d01d4f75bc9f7704ed6d7fe0f8f1aa28f55180f68070c14da4f"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.23225000839325e-223}]}",
+    "hash": "846c09a9fd1ce65f8ff942b457d74ba5fbd97673c55bc0eaa563d1fe044ea2fa"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.8297678066907054e+38}]}",
+    "hash": "63aa00c5271643cbb43cad15ccf2a270b5a8bed8628be0d9a8e3e0256c4b237c"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -7.405608894746663e-187}]}",
+    "hash": "f405ff4b92a0564e3cfb725de538356eeb4b6e5c239f765220bdc980c66f05ba"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -4.135310723538008e-165}]}",
+    "hash": "e3b8e3520e866e90d6745186fbeee3be3f20fb54e93dd8129fee8768c120c4c8"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -9.415744116151969e-97}]}",
+    "hash": "e078cc1fdb1b7a06fb3dbf5385730136e7b9dd31975c37a47c23483d111ae530"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 5.696489005561127e-147}]}",
+    "hash": "23e6e5946572ae88c21e7c7bf58348367b4b596412694580c47e613ea5d36553"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.6456113129112217e+245}]}",
+    "hash": "4ed12619155a8fd5f3d8a4ba0459f468253ecdaeffde9bdfa9ecd713cb6c7e6a"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.9082159131880605e-113}]}",
+    "hash": "47bce0a85ed658071685a377c05b4e3dc1bf58fb45bfea845ff690b6e7f8837c"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -9.416540074021804e+275}]}",
+    "hash": "b634e22edf89785b979eec2316ef5e6906c4afbfc8f0eb572f47b524a06d630b"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -6.742947231947966e+118}]}",
+    "hash": "157e2f83ad449341f7a956a46b6bc12bebdc8d42bda3d0c08b1ced8e64c54ab5"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 6.083853475300034e+29}]}",
+    "hash": "bc10e4adbf1209f852fbea592f2d3427b67a4fcdfcecdfc1a0f148b67672c45d"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -9.333850884123736e+212}]}",
+    "hash": "d280bd765bce1588dfdb512e388d56348759657675190b2b664910ebb8737d2a"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -8.23020806365389e-65}]}",
+    "hash": "2b3c068bf1acd7770225a20184f2a040213b6237af65bd6b39c6fbb630f9730f"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.35152864891146e+117}]}",
+    "hash": "88714470753aeac1906aa10d37cade316fb692b0e64fb4a699f44ee45ae6fcee"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.185901284793341e-118}]}",
+    "hash": "4505605520649381fe97b1d26d08b9dd6b403c241f1ab920314594975049d15f"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.8262544192813117e-56}]}",
+    "hash": "4fe0e2f81ea87a153f4eb23b46027e7ba35c2bd0e8206505fd17c3eae32ee4b5"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.7514618480062673e-93}]}",
+    "hash": "9fb9a1d0d2cb2fb2a79d1b6db0fbb58378be36133b0ed5a2ce7aa44c06728325"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 7.477386039883883e+150}]}",
+    "hash": "2b0a081d600cd60c602ec5de1395d9d79211a3880b045f42685fd7521c6d39fd"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 5.3159550075045126e-198}]}",
+    "hash": "4afc08fc8c52de5be6a50f94fa4136d5b2106bc9528c8eb00bac317235b8ee81"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.0319835137584116e+248}]}",
+    "hash": "8707c912b5c84595ad3f526386648192163917138acf3933d7844eafb1685236"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 9.296404576427154e-294}]}",
+    "hash": "3aec5cac22bace4c882e7b32cf350be78d6086c24ce1f102c580a7b372a208b0"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.83598188740768e-06}]}",
+    "hash": "f6f321129730855ac08ad48e5c7f0c7f97ddf85a4a9abf51799865dd13b22ee7"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.481835371697798e-92}]}",
+    "hash": "b165bb69696ee5f56c048470907881b745be1f0ae130512a08992fcc4608acb1"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.0233069618961446e-130}]}",
+    "hash": "1f16aae73e22cf1ecddd986ff075f719c82143f17314ea4e2eefae0f06b3999f"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 6.341667050676592e-122}]}",
+    "hash": "b6f70f535daad4885ddcb33700f833bebb131a3309ed7bd4429add2f01160fad"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.563018021503028e-34}]}",
+    "hash": "448b0093452ca45b9da761bb37d7027a7309f4560a3124f0eff5cb77aef00eb3"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -4.501137801937795e-301}]}",
+    "hash": "746a1c04b3e67389bb56ee385eaca1ea0c394971e2fa9f003eaa9a65ae3cad1d"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.9121205298931324e-38}]}",
+    "hash": "54bd2e8e11ef09c476fe02f71957c5a37f6a8d54d1939c9d792fd4f28fb9f112"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -6.719138859189136e-87}]}",
+    "hash": "f2cefdd2892165dda7e8236a016e76ac7e5e221b537ff6be4c77c12404c3e828"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.776647447258784e+65}]}",
+    "hash": "6e42182aacad85a926a69d571c97951ef6b9402295883f5276ee24d6a58e9212"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 6.55130660825247e+249}]}",
+    "hash": "541067646a9b18b0fd7039b947deb836ee77a2e2a802568b6c61984ae3d6d367"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.229851857118287e-132}]}",
+    "hash": "12e5763228fdb2368527687434505ba466137fc21d78f3a1549ee5e6d4af3552"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -7.242890901560833e+100}]}",
+    "hash": "27032c4d2d15ec9b8c1b89385a17355baba8434b0e8dac24daec340614346444"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.4883861203701545e+120}]}",
+    "hash": "5ac057ebe19bea8df0d6b8d6689867bde4a7fe9f04307a3a5ec21a319b9a8dff"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.8843824313374974e-89}]}",
+    "hash": "fa61005fb2a9b1814b289cf08fe6233bc7d967bb3505f131b296af49712a1312"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.3972843918488554e-244}]}",
+    "hash": "747a44a933de0d39c8726f6f7eca9f569a8c8c5565fddccd5ef2326c7c9678b8"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 7.951618999972523e-17}]}",
+    "hash": "75980635b793779514b7906724af48d4249c997f4e4996c1fdd46531533f3ec0"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.5660053176498933e+207}]}",
+    "hash": "0654e87773c22624d2e4ea905da859e6aa866feb56c65e6fc087f585a98b4873"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.3657409358187089e+224}]}",
+    "hash": "c5bbf3727c12d3cfe0c3528f3b2efd31cfb777ab9d0511f27c653de6fd690a8b"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.3609074084777378e-40}]}",
+    "hash": "4b118141f1f4566cb0371427dc04484cac11e592168342546cf30d70ac8e4b08"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.6306718647990185e+61}]}",
+    "hash": "bce35ee92f25bffaf0f0cfb9b7973e3e769c5bc904b785ad42b4111b81be4ff1"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.399330692107385e+261}]}",
+    "hash": "8ebe7bc958d45d2454f06645a36491f3a5bd40069ac9a398a8d31736f3b81952"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.3529261822162512e-209}]}",
+    "hash": "3c111a2070b1ae121dd38353400f74a6cc5c7a9397943b88ec2ce8d632c9d01d"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -37347.19001408815}]}",
+    "hash": "e8fdcd1d2edfcab04f8fbb47da56d1fb193c4f14adde72297d244169b6846791"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -4.187638147441115e+261}]}",
+    "hash": "976450d4fa5a8161143e154e8c6c55c21de0181035e761d472750caa5d6d9772"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -6.723355405848576e+164}]}",
+    "hash": "72401126834e42d7ccf7426ff88a324261f80603c1fe0cb0ad4afa8a478773ec"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.118543856266394e-232}]}",
+    "hash": "01092e6e8e0c3fc1d071adb046948418ed2bbc0e208f45c14535531370e0ef4d"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -8.010275190503465e-165}]}",
+    "hash": "cbf9966969708b53cb251594bc8dcca2651bf2755ae0ce4c7af4ffb661b8bd01"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.8265272563499277e-288}]}",
+    "hash": "a7b1d6ad558ae0392eed693773297012c289bef55c559450cc22c992a519efd0"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.6423836732468015e-218}]}",
+    "hash": "08118a7b4d684f7f9985936d648311cbbc4f7ad248ecefa4eb61c58d741cd2c1"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -6.845482822282952e+96}]}",
+    "hash": "4975dbb82431afbc797b9979fda4f4ec2c3f90c831f2007365f9bbfc5aa43600"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -7.66510850927717e-203}]}",
+    "hash": "218010164a325b71b7ce49f4f0b117b3e56c0bd95c40360329fa078f5b872fc3"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.1971137043102818e-192}]}",
+    "hash": "db54ffb6b1d858d535dd5729bba0a9a90197943dca4d6461af6bfd8c1ecd159f"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.8554877959340366e+25}]}",
+    "hash": "a4c8bcadd36945c386fb2059672d6aaa8083fe6c30794b231d77af89b5dea1bf"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.4480048138487856e-170}]}",
+    "hash": "2d1f302b12265b6ffa33a217d614765000dd305ba66c824fe0f0f3007f07dbb8"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -7.984745888363816e-33}]}",
+    "hash": "e56a29ba856f6437b90960c9c36abc30bf4fa850bb9db51619d54fcbd2a526f3"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -6.640551815206153e-209}]}",
+    "hash": "2ac77259cb8d40d0ffd439dd4f30980d850d2621b55dda0de9cd1cfe19a20679"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 5.0923267856073343e+297}]}",
+    "hash": "a1fb73a19c532098dde4fbaf9efc5f24c9429cae0e3ce64344ee779b20d9dc4c"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -6.176584479065252e-241}]}",
+    "hash": "4b74a12dc5ff8613d86cc26cdd564fd4a7eb2d7c5c15e146b43cd6129d6d16f6"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.1333913171229667e+70}]}",
+    "hash": "7eecb27c5eb21055a4f7d2eb53be9b9505aff0a68a089bb88c39ffdae610b997"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.4220472799504193e-301}]}",
+    "hash": "30e522b633febb024958da38ab1b8955ea2023237abd88dc13d08763deeb5118"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.0679063864782693e-183}]}",
+    "hash": "972845b85ba50d894d009f1c673dac3e0f7ba447a970ae414ebd892f84f94bd9"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -5.8397780682654554e-241}]}",
+    "hash": "49d367769d82048eb4be146ff579fee0072897afa5d613b82c02c577d84eaf10"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 6.544449361617138e-115}]}",
+    "hash": "961c633a9d6c519d09e5ce8f3c43a9b853fa32e67415a257cb174116cc83b611"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 4.882999554183462e+87}]}",
+    "hash": "891231d51d413a5cb7ebd2798d812a0a364a424bafb1635977a4918dcd83e7df"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.3196133495999763e+163}]}",
+    "hash": "dea19d7b79e2b89c162f7278eef9c6ce201a24d27a3f78a0d22a60448638d219"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.506940872595844e+262}]}",
+    "hash": "8a370273b2c0bc8c5be2897aeb7a5d54c3cce840e893d7a3f4d51593c79719c0"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.2184393688589435e+35}]}",
+    "hash": "b3df091bbc0087a8f789f9befee85847e6da4e36c0cf39e301bb9df4fbe0ef7c"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.3399306226260398e+85}]}",
+    "hash": "983c89b4b989e39e5638788d86d6c1dad1de7cbf846dfe917e7987f5e8b72da8"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.0061714879771686e+255}]}",
+    "hash": "ecf5168346c0993b576b330263a6514d14de178692a44980fd4859882cfe4bbe"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 7.122679921987309e+122}]}",
+    "hash": "d9c3d46f01558e3f617317f6429b5eb007ebe820f5cc74c6f8db164b8d835a4c"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.9904238493088452e-19}]}",
+    "hash": "d36d96c33871ac23c7acace38c51aa13b57ee8c66c084d9ea3275f331e466a60"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.799333847454746e+270}]}",
+    "hash": "45c6951ea2195a93466304818d9477ab9b4e4f7595d8578a736e8795bf93bc28"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.657156370252233e-100}]}",
+    "hash": "db61bb6716fdbc633497aff8fd065ce17f1195ae6becde8ad48e847e8664e99f"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 4.745630809091274e-269}]}",
+    "hash": "2aa64f22bb5e8c438fe24fede1d4b2cada97aee30aba1c9d8f7401fa9f6d620f"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -6.0558106274222655e-158}]}",
+    "hash": "dd7463d9a6e25fffe392b8c798d67c01504ff43929f04075a738469d74b2e2ca"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 5.644535334758562e+112}]}",
+    "hash": "c5ca7b1ff7848514642b264254462d3e96ef05a2bd2db5e6e459216360daa7c2"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.7046129077511184e+103}]}",
+    "hash": "c355ea8072d8a37f289816f5f1d5ae958a693467a2772df38a675c8c678c9b55"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.579684356844503e+262}]}",
+    "hash": "cfaac55e5d7d4a3cb35ea15a5f3423b05c84e00b3185b1a02fd9627665011881"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2309472818038.571}]}",
+    "hash": "50315e3bcdb726a1175eac67e8ce5383beca7bbd89fac304a2e008ebc8608779"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 25131.55603150746}]}",
+    "hash": "6e0e5d2234e3386bd68c6bfdb618ea7584066ae9cea747aedfbabaf424155b2b"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.1193124069325658e-35}]}",
+    "hash": "989823b11f4f4016c57e275fb405b7b8328005c4b82df1c70263ab69541291f2"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -6.363155509142018e+34}]}",
+    "hash": "1a3353fb0c3f157d2f81aa861c1f6325860778c68edb08f4c401269c243e7f90"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.939997409144439e-206}]}",
+    "hash": "09fd640cd889538d9412aad2f625fefaf54aac76cb2f080e247b2e64f97e3a1c"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.3569556526881385e+213}]}",
+    "hash": "bcea7b7715725109babbcf0825dc2e3d97eb6ba3b458173c026a4b921c51ba0c"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -8.593002205337187e-297}]}",
+    "hash": "7efe5287215451ac6fc2879cbec9ac2922ce79b37f083bdb4d6501e3ae0a1d5e"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.477559078378776e+192}]}",
+    "hash": "f81b898503e5547a923d507eedb5eefebe628cd98f36f6d0e76a17050e51eaa8"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 4.682766378141542e-150}]}",
+    "hash": "4980a28d7162d75dd5e20c65389fb83bb2968fb4e89ff2fe803709075cc6be7b"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.384368282624521e-208}]}",
+    "hash": "e6a07e8ad3b19fcc86fef53e01d1e0e1556e5c557cfdc8f6f0fa4cdbcde5dea8"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.7481150491209205e-251}]}",
+    "hash": "9ef89e7a33d3f568f824ec29543ca91ae780360cd74bf3456c8923dec824ed07"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -4.962443707604385e+22}]}",
+    "hash": "7fb071ee908255eaca04a5feb191b89dac9ee3bb806d24ae2964200f0156835a"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1853545.4669727597}]}",
+    "hash": "bffe60c9225e9b62d78a4dee7ac6f732b13f5332d33dcd16b9454b4c9287edb7"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -6.014103041465432e-206}]}",
+    "hash": "b81e631e2c6306826d6fc9bd35d0c1232372a0db1d57efc8a21522ef9aa2d677"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 4.759727988215409e-130}]}",
+    "hash": "d615f03df4fc43f8033359a87f05486e6b7fc380050bacb6a691c2f02c22db24"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.0117095013761347e-255}]}",
+    "hash": "04eaf7d1025c185160e3d70ab78e97eaf356d1ef460ffa105ed0c7fbb6cf0b6d"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 8.335170285846954e-257}]}",
+    "hash": "6d54466baac79513e5c8adc651fc48b57b2d960e1f63baeddc101a0166d05e2f"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 52306231047.37582}]}",
+    "hash": "705b4591c2da69b8389133c028a03de56a1263143c4ddc347db582bece71a2aa"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -5.0343710304782546e-294}]}",
+    "hash": "34f7e7bcb74f9dc69b8aebe72ba2c9902bee8a4b7e6fb370c84178df27a810ce"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.6838514918793084e-07}]}",
+    "hash": "6b6f27dcc741e112aa3bfa4d92db91abe6c4f35b380f9d1a34aaedf303e32478"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 7.795591536379819e+297}]}",
+    "hash": "4da75eee42448347490ebc66ca48fa8c10793f66ea16d742c5ca5fd8da9e9651"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 6.75552049944488e+82}]}",
+    "hash": "d660f3e16da749793991e56bd56c5b550c30a6e37f1de18d8d46f2813fb6cb2c"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 4.281675291096981e-200}]}",
+    "hash": "9a33807f8930288bc73b03ddec5d0a7ae6631b91a97c8ab5eec34d9c345ca18b"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.704972664831634e+75}]}",
+    "hash": "de1dd401e2876b84035e18c4a378e841a8d59843e23d3cb7bc542e88f73ac418"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.177827128331638e+276}]}",
+    "hash": "0479e691de24cf346b9608c64774d5d8c64083e1f47701b297744c536bc02aee"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.1826641523244786e-186}]}",
+    "hash": "64b087a75738ae93d0c3e9311cf79a0c0aac4132529a3cbf79c6c27e923e1884"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 9.345739881041384e-08}]}",
+    "hash": "d0ebd23b305819303556b20b9a2d2bbca393d00535bff8890f04c4dbed5f5137"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -7.574451645273575e-154}]}",
+    "hash": "95d796d5a5c8f3a8be0d02107bc55c5862d62419d58121e5fc2406a6abb33add"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.9074843482989777e+30}]}",
+    "hash": "a557f1a0d7e05cb9b552c88ea43cfe6df19c19427416378f8e4f6077e9418ff7"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.18251433225722e-129}]}",
+    "hash": "08a29615350a8847fa9ecb32ca4ff6021e1ca8702447450ace76b1d2329d3db4"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.3753201237142394e+286}]}",
+    "hash": "a4a45c989acc3db039b96f75bd45b07fff89a59ee4721c5afa0bf77568551e32"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.0723758569501816e+26}]}",
+    "hash": "36abe7e47cc0a4f78ab50945fd9ec0392124e8530883f756555a0e91c485a37b"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.501761506043674e+193}]}",
+    "hash": "f0c4f2930986af751d14a29dd690073c353d48cac32b4f535ec71ad1f5caf28d"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -4.999790376290975e+159}]}",
+    "hash": "17175073a223b111a1662661bf5d1d840f8f8c274e3d079040dfb64c705e0a60"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -7.672610968317859e+217}]}",
+    "hash": "044571e2106c1e0808c16285f846ad3ceb540b0c27fd9ed2796011dd6f35ae2a"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.381488155657611e+94}]}",
+    "hash": "b9dcc9036591c07cd00ef62278f520c387fea090b1197a2ece92558992dc7d6b"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.0334809611044363e-228}]}",
+    "hash": "028c70a8506c1ff8a2bf6373d3bd3df4e4f356a2825744d6cdc2c4332f38d18d"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.0453835539070286e+273}]}",
+    "hash": "4089af60a2647e86468be58cdd27172aa7e9b6a198d5032315183ded74909805"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.2061873061055474e+83}]}",
+    "hash": "7ae09b607609d726cb3c0aeff6e5fff133c6abbe8da8be127f8e824faab4893a"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.1729027143847889e+208}]}",
+    "hash": "41533a3fda428bcf551675895669b4771a7354447d14deddb4834e4dcdf0dcfc"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -7.67498762132524e-99}]}",
+    "hash": "7b4613f3dbe2a64fe2bb3aaaba0dd419268ed2152b7ca16d1508b6b2e593030f"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.979982575070084e-115}]}",
+    "hash": "924bf003eb8b0ed2e88dedf1db3097c795e99fe25ae39d5f5477ac6b67b4e638"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 16096039.464366332}]}",
+    "hash": "89ed89cfb0b4b27bcf502824d1ef26ce7f982c67d27c0fb2db9126158d04b6c4"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 4.650794284570282e+47}]}",
+    "hash": "da436592765dbb71a1664a71d984c9350ec760e87170298162986280f569d714"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -6.749438318337813e+73}]}",
+    "hash": "c5effb1b896e93eeb0e3e4d50b4717c284af6faf41abe79fab5e62d530f2f4b6"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.7037189284353663e-216}]}",
+    "hash": "e67a44a66b5a4a6e22ed712a21a89968d4e5392f918ca9c04acdcc00dff3481d"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.314448817463819e+49}]}",
+    "hash": "4a5d41223bd9667ac92ad57172480790b3aa087bbe0f550195d3175d2175565b"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.206082785855621e+220}]}",
+    "hash": "558d0b2cf4ac85192a70853ac0cc32a96593784cf3c2ba120e277bb8c6a2961d"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.152813800274319e+150}]}",
+    "hash": "c3b5df802bc7957f1568cd8501282aa780f725fb467e82333578700265e9316a"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.105461061033282e-44}]}",
+    "hash": "cbc57fc891b30897da5048fd564a699b453cf1e4f198ab02e4769f218c500ee2"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -7.100250815689845e+195}]}",
+    "hash": "aff6d6b918e66b91f9ee2b510fac2108a61af802d2ca2cbc080a1cef033a0372"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -9.423207966617365e+201}]}",
+    "hash": "026c7d6542d0c3a53829befc57e3e035b77a3dfd9493da742f8e061b444946fc"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 4.40344607573833e+238}]}",
+    "hash": "82d6c7ff9ac1ded379acb2035cdb22eebb3a850db84f2b193e645d75ced12747"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -5.957660148586872e+119}]}",
+    "hash": "4958544433fc21eaf3722afef65baddc9496b2e96ce7f2189b31c4cbd9fdcad5"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.0485334485128704e+275}]}",
+    "hash": "d182e170771644e8239f334002a957e418c7d272e8c35efe2d31d6d4aa361077"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 5.3210004479659544e+249}]}",
+    "hash": "a0e57959aa4ee439dfd2e2e0c770d4f56fd157cedfcc249cd3cabb2c9a740483"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.146645986974526e+209}]}",
+    "hash": "b4b5a553f02b4fd28533573857b725b1e34a00c87a2a17d378ef321637a28809"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -0.008977139174348853}]}",
+    "hash": "f6415ba481a69630614d7a81d7a6211ce6a6f8c87380bca1b1f831691e6dc384"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.3730203431507747e-307}]}",
+    "hash": "3b2c903ba3a0908b2cfa6492cafa406e6aa25511b51d7a77235eb5643294e9aa"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.4459575067274926e+134}]}",
+    "hash": "d3a51cf11c2eb78aeb88a11b859ea2fa42236ff8d2502e487ec5202338b80d2e"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 4.66481896061259e+37}]}",
+    "hash": "11a638fcb03695d244ce34099d2a79abc64ea4414faf61416a28d4f849761706"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -4.4562391527462556e+210}]}",
+    "hash": "a48db114607ff1a3fe9868308dfd91595f7d034048df3e3cc2c35ddb90f82350"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.5211652768922263e-258}]}",
+    "hash": "10a3e99f930649a67b8e3b2836f411b4d32921064cebfe52a47a8cb8a2cbc9c9"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 5.026170498542291e-170}]}",
+    "hash": "31204806cf80c08c92a5ed2d0323b18ac450b0953a1078e40be3e52066a9795c"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.848830809118675e-71}]}",
+    "hash": "29233a743994c9a97bb9922594f2fa542ad2a48e2ca08efd138ca4a41824a5bc"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.33731921496096e-234}]}",
+    "hash": "7d618ed936a5bb17b3f135bc5251e53a92ef02b9a4830ddc00736aa4526dadee"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.864564368760207e-38}]}",
+    "hash": "f58f4e8776bcff174df79808a2940060769e7282ee3b47b1d4e6f1d290ac8416"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.3848347162627342e-293}]}",
+    "hash": "2b02566fe6e72fc70063cb84a55effac691588177c974714fae881331b348576"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.260674368214392e-254}]}",
+    "hash": "36d8b8060f0190de021df6007357ac639b205ada19bdd1acc451381c3d9a8bf5"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.199591769144471e-193}]}",
+    "hash": "2d54e1926debd8d147819c140a5855fd849d36ae8bab3342029eaa435e53a22b"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.1320430979682975e-104}]}",
+    "hash": "f11ea5d93eeaa8db8302706d88208915d402efbc396ba5b67b125b7af7e1efea"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -545.9875945001611}]}",
+    "hash": "015419e170b42cf4cb41e3edb27b9aa6c4ef9d38feb38650f18b5ab246863125"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.7121621980421864e-14}]}",
+    "hash": "3230d8a18699481129496f625a8345c98a83b98171250f2e393e3a25ec8d1ad1"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 5.1912498034604285e+104}]}",
+    "hash": "e94831517d0c426ee77201b0acc344d5a624b96dc0987deee53742ded381319d"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.4807896859194704e-125}]}",
+    "hash": "2c8b5c9191373b82f0637bfed9f5e5ea080c81eece7a9e0134eec40b65e25503"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.2538444972333243e-293}]}",
+    "hash": "4246a4bc1048472b1c88ad0eb08aebd7b4fc1a8745204428d49697ca8cce1ead"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -0.012026397886360696}]}",
+    "hash": "442737d573ca6f4ea1a3174a64ec4341339be22a47afe5271a89ea2d4d4172d4"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 5.070009034931799e+204}]}",
+    "hash": "05c36ed67d5e040e202e48f47d8588943c480cab204cccb9f0297402000b4188"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -9.505903836610344e-179}]}",
+    "hash": "b8d5419737936ac0a7886b44dec24a769d794ee93d20f04968796dbd0aac4527"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.4231817293665743e+169}]}",
+    "hash": "b0a3da01f8b2841af0d9ea0a0dcd0e9c092c78302a19d3a649474b21666a5aac"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -4.2168817942943405e+75}]}",
+    "hash": "7a35e0a51053b5a06858e298afee1640701a94daaccd5e50d7eb697a91ba0427"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 5.586340499760331e+96}]}",
+    "hash": "4ac2b0441c77961f9a01a8e4e7998a418c3bf7ec63beaa129a8fc3f0c90ea189"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 6.158871177138113e-81}]}",
+    "hash": "40df38cdd1e30174a1c8cc444412e1ba614fce1a43ee3225ebe43538b0cdc9e3"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.793710221791504e-192}]}",
+    "hash": "a0425c242f736270849ed4edff673c5ea24ce68a8024fddeb982769556019219"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.8247694674461883e+202}]}",
+    "hash": "273225108e55ee063edadb4398d42e965b3ad80c4b371f263a459d422c97f83f"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 8.228348399173563e+204}]}",
+    "hash": "f8ae4d2d3589b77e23d7acc14b2653fe70691e8e750be00a3fe6c68801a3c483"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -8.004936915725621e-252}]}",
+    "hash": "18d674d48ca16d6e0dab8fc9a2eb5085f7f03670c1c6b38cb5e93ae090b00edb"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 6.949011864505378e+204}]}",
+    "hash": "68d0116c8a6290941e5a3a7bf131f6682a3258c85ef506313b1b97d12d5a4c0d"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 4.2735998388937535e+171}]}",
+    "hash": "e85a716aeb4f5cfdb1e9f96fc9a72ab3923c13d71f2bbd7b3c25b78ee509f726"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.3990877909828281e-36}]}",
+    "hash": "181d356a26328ca1e00822be04cf13a92ce3cd283a697801fb9f8429968d39cf"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.2675430593263255e-43}]}",
+    "hash": "5267cfc065dcb8924bcdb29cfaf3f88237fdc17fa9cbee7d3aa6c9adf2927542"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -9.524219122418196e+214}]}",
+    "hash": "d4618fb3ce6c18ebc305c69365e726a84f205f280c9caa23e4f43141197f2f0e"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.381233583124701e+67}]}",
+    "hash": "2a063aacb5a9ce7775ddca773594b0d3558c98a25efbcf9cae0c9de686243576"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.196788338544567e-301}]}",
+    "hash": "ffad737e07e95fc888c61a3032efb30884872982a36ff56bace7bea008d09c96"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.831771359426965e-295}]}",
+    "hash": "8cecbddcb29c2a45cfe2dfb6d46fe6a672d519e14929b3d2b180da669310854c"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.8417516968014248e+249}]}",
+    "hash": "5eb30f59ff24c5504d8fe0a5f3482b2ae08507421c090ae49b8279121c416650"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.0033901672284773e-106}]}",
+    "hash": "cf81ea7b533e145ef694f687a1d32aebe2a15c3bf457a02fed5fb293db68e69d"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.883562397837057e+298}]}",
+    "hash": "a5fde8af275c1d9b64761abcf44756f4c01ac314fc36fd498637ba39fe9bb7f0"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.3447901469044197e-273}]}",
+    "hash": "df1bb373134b458525b5850078f55dec777b6b81fe39404c35631d93f4ea0d9b"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.134344901137902e-188}]}",
+    "hash": "1e4e898c40a701bae8384ed1e522e390ed2df0802188e0a76e26e409718bc6a4"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.2541887040416672e+256}]}",
+    "hash": "129788eb4d1f94c470bfa108342b0dc45eb7472b4c9f1aee8b559f587ec228f4"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.9632232725662332e-141}]}",
+    "hash": "5bdccd0fc02eea2e384c78c5b39d3ec0de632d9da03b9722ea023869cfcc600c"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 6.146995445789046e-294}]}",
+    "hash": "a8aee494a15b29139bed1b2646392de1f0c31601b373eb5e90be216ace5de536"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.016313877006154e+114}]}",
+    "hash": "a04e516ddbd347443d03028aa3bf64a6ed5960298b2b91153f8026fe8352e028"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 6.987466740601736e+245}]}",
+    "hash": "93223591c57e93755583cc805a95042bd50a075b531cfc3752f933ccb383c511"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.20192592801263e-234}]}",
+    "hash": "b6ec594366bb6fe8b01bf1444202d66d86920cdbef60d8eec07c67cb43f12320"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.2169851326975036e-122}]}",
+    "hash": "79473216357993188fd362c229a64dc16142b3a4bc757dae17e240a8718ac29c"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 4.834705960097784e+172}]}",
+    "hash": "0406a4863d783f7ee85db7c8f0030b3d845dcb1e846e45a28d2da791bbec77aa"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.9504134383021933e-68}]}",
+    "hash": "642f764ce14176031c9437bccc5937f2146f47d9486f5d6f82b799b5f299c450"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -6.0308276622817e+265}]}",
+    "hash": "d2537104e5033095c29d098da812405b8f1d42c47c1d217d04f51a68e7c504e9"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.614435320082738e-28}]}",
+    "hash": "8c3816c5e62f05ba2e432ff8e028674ddb5bf1709f2fd44650c03a4bb4cf98fb"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.0258417685270158e-46}]}",
+    "hash": "21a1497cf135f75761899e39baef3365dcd5aedb3b5f10395ac4b184b9b2df29"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.2566550558554982e-220}]}",
+    "hash": "b4688c92ecdc11bd1c6b30a22939e3bf0a7210b71101b7fb74f72290f85997d0"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.1554259569727985e+154}]}",
+    "hash": "4b510cbb90cce9a3065c23bd784636c09b8803e6a6ef93b168622bf8215a1014"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.6662894491984654e-252}]}",
+    "hash": "8b8023337d4b66a2f0c06c510ef44d369f16182afb88c768893f52619967a4d4"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.2892299748641023e+143}]}",
+    "hash": "87341ae52bfeecc2d893dbdd87c7b5cc11964fec28a6838ff2fd0e1fa8798a11"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -9.160519278515958e+125}]}",
+    "hash": "ef8c2cda92062d427dab850270d56cb02ecf98f3a1813104cf326605f60cfeba"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.674022651623748e+203}]}",
+    "hash": "26f67f2e33ca3d7f1b396f2992573e7e519128042f04d8d93e0deafac22aff78"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 4.0041977374513707e-255}]}",
+    "hash": "6c1dd20191379cb5f05e1d7ed325654df288c7a81add6635a30fa1474b9389f2"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.350627816957953e-124}]}",
+    "hash": "1bce49e6d53a065819254c5844897f4d0b69d60a6da8928b5f30a0a4d9ca7519"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 4.2944626661105084e+213}]}",
+    "hash": "7a6d68b6138a775958fea031d1919e1fc48f8ebd6a8518db284eecc5abf0d2d8"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 7.210022131161331e+48}]}",
+    "hash": "b2773f051bb90e0b80a29828068dcdf39bed53e4e7bd07ff7f22a2024f824255"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 6.602037024657305e-142}]}",
+    "hash": "c799d18b3caffdf331f86246a519d81d570e913e6f5b89332aa00a0c5ffe7cd2"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.4955469760553146e-15}]}",
+    "hash": "9870ca5270454d54393fbe86a524b0eb128ccef6832ab10ae703d0efbadbf1b9"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.4291190110903368e-69}]}",
+    "hash": "10951bf9034dca87c027c32e8a08d9894302118efdc89e12401dd51eefbc3b37"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.2162880622137044e+59}]}",
+    "hash": "0d3286290f27dca25583359983604ebb8f0a3759958b4c66afbf0a855652a87f"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 7.367552424537192e+41}]}",
+    "hash": "acb7b9c1e29d9f12d1360e60ad36c54c0d86b3647f7780c89e28752664c552f6"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -368689606419.0488}]}",
+    "hash": "a84a6d80098e7ee1a1b2c634d6295be4c6b7ab253c140b6479fd5cb95588a054"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.7410454541571597e+138}]}",
+    "hash": "e4e4eb93529d52efc1ed08bde43462e1484384683afdf74f0e9acde4bdb12fe8"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.9274829372562865e+217}]}",
+    "hash": "5732c459cacbdfe1a0ac2faa7f021d62fac8fce318338eaa6fe788e36db50b4d"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 4.931822044336196e+77}]}",
+    "hash": "05715627013ce8917b10894d1bcbb58b8d6b46ef6ca2a1c8384a1dfff423cf32"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -5.0841814966477206e+207}]}",
+    "hash": "20b3615da2bd1b08787e4367938982d74504483390d349cf99b980082e7461b3"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.2797558489119014e+265}]}",
+    "hash": "52f8c0ee515883c2409b898f320848182a54016f41dd36de02adec828fdc4371"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -8.23274285552248e+132}]}",
+    "hash": "8beb916671beed5d99c976530a90cb2f4e6f0129d3be2fe07551dddbabbf4f14"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.4140275779412827e-11}]}",
+    "hash": "e7c45138a7f12e23cb89866a59c0a8c24401aa278dedf11d65b313d0d41225c8"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.8108825081764767e-243}]}",
+    "hash": "2d9713dfb9ddeb87d2e781df3e8a0c918f52787de36d30e30140fd42649e6e4e"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.7885881387823642e-260}]}",
+    "hash": "c12ce749c2efcd849115e505d7613a31275b4d4816caf67404ff69870b8039df"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 4.4457243075131277e+67}]}",
+    "hash": "65c7203db343ff57c378ddfe41665a950a7e7bb5731df9f1052f0f2920d44520"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.1718257844904239e+257}]}",
+    "hash": "14bcd10574fcb309d3186369f3ca27edf52247ec2c0c9dc92ed312a53c5092f7"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.2128717349306043e+291}]}",
+    "hash": "e6097fc37a8f7b8f38a24725f5c12a4783b0cccd2097bebdd50880cd8922b2ed"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.839733465090115e-93}]}",
+    "hash": "3b3d649d0bd4b8a9d3ba28727db153331b524ba268c9c139157a4f82d9e6a7eb"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 0.00012532533591283482}]}",
+    "hash": "eda7e20f9a9490aaeaa678379ccfbae21d42e39adc9855ba5bc2903ce05b8fa8"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.9606021293301828e-31}]}",
+    "hash": "8f89e5a1cac6ca32783d659db8f26ebc0985e69eb36cdc46610163878005a221"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 6.95792080980674e+261}]}",
+    "hash": "e2852a4e2ab517be91fc210c7831441432f86c581d4c12a21751734583bdc5c2"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 8.270777281573448e+279}]}",
+    "hash": "c900efa73285bbb38c727fc6e4db8747b0165bdd669320e424b58eddb165e0eb"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.2420519710399603e-211}]}",
+    "hash": "aed2548e13ac29b3334fa93019c4914babc91d356ae3cdf5d2ecd76cbecdbe4c"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.3969082452159882e-249}]}",
+    "hash": "373399868660f3b2bc3b4dc249ae571acb10140fd9b91ffee658f2f09c052a5b"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -7.11412376825448e-06}]}",
+    "hash": "378705bd2fef839ac4a447737ca129e2eff222c1624d06b1ebe2c5b2bfbdb638"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -8.689884996345809e-296}]}",
+    "hash": "682185891a8b0f918885ee5225b59349d03da6dd2a31aebfa7b2d6f5abc92689"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.5266070508258824e+151}]}",
+    "hash": "8e4fae80a4a22f96e1c1d9cda7d8690f7d616e16fb17a09ce0fd3ff37c41d8b7"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.0091578877158657e-07}]}",
+    "hash": "67426cb9b83e7ad9c61f143deb0e945085362e53d176bfe8ea5c9d21f05419f5"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.7804115940119736e+161}]}",
+    "hash": "470a10eac758a63fcb1bb63986648a401d903dcb68ad1ebab1e61253a3892371"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.53679450304471e-123}]}",
+    "hash": "759d1523c50b0f4a858b25dc40b77045675503a197e9f9301682ffcfa10d5372"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 5.6915792786982316e+200}]}",
+    "hash": "fd20f344c220506f354e35eb9ea5253ea745373e040379a5c9d06702b987aca2"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.4304889737337854e-88}]}",
+    "hash": "c176fe9fd561ba1f739c5c3e9ab50ecd40652596008b392bdb9de5ef5c3df222"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 9.612649359578908e-242}]}",
+    "hash": "a031e86a35ffa9377895f13deae289ca7fa6677b2f80a37465509695d81575e6"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -9.400878606198523e-181}]}",
+    "hash": "75c25e5c7b1167922f8b7400748918e6bf8e2505d3b59eddf0f32bf88c7f14cd"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.0370297496710313e-251}]}",
+    "hash": "d86130b11ced50492e8a24edb766833bf7478f0295f96c63e5270926bcd17242"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.13881322282688e+90}]}",
+    "hash": "1caa7da9335c9b4893d7fe687588d7d3206b5a3eb5ba8e9401906b52c4122d94"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.5716066875183e-83}]}",
+    "hash": "acf7ab62f23f4500f321b6fd8c236f027f05b50e5549d000f528f7a21416ad1e"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 5.6060515453365e-33}]}",
+    "hash": "805bf90d429c5f497ef9d0e305519ff7bce5bddbf9a5e9de4927290c487e708f"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.137093588637794e-154}]}",
+    "hash": "3281084cc3e8bde01a7b891d3a7ac1cfa919c3755f6d74987cdb6140fff728e2"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.0633398812318932e+104}]}",
+    "hash": "50549a12a67d889aaad7061aefaf8ba71edbcb5f3c59c66da5fafd2b3051dd58"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.5166955167627517e+218}]}",
+    "hash": "9a36bce9dba78ab675f6ea26ed6a802aea6a3c27e2901b775b4aa9f1c41906fa"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 4.180432605368566e+129}]}",
+    "hash": "38708423fd8d5c9f31385a6d8d4d91d0e087d0edac0183d78211a24a312093f1"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.69631475883719e+191}]}",
+    "hash": "8be7818c7c8fca4916d746dcfe7159e445f0300eb768582d3f00f2124fb2b0b0"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.827132119166671e-92}]}",
+    "hash": "44bffe33b44fb0ca7a03642e541fbc97ad5ad6537df5006aafe3bbe32d2ce29f"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.585089394250391e+238}]}",
+    "hash": "fac11a48257bcac0c11a09bf511ebb8403e1a7ab80881063ee4f2a3c3fb3d092"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.6398220035801823e-183}]}",
+    "hash": "e74222a3b3eb0f5ac3491ea070c2b3038b5b706900d3331b4c1f16d72ec5a5eb"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.0762073076554158e-257}]}",
+    "hash": "8823854d04466d8a89bc1885ab722938de70e4e26e3ae303aeda44cbae334f39"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 4.324131578192687e-264}]}",
+    "hash": "ffebf336b92429a4303c53445b2f82db900a2accfc0475b882339abdda0e3cbd"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 8.113416770780345e+279}]}",
+    "hash": "8fafd2fc2dadd8345b21af6154ecffa920523af42937e8e547cfe2614aa324de"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 7.697302861540342e+114}]}",
+    "hash": "bbeed4fa1bf8247d22ceb17fe35bbb5080118d733569b0dbeee8aff1a5d6022d"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.2437431483304407e-203}]}",
+    "hash": "ed425f2514f206385c2a78a67ad1ef2e72787cbeafbc3e0838a20b02c787d01f"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.5246880037594265e-295}]}",
+    "hash": "d0edf2dfa826f667469012f259316a160df0624b0651f7b1f7ce93f481e80b21"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.2007356878525839e-75}]}",
+    "hash": "76f7654061a6c22b51416207c06619678ba96c3240a3cbdd0d1b5258e7e9380f"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.845504635087982e-118}]}",
+    "hash": "b566562493aabdda4b61ac6185123e2af65154e0557e7e8c24fa706cff84897b"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.5316677158005097e-247}]}",
+    "hash": "6c0f7093c209c856c5c115823ca916d7e6b147ee553bbfc031ad4c5a66cf8cd5"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.3654052973981193e-158}]}",
+    "hash": "37c900e69e3850e0368db356e3a460a65e472d6b2e62684dafc5f3af48c0e043"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -14915682.049770257}]}",
+    "hash": "1f390ab150c61412d3e3cfe35b113946e590c7f6ca3faed6e76b05ddc276e8a8"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.2970428666796394e-173}]}",
+    "hash": "072342e5754f627d491428f2c09b2e58e2bb6a4119763c55d882d10143688625"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.120995548571114e-80}]}",
+    "hash": "6516c0b03516a8245c6aa87985678f878837ec9d286323a7d17b9927149de614"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 7.031799913725926e+156}]}",
+    "hash": "b6a8cd993967eee0d81fd2b8b0bc05fe99e32a0f00a7846c9537a848ebbe93a2"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.5391869513898253e-214}]}",
+    "hash": "6c2a18674c0b4148dc77b1ce1fa2a7a1d4d3a2cb90f4fb4799f862f89016b054"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.2117192319512416e-264}]}",
+    "hash": "6c39e39dfb3e669f443f475a66910fad018850b4ec3874d1a64adb1121acbe7b"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 8.52044261467803e+276}]}",
+    "hash": "8f35c23d793e5af80f18db326ad3e6c5403efb90a246a66c05e2a8cedc4e7cff"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.514193865048213e-173}]}",
+    "hash": "ac56f398ec7cd930ee43297284c8ec5e1a54c62ab34ee65e3e21feced794271b"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.9543478656328238e-148}]}",
+    "hash": "4571710d116e0a2059e935b6400751d1b13d3a3a07d216ee8cb5b0db57c7ae96"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.832001927885155e-227}]}",
+    "hash": "bd4436a288c84b0db4cf85999b3690c8fd2e83a1d6a9baefb98f21f22ecd378e"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.2451141392461397e+302}]}",
+    "hash": "6eec140aba384abb25e66acf4e5b7719d1b471af72ce2d75ce0d7c32c19741fb"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.0398906570968798e+56}]}",
+    "hash": "eb5e460ad2d294876615653ad1122a068d615b167d0ced078cce6da01496e91e"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.4003695100828996e-110}]}",
+    "hash": "0699ed3b319b48b92b7cfcabcddb56345eb8d465ce1585d371050e9ff6a74b99"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -5.045775192339453e+297}]}",
+    "hash": "814a70cc185b25bc595408050cef036764549a4be67df596a47f99efd8e72f0c"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.1318459345739727e-146}]}",
+    "hash": "d3109119d08b6a4abc4f2b2682d22ff23584a7245fb4c76f0599c6b58410a4e6"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -8.462075443261205e-96}]}",
+    "hash": "09a76df4f44a0a4d9c517be1b9b82394d670e172d3ec02de82a15aa3c95f0606"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -7.477988350002342e-85}]}",
+    "hash": "7353a09865dcfa96f1f51842a2e544dd4671dda4814bee1c7db3511d55360a36"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -9.983764992040053e-283}]}",
+    "hash": "d16232ecd5a32ce6aa790a37e9ee845e32a5f7b497f7cd78713782b9dd25e00c"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.9141349676249516e+239}]}",
+    "hash": "456c7f7c06b3d2e044e1a2c21d9b1621b6d56cb5dbe01da63f8feb08e4b1d722"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.4756432149509385e-244}]}",
+    "hash": "4d4b0a051da027d645809c2342e7c728baadc6bac2c8b6292135a0eed1fed1fe"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.6671361746682682e+40}]}",
+    "hash": "0de44d3f4ec628846692d9d5fe9613836f549340431e0ef37f1b21ffb43afab9"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -5.411083567559931e-35}]}",
+    "hash": "975c2a2bd564337fe9c01db4c3e1a43cd0fda1cb195602edb39a80e8323477c6"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.22359939746975e+230}]}",
+    "hash": "df098b2199467574135c9a9e916a50b2c8ebb02717e0fcdbb8cc3edde7139345"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 5.39766064316463e+171}]}",
+    "hash": "c116dd8af5626ef02ea0a0a4d18b51917691b991e6e534af13fd82db54329688"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -5.038215322022582e+68}]}",
+    "hash": "a0a3511547ed351a31ba18b00970d716203c37ef0c411d4a56583964ec045070"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.828442291471911e-173}]}",
+    "hash": "f56e29a27c77642c7a527b68445f618d30db244740f8fee5aacf21b466176d6f"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.2577354048126245e+192}]}",
+    "hash": "ca9ed7a33b5781b396831eb00d040cc1daf6942de40f8e89e4f835082889b67c"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.0022130649785243e+208}]}",
+    "hash": "9081bcc406bc953d170c82d8ab15263e8527f798a568c4e6204066e58f516c37"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.618980672002022e-278}]}",
+    "hash": "0a37803bac5ecf7334ef7cb24f8f0e93cec514179414bbab6c80751bba1f08bb"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.4493502889456017e-253}]}",
+    "hash": "25ae2bcee4cc0b17843f51df0bd5996d66fce12b092932d7870efc4cd36a97e1"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -405870713.4413539}]}",
+    "hash": "3dc86ae64384ef1ee693bb596f292a3ea1795b59cdcfeb4e6e08965e59b57664"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -4.005841649000657e-182}]}",
+    "hash": "ca9835edad696a785e32c84758f302bbfc5e07bcb963b57e13f6271a93bd76e1"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.1023246493967039e-21}]}",
+    "hash": "038da3bf224d6fa6af14f0b0b0b35a4ff48c9cd385026a039c839987ece8d8c0"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 6.468253802014407e-170}]}",
+    "hash": "b857b3160b3d535d1b727439ae41cc1eb4db37c390f6eabd9ed408bc1ffa311d"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.6704374088208233e+251}]}",
+    "hash": "6faf6e4a777c29a2ea8f08aa106f9e7d3f33fcd74005b3e209c8942297ac5708"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.290327037226219e+37}]}",
+    "hash": "cc4e2a6236c75b00af5747bcf103e27ec823f5bf93874aabea8e6c173e877ff0"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 5.461205035069409e-288}]}",
+    "hash": "36e8a088d187af7d6898116041d154922b3025a64d9d8fa294d45bbec747ef8e"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.1282498600292034e-227}]}",
+    "hash": "ff13be3eecf6d776e4156c02a7c6a072bc4adddc174ec0b49206d246ceb8c018"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.645693537132237e-188}]}",
+    "hash": "a000955aa621efb602259ad0f8aca978b270766673fb13c8b14ff4ceda825682"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 9.908833016703546e-74}]}",
+    "hash": "9e931bd6ce80ead048b7561b4ab01393cda60c27281f098e41b9f12283c64b61"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -6.020456029470852e+276}]}",
+    "hash": "62b80e603d72a6fa4ad4dd2328edab358494afcc0c4675928d1fd9bede5ef7b9"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.5609289095601503e-131}]}",
+    "hash": "c445579236e03657a449efcd76c937fab58eecc7470ca5b3bbcf162b580052cc"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 23.242777851606856}]}",
+    "hash": "9516f431a93f2363621d86520bf6d925839159764c0b79a8fe5638d1a7e236d4"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.2782423390918034e+57}]}",
+    "hash": "18c64044aa7364a29793eec17122f6d3694e889e7772e0508698fe758a2a959f"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.761263122564782e+39}]}",
+    "hash": "881b6c4cd6db3db4040d97f681a4368ffe62a9d0b0242b31609310d63d9e7bf8"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 4.91132128427698e+281}]}",
+    "hash": "e533ca88c058b9e86f116ad9165b28c3a4246fc79707de9c0f8b37fc929d525e"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.5518322877201168e+197}]}",
+    "hash": "679e85fcb8111312aaff1154d4c188992f3c544d012fa4c3658980a1dfbd00c9"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.5501301120598756e-23}]}",
+    "hash": "5324dd5cdbc7a19ee32673b1b37670dbbfd7fbcf644c4d7e3970def480791775"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -9.974575364368414e+158}]}",
+    "hash": "9f85d8abc6c667770bbdb904f3a191bd46ecb32795adc9144cec48f9f13946f7"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.006109115650983e+223}]}",
+    "hash": "305917388c6dcacd0c1de60859905b5eda0e75b80a11ad7a65cfaf00abf710a4"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.6265588086616915e-143}]}",
+    "hash": "00fc175dfd644382a64463128e60554b430cd415c6b8b4091ab996a597139d32"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.881478692477078e+74}]}",
+    "hash": "6cae9e0d05f28e64bfc10001d1fabd4a45007fbb404016968e82c646d73d927a"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.8967760692266226e+138}]}",
+    "hash": "b9e4ee276f79a3a11e458c9f51837da1814c7642aa6d28e129179e6f632223d1"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 9.174802316959901e+125}]}",
+    "hash": "e13f2d87c7c9c5dc41e76027bb2566161addebfdaaf9598eb7a0ee204aeb2986"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.272121816438814e-206}]}",
+    "hash": "4338704f91ac89615d26748d1f861f82e4143e4e242edc354f1ab75017214b5e"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -4.503111582476065e+186}]}",
+    "hash": "f0c20bc0a16378a2c38ff88a4bb85a545c8955564750f4164981a3bf6a785c27"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.2739164782077047e-124}]}",
+    "hash": "27d539ad14596a016f85077e832d78ea8315dff140873c7323d8915182c59cd7"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.7433639470995786e+72}]}",
+    "hash": "629d9271775b8f8346a70d134542c2cd8e6191adca3eac7e6870eb2ae6b56303"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 9.834488039101228e+245}]}",
+    "hash": "fdd2711741caf5baba3124ae7d5edad152df5f05f43be124fa02535362a034b9"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.612998293958217e-223}]}",
+    "hash": "b3b620f1a0ef9e7c813460dbb8300931e83d4b8b82554d6b09f55ecc7a6e2315"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.268580193088654e-207}]}",
+    "hash": "579f6e839d2dad8471c4e9d9deb39336bae744d6fd20c688dd0aa2102555589f"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.0785078497596247e-133}]}",
+    "hash": "0f44588ff9865137ebd12508048d74a00043d50b103cf2003fe2fbdc0893c343"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.1834967949813947e+173}]}",
+    "hash": "533ade66eb4f25e9f1c697e1ea743e2272bef9c5748d61c4176472637b948218"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.3231665344975384e-131}]}",
+    "hash": "b7e04189a0acf946a611acaa4f78824a85d25e798969e910ee2e96c8d2d62df3"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.896854387544801e-90}]}",
+    "hash": "51b018df8f672a0374f26040ae7d4336ec402a082bf4c44baea71ef0a95e5476"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.3597376771395034e-241}]}",
+    "hash": "97eb418461d0ba729a64f15c93b6e1d41cdefbfb55b5b7b8f5946fba3f4d5368"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.0080945977336798e-142}]}",
+    "hash": "b2c01db3524ee3344a398911c39fb8a6b8eb073c89cb29fd48adca20a1a51ad1"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 6.551621221508526e-214}]}",
+    "hash": "5fc5cb392a343e7c1239d21e35cd6af1be6ba18bb2e66565f5649d4e11841cce"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.7857081003423275e+116}]}",
+    "hash": "98ac0ec1f41116b05588779dcdf974e8e99cb7e39918a6a7bc4eec16df748d38"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.313036424193973e-229}]}",
+    "hash": "e190b64a427335c54483b539d58235c2cf7844d76b3740537a33f3f651875812"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.3199181332365832e-188}]}",
+    "hash": "7fdbb35de33a53875c89b27548c5ea01c414225a576fca3a8ae74db8277fbb76"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.0114389417738307e+41}]}",
+    "hash": "9e9c11a1093b21be7cf02a8e4ce7668ec7b07f86daae07c84860cf0a4d3fd390"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.8489523685067062e-110}]}",
+    "hash": "4cd15c55515ec56095354666f32b7ba1262ae8d2da45bdafc9038145d8edef96"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -9.086231434169467e-155}]}",
+    "hash": "510dfd6d427f7afcfce8c359cf557ffd4b8ad97083beca57b44cd9c158065df7"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -4.107220882567566e-272}]}",
+    "hash": "85ed85ec3fcc7c8f5853b18edfeff07a792a4e4398b9d0b8b9a92f12390f6008"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.41818486521323e+28}]}",
+    "hash": "0d732027089be4bc93a584ae47d15c6bac6191f4f48e0e0bc79cb16e520e5d86"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.0181440864703101e+65}]}",
+    "hash": "26239c8e681a8a57494d2d735936a00d6c87860f3fab3f8cdd36abdc3a00f3cd"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 4.202336126465641e-252}]}",
+    "hash": "ecb729745028d13f08939ded7e1ab238d0d84dc79130f34c261cbe8e50369f10"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 6.51541057842777e-258}]}",
+    "hash": "7ff61e643e7fbe1e81106580ac0bda3db9cb8f59c3d2419d04209026b2fb9c2a"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1213713.16807851}]}",
+    "hash": "704590ebc88d1c3414111072384907d8e33adb8f9a19bce84062d0960acf54c0"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.34745182195983e-67}]}",
+    "hash": "f166f87f66b1be30f1e4fa097ed99cdc243acac515fb97c6e22fc1aa49c59840"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.8760733265686671e-221}]}",
+    "hash": "ff75864303f8ec84d8eb33d0df562f1a24d578e743abff750f2c6776e373a932"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.0710768370834654e-276}]}",
+    "hash": "8da7fc7f500ec4c7bf9a271cde9c102cc1e1ad9c7fdc26b3b796e26b6feb9d7c"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.1013097424467437e+283}]}",
+    "hash": "3d64604d7bc9a27deec3e0c2fb431c2e19fe25d78eca6aecd85b7eadf067c106"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.3498935275946507e+113}]}",
+    "hash": "46328c4017645f47e0c4bd6db7672c6c4811b8fe267549bde4ad93c36b3ae4bd"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.025494992881387e-39}]}",
+    "hash": "c2eb360fc11a4b22e6c1c6cdaac648161076361b90ba9d86d496b5a7bc508590"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 5.404913283435046e-104}]}",
+    "hash": "7a4f436cb275ca13a614ff3fe6920a569ee29deb16567c627622c326dc638cc1"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -9.357532572468776e+194}]}",
+    "hash": "912ab3b349335118bab45ca751f7a4c0772ded02644cb7d0ec1b4a59b3c9e8f8"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -6.525503610645896e+276}]}",
+    "hash": "76d3eacdb342426b838da31daa87aacee82cef17b4567e85b364c26379e60a43"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.1759264889875453e-229}]}",
+    "hash": "4db5af6ff653f0ade348784a1b9dcb9317ba24936d4b249aa5199ff8f212213b"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.1310295778019764e+241}]}",
+    "hash": "2a01d0a3c3caa93ed554111753d1a526afb7d81c422786ac24ce96b845c27b3e"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.6994772717269212e+246}]}",
+    "hash": "6d32a31cdd6d7e20151a6021671b520d64be8afd65a281dbbff4eb13ca483aac"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.1335940836103388e+83}]}",
+    "hash": "4f84ac4825f286dbd2815da79dcdaef058a56beca329f708217c51f6922e771e"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 5.3523931019487684e+256}]}",
+    "hash": "0205fbc83831f1f9e89ab3b8b29d26d95154f31e66f9ae650047616bd9076c92"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -9.244735099660427e-300}]}",
+    "hash": "a2ac061deacf25c1e67dbee1613a9c7a83483df4dea331ee3b31900b9a9c2f4d"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 8.062758765765147e+84}]}",
+    "hash": "3cf805a056b4fb6bfafef211a890c2da3f9be5e9f43fc8c1aeca1064c15980cd"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -6.192288218505503e+57}]}",
+    "hash": "ea2e72fbb74b25fda213b2287f14ce62d1c72b6d5094fd2d9e07175c7e271797"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 8.196346157553736e+176}]}",
+    "hash": "2f7a258a4ac085e40e2023a56f81d53d4a9bcf99f9b1efa8b590d9e2acd27e65"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.7932453749180025e-155}]}",
+    "hash": "be59bd251b815e5169eb4da0fe81b6b3643bb4952f9edff2286525eff593e72a"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 5.2166053947993605e-220}]}",
+    "hash": "a2a01447d02c51f6d096138e5114100e19836e50cad933bd38aa1be9c1e90251"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.6360424750941568e-283}]}",
+    "hash": "541f0f4f950aa9e5e75e7210a9eee72f0a07c16e44c4823009833cc381e0624d"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.1540818496289487e-166}]}",
+    "hash": "7c8d6b1964ec9773f1f3d57bd7c304de03927f6d05f30a310cc792e699a6e349"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.690127369006544e-170}]}",
+    "hash": "01facef91e493245c90c747728e25f1fd3b03e61a0061c3b47811fa634303cec"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.516362470357114e-40}]}",
+    "hash": "44b804e3f3b617a9e1369e5e6ca1abfd059ceb34418a44ac1d37c8b1ac7100f0"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.922854909623347e-31}]}",
+    "hash": "0c64f5eded552d8f4cfeba26849835eae82b799ff3e36242261ff4529a73a859"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.747991508668382e+255}]}",
+    "hash": "2ddb83b0de075de6d64c1f31149450ceb1c0be92b46510231c2202fa9268a3f3"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.5704642704779307e-38}]}",
+    "hash": "f6ae2b3a45e4381144e3408a2461fdd5ee3135058b7615db9f25d97eaa2c2eae"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.4492618892590423e+57}]}",
+    "hash": "61f89b9fe722261db8c5680570c8401556f8b187957738db23061c3e1700e59e"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.3800668666849742e+46}]}",
+    "hash": "8a42289be002140a9c2e3432e23b4a4735f0318e5587ffa7c8a5d74ea8a7b2e7"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -8.990840217611442e-192}]}",
+    "hash": "8c5f03561bd5560f6047a2eb8c87b355f263ee57333314b5eb854fd85355c755"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 4.507486633610669e+283}]}",
+    "hash": "4ff5824d7044e21aec55018e9a56016721be52389c17531b76ccb8571b0eade5"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.843909759153866e+236}]}",
+    "hash": "de2c3cbad4b5fae97781bbac6acbba42bcee52b449dce7c4b1954c4050366538"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.0940153318304249e+94}]}",
+    "hash": "34380db9ce311d1a12326ea204824ab9bc94cc7a76f1e206aa60191bf608bd50"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.4518538418929414e-233}]}",
+    "hash": "efc56fef16e2877678ab9b34fd993e3283382a7827ad1b7b88bf85e8e771b4ad"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.0247103584128173e-131}]}",
+    "hash": "c8498d8f57af1d8f312b836ac2edb0928898bb9a22f99e953d14d94eca9c4313"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.5719522948566114e+105}]}",
+    "hash": "df3bab273de59ddec97bc8404f8ab7dfbe444da93cab63f7991fd89949dacb3a"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 6.625900106888971e+161}]}",
+    "hash": "097c0389494021aeb3edf8c1890e14584887050d49e1097229a09fc276f3f072"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -6.517260124190768e+37}]}",
+    "hash": "16ec9b0b1dce6730a6e35eece47c6f9e3e3dbe10a098e1d9ef3015fee5b6ae71"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.0562959497971266e-290}]}",
+    "hash": "ca4980f0319ad3e8b6e204749da27c15b17e1a4a1e901040f2a57597af28cb66"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -4.031070682639695e+79}]}",
+    "hash": "10a226526a6e0083168c0f910279da43290dadc74ca5e46be822344bb2619da6"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -9.614147330598107e-294}]}",
+    "hash": "b9456f65d01ba9c1e974b5dbd2ec4e2be2dcc2afc810fa086eee71636070f07f"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.7853383791112473e+262}]}",
+    "hash": "11bbc00f66ac8965f38aa1cc607e34a573b8efd24be143423f20128a1168f3fe"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.748377374749383e-25}]}",
+    "hash": "8f79de43eb6cf43c1c86ba5723a23769419db04f5ef54eecac8d567d43c8b20f"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.537500337777114e-303}]}",
+    "hash": "09b3ecb044f1331fa168511951b5b0b6c4c43cfcae681d3b16da59b5009a468d"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.848746193798349e-122}]}",
+    "hash": "af93112755ce944291247f799c070de8b09c105ed0d226e0a99094449ca3953f"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.946305513248101e-44}]}",
+    "hash": "f80061ca72c65962f9531822415c96da205b61b7538c58af1fa3265f0bf4bd11"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.1040717902144788e+153}]}",
+    "hash": "d93105991cd7e58f515a5da42523df08fe516a4520d59a76c7868b87b272e583"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.9225768981435776e-302}]}",
+    "hash": "3f704e45772e22280d004c9449563399dbdf3cc53fbb23b2621c7d8bc54c7c57"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.3490001516510032e+103}]}",
+    "hash": "8dd921e8fada2c9b31e17c0e52bed1b089e3127bc1d462f897595d062c178edb"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.9387256696803678e+56}]}",
+    "hash": "2ed0da4c8e0f31b7cbd927a494434f3eb5613882cf0e00905b7530044aba9151"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.826316760296808e-229}]}",
+    "hash": "7e6357c22b2156513d31c7da38d0e0521e840ecd8fc13910e9448e35a72ff1b9"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 8.211799236220177e+51}]}",
+    "hash": "648941c8c7f610502148621ffd066c537b6f4d786fd81f5cfaa14ab2b024b905"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 7798498511322967.0}]}",
+    "hash": "26fdb1209ee9e92fcc61a2ae1f7c19cfc7f365d0a3d0006d1af27c38240ccf78"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -4.6985124226949104e-86}]}",
+    "hash": "bf7c4d71cf179faa0f4f207745e7e6b167d1cd8b05e3dda831ba26723c0ea661"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.1660769835869925e+140}]}",
+    "hash": "b5f0681f27b0b1b983f78d7648b87c0a2e1daf2cc0bfe524d3e7ec39a4cfcada"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.2527762699618636e-251}]}",
+    "hash": "9563cadce6b8513da9c2318a6f8fa8fbee475b1768bceac8a6997d5853648658"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.6488704575739936e-289}]}",
+    "hash": "87bac63a618066d7442c66fe1f4fbbc36178bdd0994d7ff6e7b314e2c02d47fc"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.520112606199717e-100}]}",
+    "hash": "94b80780a7806906ee7029d8562edb338c071ad0a2b2697c4e284e0ee1b4bf92"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.0439605632438258e-158}]}",
+    "hash": "f8282d73f389cb1c3aa187c538cc0e9e2939c3aad4879988364a6084e4dad352"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -6.927603823172286e-290}]}",
+    "hash": "bc357d65ec92ebe1bf9322f3ec999bd531afcf40ac42a6bc68bd734147d83499"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.958552895352786e+271}]}",
+    "hash": "48fb7c8fba443aa44947ef0ca6446ad81c51817be2a2d25599c105224871a49f"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 5.354759296551787e+49}]}",
+    "hash": "7f558c44cf08e25ce03703b3e2f9e90f33c80d91a31ada64f729d8474d63b376"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -9.244089376377398e+259}]}",
+    "hash": "3a35d504ea46facb68d51f4c764fab085745bbedf16501f408044b03cd06127e"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 4.4765521101718296e-74}]}",
+    "hash": "6ca95f3f40601af0d7bd2f850ccc32d2a6ebdc4f14e67ede95c7687a195d1e23"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -8.733531990343171e-225}]}",
+    "hash": "3871d0d5d05f7cb5c214a982a67e86131edde72f1c62f40c7abc0d8351d64a66"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.6535226334190337e+56}]}",
+    "hash": "8a869168ff4108273e2e136d8ff6f3b1fe85d3f923f6cce26f407c736ab3c1e7"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.2601937021860854e+221}]}",
+    "hash": "8129c69e60580e0abd04aac7b3a06c30770f36565ac30ea79fe194fb1c59048a"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.7079571446366424e+174}]}",
+    "hash": "378091d015a93e0ebee502a3821583f2df9b8a5bce83abe98611adcbff948195"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.5157685554933404e+63}]}",
+    "hash": "cd0dcd3ec7e6fd9ce26f0063aac827649afbba334302366904bdc3763df46001"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.8653352105364555e-171}]}",
+    "hash": "2f6a986e7531a036cc3243b1de4f07cc9abd225b39d2e51025d4997b7356f058"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -8.70444050553411e-288}]}",
+    "hash": "95418598c06eddf0ed83116876ba542087cc2c2c985782bcc09974f78cf0536c"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 8.469548127010398e-27}]}",
+    "hash": "80a266b0b873e5f0f2a3f7d48ac7963068e8d27efe472ae1818f3cb069fe3c41"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.7089786766991043e-64}]}",
+    "hash": "fdc99c1d5081282fb2d1dc706daf78c9eaf387a07acc3ca639c03f348274b885"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.6377336116671962e-250}]}",
+    "hash": "1a53d2488b1f2738f656d54adc0d466ea4fb51feb33389f2d93dc2f196178af3"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -6.868465392101122e-118}]}",
+    "hash": "1227924b28ba3834bac73bbab85894fbc0731438e3d414a49acebe26f2ce0db6"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -4.882001634750106e+194}]}",
+    "hash": "a476085beb4797fe04a157393551c2886bb0c18a975d0d16983956fecb7a1843"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.1003331530924853e-144}]}",
+    "hash": "547b04e5ccd62209f5d06c8244fb60e91767253d7cff536ba058e8fe2b5db5db"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 6.748955095666828e+292}]}",
+    "hash": "ca67230ca2ddf444b23e7bb24101a8092a980b6520f744c3e3f8668517f6603c"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.146008831068016e-304}]}",
+    "hash": "0a8894b60955781d097e76f462e316951c45c8d051d0e356d2885f4681618b6e"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.948925930714889e+162}]}",
+    "hash": "fa764a6d9bdaf7917d6a909a9eeddd62a4b69a8420f34fa07b05128158f0202a"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -4.1400717309794907e-88}]}",
+    "hash": "ab32409cdfb06e51bc9f00cb8a787f008b86604c2024b4c6ab2f683177d4f073"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.1787539058580876e-263}]}",
+    "hash": "4c84f029bbc069f78faeeed669e081cc9fc47be1a786faedfd7a439036e6ce05"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.3099122716266728e+299}]}",
+    "hash": "6b04a4fbc40d9c0892cf6bf75f0c0f5bd6af3c807a2dcefdb53a2c37ce8ae999"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -4.357827049451581e+277}]}",
+    "hash": "dd955b47882ff689c1c0c370780c75d14d481ec1bcbb66ae1baa3bcc1e6f6434"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.3069425560424127e-239}]}",
+    "hash": "7ec0d12cb76f06eb802983946d2d8eba6c2c61a76bddbef9adcfa8d749a2d691"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 5.579236865462825e+119}]}",
+    "hash": "b2476d9ec54cadf7c7d9afae17b5f5b34d533ee359811ff9df805017e32e2dff"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.244805571648382e-06}]}",
+    "hash": "bc5ea2ad9956d945a5e1c9ac3fd1033f14f185bbfafc7ea7a3152eed2fda77cc"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.711831521294754e+208}]}",
+    "hash": "2ec661eae21a36a77b54c0a1975d8799d14803dd22cf3c086e2b5af435ddb15e"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.8106968011420087e+102}]}",
+    "hash": "258e29907810e8499c6d94e02fb4cc58129c75905f37af40fae36e35a41a5d05"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 4.5235048975189585e+42}]}",
+    "hash": "47291294d8d01e056d8bd3a2a1b8adb91f4af9f09db4eb8af7a2dc227d197aab"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -2.4494174813577417e-294}]}",
+    "hash": "cd68f385c31d84b89709fb79eda45dbcd03cf80720b9d5a225898ff2bc1cd55a"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -3.855867777653165e-07}]}",
+    "hash": "da28b7f36b5ec5aef629051011a03d47d089bfd796c5b002b83649d49e915e94"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -1.0757096465905386e+273}]}",
+    "hash": "cca6338036d37a1252eec05001789578c908f6f15ef50e26ad7392963022b36e"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 6.637356623068653e+170}]}",
+    "hash": "d3fea1f133373dd1e2e9e5f4f096e726fade56ece0b8b3d0cdae37c337a87369"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1.1238372295076877e-242}]}",
+    "hash": "83ed8269a76106826685eda276b8748af61dfd0e5f5787067cc843236d01a1e3"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 6.771562714588548e+272}]}",
+    "hash": "c478c0f7720143ac112bac4219e71ad9800f2b3bbf2f44273ae49077914b84bb"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.72565986791198e-78}]}",
+    "hash": "9114a0a10f8167caf9d068912489860fb157dfe28525c52b023385875d869de2"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 9.58162642717007e+39}]}",
+    "hash": "716ea4e9ba082331e5aae6304b8b69afd22ca406154147800605b20e27237aee"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 5.248845235295036e-43}]}",
+    "hash": "00b336ff00894442dcb3d7c59a65391c3544fbac9667fd9e55099d0e91fdad56"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 2.787018449646134e-145}]}",
+    "hash": "1bfeacc875dce34f50e177c524b5e00dae52f580949867084d08e8c324ffb125"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": -4.979432753409029e-249}]}",
+    "hash": "586cc9b83ff8c82463c5a6e140ede2deebe24d381743225f12702d658de9f8d2"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 6.385272743096218e+173}]}",
+    "hash": "e387e9e764414a7eca4c7c23eeb59d2c5f7ac48d677346ac674002cd8b8dc96d"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"numeric-test\", \"activation_height\": 12, \"changes\": [{\"key\": \"con_x.value\", \"value\": 3.042672012412447e-146}]}",
+    "hash": "97232f6b8f9c7e36ee7e13d5d54704d507baf26a501f93eea793da766b838bda"
+  },
+  {
+    "source": "{\"version\": 1, \"patch_id\": \"null-test\", \"activation_height\": 9007199254740993, \"summary\": null, \"uri\": null, \"changes\": [{\"key\": \"con_x.value\", \"value\": 1, \"comment\": null}]}",
+    "hash": "919f370085ec72496520e57ffcadc86cf7705a943b74c409d37f1a28f58dbc09"
+  }
+]

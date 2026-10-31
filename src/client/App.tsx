@@ -1298,7 +1298,7 @@ function BundleVerifier({
       return;
     }
     try {
-      const bundle = parseStatePatchBundle(JSON.parse(text));
+      const bundle = parseStatePatchBundle(text);
       setHashResult(computeStatePatchBundleHash(bundle));
       setHashError(null);
     } catch (error) {

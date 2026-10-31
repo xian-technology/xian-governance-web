@@ -323,7 +323,7 @@ export function CreateProposal({
               disabled={!bundleJson.trim()}
               onClick={() => {
                 try {
-                  const bundle = parseStatePatchBundle(JSON.parse(bundleJson));
+                  const bundle = parseStatePatchBundle(bundleJson);
                   const hash = computeStatePatchBundleHash(bundle);
                   setBundleHash(hash);
                   setPatchId((current) => current || bundle.patch_id);

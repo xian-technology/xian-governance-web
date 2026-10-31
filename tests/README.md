@@ -25,3 +25,9 @@ client helpers, wallet integration, and the canonical state-patch hash.
 ## Next
 
 - Run `npm run test` from the repo root.
+
+State-patch numeric fixtures are captured through the sibling node’s actual
+`StatePatchManager._load_bundle_file` using
+`../xian-abci/.venv/bin/python scripts/capture-state-patch-fixtures.py`. They
+include fixed boundaries and 500 seeded binary64 samples; browser tests consume
+the original JSON text and compare the resulting digest.

@@ -83,8 +83,13 @@ Express serves the built client bundle.
   canonical JSON ordering and SHA-256 bundle hash format expected by the
   chain-side state-patch workflow for supported JSON values. It uses Unicode
   code-point ordering and ASCII escaping, including nested numeric-looking keys.
-  Verify original bundles containing large integers or floating-point JSON
-  values with node-side tooling; JavaScript parsing loses numeric information.
+  Both paste flows preserve numeric tokens before hashing: large integers stay
+  exact, and floating-point values use the node-compatible canonical form.
+  Explicit null comments/summary/URI remain null. Duplicate change keys and
+  direct generated-artifact patches are rejected. The browser accepts standard
+  JSON with finite numbers, up to 1 MiB of text and 128 nesting levels.
+  Object-based callers must pass original JSON text for non-integer numbers or
+  integers outside JavaScript’s safe range.
 
 ## Capabilities
 
