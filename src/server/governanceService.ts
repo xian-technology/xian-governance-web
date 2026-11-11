@@ -1,6 +1,15 @@
 import type { XianIndexedEvent } from "@xian-tech/client";
 
-import { amountValue, asNumber, asString, exactInteger, isRecord, titleFromPayload } from "../shared/format.js";
+import {
+  amountValue,
+  asNumber,
+  asString,
+  exactInteger,
+  isExpiringSoon,
+  isPastExpiry,
+  isRecord,
+  titleFromPayload
+} from "../shared/format.js";
 import type {
   GovernanceHistoryEvent,
   GovernanceHistoryResponse,
@@ -109,7 +118,7 @@ export class GovernanceService {
       activeValidators,
       totalVotingWeight,
       pendingProposals: pending.length,
-      expiringSoon: pending.filter((proposal) => expiresSoon(proposal.expiresAt)).length,
+      expiringSoon: pending.filter((proposal) => isExpiringSoon(proposal.expiresAt)).length,
       scheduledPatches: patches.filter((patch) => patch.status === "approved").length,
       governance
     };
@@ -185,8 +194,11 @@ export class GovernanceService {
     // part); list-level history badges come from the single recent-events
     // call inside `enrichSummariesWithRecentHistory`.
     const includeVotes = Boolean(account);
-    const details = await this.proposalDetails(networkId, { includeVotes });
-    const summaries = details.map((detail) => toSummary(detail, account));
+    const [details, latestHeight] = await Promise.all([
+      this.proposalDetails(networkId, { includeVotes }),
+      account ? this.latestHeight(networkId) : null
+    ]);
+    const summaries = details.map((detail) => toSummary(detail, account, latestHeight));
     const proposals = await this.enrichSummariesWithRecentHistory(
       networkId,
       summaries,
@@ -213,14 +225,25 @@ export class GovernanceService {
     proposalId: number,
     account?: string | null,
   ): Promise<ProposalDetail | null> {
-    const detail =
+    const [detail, latestHeight] = await Promise.all([
       layer === "protocol"
-        ? await this.protocolProposal(networkId, proposalId)
-        : await this.validatorProposal(networkId, proposalId);
+        ? this.protocolProposal(networkId, proposalId)
+        : this.validatorProposal(networkId, proposalId),
+      account ? this.latestHeight(networkId) : null
+    ]);
     if (!detail) {
       return null;
     }
-    return { ...detail, viewer: computeViewer(detail, detail.votes, account) };
+    return { ...detail, viewer: computeViewer(detail, detail.votes, account, latestHeight) };
+  }
+
+  /** Latest committed height, or null when the node status is unavailable. */
+  private async latestHeight(networkId: string): Promise<number | string | null> {
+    try {
+      return (await this.clientFor(networkId).getChainStatus()).latestHeight;
+    } catch {
+      return null;
+    }
   }
 
   async proposalVotes(
@@ -1036,13 +1059,15 @@ async function mapWithConcurrency<T, R>(
 /**
  * Compute a connected account's relationship to a proposal from its
  * snapshotted vote matrix. Mirrors the chain's eligibility rules: an account
- * can still vote only when the proposal is pending, it holds snapshot weight,
- * and it has not already voted.
+ * can still vote only when the proposal is pending and unexpired, a state
+ * patch's activation height is still ahead, it holds snapshot weight, and it
+ * has not already voted.
  */
 function computeViewer(
   proposal: ProposalSummary,
   votes: VoteRecord[],
   account?: string | null,
+  latestHeight: number | string | null = null,
 ): ProposalViewerState | null {
   if (!account) {
     return null;
@@ -1052,7 +1077,12 @@ function computeViewer(
   const vote = record?.vote ?? null;
   return {
     account,
-    eligible: proposal.status === "pending" && BigInt(weight) > 0n && vote === null,
+    eligible:
+      proposal.status === "pending" &&
+      !isPastExpiry(proposal.expiresAt) &&
+      !patchActivationReached(proposal, latestHeight) &&
+      BigInt(weight) > 0n &&
+      vote === null,
     hasVoted: vote !== null,
     vote,
     weight,
@@ -1061,11 +1091,29 @@ function computeViewer(
 }
 
 /**
+ * The chain rejects votes on a state patch once the executing block would be
+ * past its activation height, i.e. from `latestHeight >= activationHeight`.
+ */
+function patchActivationReached(
+  proposal: ProposalSummary,
+  latestHeight: number | string | null,
+): boolean {
+  if (proposal.kind !== "state_patch" || proposal.activationHeight == null || latestHeight == null) {
+    return false;
+  }
+  return BigInt(latestHeight) >= BigInt(proposal.activationHeight);
+}
+
+/**
  * Reduce a fully-loaded proposal detail to the list summary, attaching
  * per-viewer eligibility and dropping heavy detail-only fields (votes,
  * timeline, payload) from the list payload.
  */
-function toSummary(detail: ProposalDetail, account?: string | null): ProposalSummary {
+function toSummary(
+  detail: ProposalDetail,
+  account?: string | null,
+  latestHeight: number | string | null = null,
+): ProposalSummary {
   const {
     votes,
     payload: _payload,
@@ -1077,7 +1125,7 @@ function toSummary(detail: ProposalDetail, account?: string | null): ProposalSum
     result: _result,
     ...summary
   } = detail;
-  return { ...summary, viewer: computeViewer(summary, votes, account) };
+  return { ...summary, viewer: computeViewer(summary, votes, account, latestHeight) };
 }
 
 function normalizeStatus(value: unknown): ProposalStatus {
@@ -1128,15 +1176,4 @@ function stringValues(value: unknown): string[] {
 
 function pad(value: unknown): string {
   return String(value ?? 0).padStart(2, "0");
-}
-
-function expiresSoon(value: string | null | undefined): boolean {
-  if (!value) {
-    return false;
-  }
-  const expiresAt = Date.parse(value);
-  if (!Number.isFinite(expiresAt)) {
-    return false;
-  }
-  return expiresAt - Date.now() <= 48 * 60 * 60 * 1000;
 }

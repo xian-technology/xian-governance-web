@@ -1,6 +1,13 @@
-import { useXianWallet, type WalletState } from "@xian-tech/web-kit";
+import {
+  assertSendCallSucceeded,
+  useXianWallet,
+  type CallIntent,
+  type SendCallResult,
+  type WalletState
+} from "@xian-tech/web-kit";
 import type { InjectedXianWallet } from "@xian-tech/provider";
 
+import { isPastExpiry } from "../shared/format";
 import type {
   GovernanceLayer,
   NetworkConfig,
@@ -33,10 +40,13 @@ export function resolveGovernanceContracts(
 }
 
 export function canVote(
-  proposal: Pick<ProposalSummary, "status" | "viewer"> & Partial<Pick<ProposalDetail, "votes">>,
+  proposal: Pick<ProposalSummary, "status" | "viewer" | "expiresAt"> &
+    Partial<Pick<ProposalDetail, "votes">>,
   account: string | null,
 ): boolean {
-  if (!account || proposal.status !== "pending") {
+  // The chain keeps an expired proposal "pending" until someone finalizes
+  // it, but rejects every vote once its expiry has passed.
+  if (!account || proposal.status !== "pending" || canExpire(proposal)) {
     return false;
   }
   // Prefer the server-computed viewer state; fall back to the vote matrix
@@ -55,11 +65,7 @@ export function canVote(
 export function canExpire(
   proposal: Pick<ProposalSummary, "status" | "expiresAt">,
 ): boolean {
-  if (proposal.status !== "pending" || !proposal.expiresAt) {
-    return false;
-  }
-  const expiresAt = Date.parse(proposal.expiresAt);
-  return Number.isFinite(expiresAt) && expiresAt <= Date.now();
+  return proposal.status === "pending" && isPastExpiry(proposal.expiresAt);
 }
 
 export class ChainMismatchError extends Error {
@@ -74,8 +80,9 @@ export class ChainMismatchError extends Error {
 
 /**
  * Pin the chain id before any signing flow. If the connected wallet's chain
- * differs from the network the user is viewing, refuse to build the call so a
- * vote/proposal can never land on the wrong chain.
+ * differs from the network the user is viewing, or that network's chain id is
+ * not known yet, refuse to build the call so a vote/proposal can never land on
+ * the wrong chain.
  */
 export function resolveSigningChainId(
   walletChainId: string | null,
@@ -84,10 +91,30 @@ export function resolveSigningChainId(
   if (!walletChainId) {
     throw new Error("connect wallet first");
   }
-  if (networkChainId && walletChainId !== networkChainId) {
+  if (!networkChainId) {
+    throw new Error("The network chain id is not known yet; wait for chain status before signing.");
+  }
+  if (walletChainId !== networkChainId) {
     throw new ChainMismatchError(walletChainId, networkChainId);
   }
-  return networkChainId ?? walletChainId;
+  return networkChainId;
+}
+
+/**
+ * Submit a governance call through the injected wallet and fail unless the
+ * transaction was admitted and executed successfully. The provider resolves
+ * (rather than rejects) on CheckTx rejection and on failed execution.
+ */
+export async function sendGovernanceCall(
+  wallet: InjectedXianWallet,
+  intent: CallIntent,
+): Promise<SendCallResult> {
+  const result = (await wallet.sendCall(intent, {
+    mode: "checktx",
+    waitForTx: true
+  })) as SendCallResult;
+  assertSendCallSucceeded(result);
+  return result;
 }
 
 export async function submitVote(
@@ -98,15 +125,7 @@ export async function submitVote(
   support: boolean,
 ) {
   const call = voteCallFor(proposal.layer, proposal.proposalId, support, contracts);
-  return wallet.sendCall(
-    {
-      chainId,
-      contract: call.contract,
-      function: call.function,
-      kwargs: call.kwargs
-    },
-    { mode: "checktx", waitForTx: true },
-  );
+  return sendGovernanceCall(wallet, { chainId, ...call });
 }
 
 export async function submitExpire(
@@ -117,15 +136,7 @@ export async function submitExpire(
   proposalId: number,
 ) {
   const call = expireCallFor(layer, proposalId, contracts);
-  return wallet.sendCall(
-    {
-      chainId,
-      contract: call.contract,
-      function: call.function,
-      kwargs: call.kwargs
-    },
-    { mode: "checktx", waitForTx: true },
-  );
+  return sendGovernanceCall(wallet, { chainId, ...call });
 }
 
 function voteCallFor(

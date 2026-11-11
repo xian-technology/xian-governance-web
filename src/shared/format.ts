@@ -33,6 +33,20 @@ export function positiveAmount(value: number | string | null | undefined): boole
   return !text.startsWith("-") && /[1-9]/.test(text);
 }
 
+/** True once an ISO expiry timestamp has been reached (the chain rejects votes from then on). */
+export function isPastExpiry(expiresAt: string | null | undefined, now = Date.now()): boolean {
+  const expiry = Date.parse(expiresAt ?? "");
+  return Number.isFinite(expiry) && expiry <= now;
+}
+
+const EXPIRING_SOON_MS = 48 * 60 * 60 * 1000;
+
+/** True while an expiry is still ahead but within the next 48 hours. */
+export function isExpiringSoon(expiresAt: string | null | undefined, now = Date.now()): boolean {
+  const expiry = Date.parse(expiresAt ?? "");
+  return Number.isFinite(expiry) && expiry > now && expiry - now <= EXPIRING_SOON_MS;
+}
+
 export function asString(value: unknown): string | null {
   return typeof value === "string" && value.length > 0 ? value : null;
 }

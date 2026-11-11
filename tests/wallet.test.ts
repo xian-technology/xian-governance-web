@@ -1,7 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 
 import {
+  canExpire,
+  ChainMismatchError,
+  canVote,
   resolveGovernanceContracts,
+  resolveSigningChainId,
   submitExpire,
   submitVote
 } from "../src/client/wallet";
@@ -76,5 +80,51 @@ describe("wallet governance calls", () => {
       },
       { mode: "checktx", waitForTx: true },
     );
+  });
+});
+
+describe("wallet governance call outcomes", () => {
+  const cases: Array<[string, Record<string, unknown>, string]> = [
+    ["fails on-chain", { submitted: true, accepted: true, finalized: true, txHash: "abc",
+      receipt: { success: false, message: "Proposal expired." } }, "Proposal expired."],
+    ["is rejected by CheckTx", { submitted: true, accepted: false, finalized: false,
+      message: "Nonce too low" }, "Nonce too low"]
+  ];
+
+  for (const [label, outcome, message] of cases) {
+    it(`rejects a vote that ${label}`, async () => {
+      const wallet = { sendCall: vi.fn(async () => outcome) } as unknown as Parameters<typeof submitVote>[0];
+      await expect(submitVote(wallet, "chain-a", contracts, baseProposal, true)).rejects.toThrow(message);
+    });
+
+    it(`rejects an expiration that ${label}`, async () => {
+      const wallet = { sendCall: vi.fn(async () => outcome) } as unknown as Parameters<typeof submitExpire>[0];
+      await expect(submitExpire(wallet, "chain-a", contracts, "protocol", 7)).rejects.toThrow(message);
+    });
+  }
+
+  it("does not offer a vote on a pending proposal whose expiry has passed", () => {
+    const expired = {
+      ...baseProposal,
+      expiresAt: new Date(Date.now() - 60_000).toISOString(),
+      viewer: { account: "me", eligible: true, hasVoted: false, vote: null, weight: 1, isProposer: false }
+    };
+    expect(canVote(expired, "me")).toBe(false);
+    expect(canExpire(expired)).toBe(true);
+    const open = { ...expired, expiresAt: new Date(Date.now() + 60_000).toISOString() };
+    expect(canVote(open, "me")).toBe(true);
+  });
+});
+
+describe("signing chain pinning", () => {
+  it("signs only for the chain the console is reading", () => {
+    expect(resolveSigningChainId("chain-a", "chain-a")).toBe("chain-a");
+    expect(() => resolveSigningChainId("chain-b", "chain-a")).toThrow(ChainMismatchError);
+    expect(() => resolveSigningChainId(null, "chain-a")).toThrow("connect wallet first");
+  });
+
+  it("refuses to sign while the console's chain id is unknown", () => {
+    expect(() => resolveSigningChainId("chain-a", null)).toThrow(/chain id/i);
+    expect(() => resolveSigningChainId("chain-a", undefined)).toThrow(/chain id/i);
   });
 });

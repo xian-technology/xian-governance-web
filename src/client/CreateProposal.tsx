@@ -7,6 +7,7 @@ import {
   ChainMismatchError,
   resolveGovernanceContracts,
   resolveSigningChainId,
+  sendGovernanceCall,
   type useXianWallet
 } from "./wallet";
 import {
@@ -189,10 +190,10 @@ export function CreateProposal({
       const intent = buildIntent();
       setBusy(true);
       setStatus("Waiting for wallet approval…");
-      const result = await wallet.wallet.sendCall(
-        { chainId: signingChainId, ...intent },
-        { mode: "checktx", waitForTx: true },
-      );
+      const result = await sendGovernanceCall(wallet.wallet, {
+        chainId: signingChainId,
+        ...intent
+      });
       setStatus(`Submitted ${result.txHash ?? "transaction"}`);
       onSubmitted();
     } catch (caught) {

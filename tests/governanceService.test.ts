@@ -91,3 +91,49 @@ it("returns the full consensus timestamp and sums validator weights as integers"
   expect((await service.statePatches("local")).patches[0].appliedAtNanos).toBe(String(nanos));
   expect((await service.overview("local")).totalVotingWeight).toBe("9007199254740993");
 });
+
+it("does not mark an expired pending proposal as needing the viewer's vote", async () => {
+  const network = { id: "local", name: "Local", rpcUrl: "http://localhost",
+    governanceContract: "governance", membershipContract: "validators" };
+  const service = new GovernanceService([network]);
+  const past = new Date(Date.now() - 60_000);
+  const time = (d: Date) => ({ __time__: [d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate(),
+    d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds()] });
+  vi.spyOn(XianReadClient.prototype, "scanKeySuffixes").mockResolvedValue(["me"]);
+  vi.spyOn(XianReadClient.prototype, "listEvents").mockRejectedValue(new Error("no bds"));
+  vi.spyOn(XianReadClient.prototype, "getState").mockImplementation(async (_contract, name) =>
+    name === "proposal_vote_weights" ? 5 : null);
+  vi.spyOn(XianReadClient.prototype, "call").mockImplementation(async (_contract, method) => {
+    if (method === "get_proposal") return { kind: "contract_call", status: "pending",
+      expires_at: time(past), created_at: time(past) };
+    return [];
+  });
+  const proposal = await service.proposal("local", "protocol", 1, "me");
+  expect(proposal?.status).toBe("pending");
+  expect(proposal?.viewer).toMatchObject({ eligible: false, hasVoted: false, weight: 5 });
+});
+
+it("closes voting on a state patch once its activation height is reached", async () => {
+  const network = { id: "local", name: "Local", rpcUrl: "http://localhost",
+    governanceContract: "governance", membershipContract: "validators" };
+  const future = new Date(Date.now() + 86_400_000);
+  const time = (d: Date) => ({ __time__: [d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate(),
+    d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds()] });
+  vi.spyOn(XianReadClient.prototype, "scanKeySuffixes").mockResolvedValue(["me"]);
+  vi.spyOn(XianReadClient.prototype, "listEvents").mockRejectedValue(new Error("no bds"));
+  vi.spyOn(XianReadClient.prototype, "recentEvents").mockRejectedValue(new Error("no bds"));
+  vi.spyOn(XianReadClient.prototype, "getState").mockImplementation(async (_contract, name) =>
+    name === "proposal_vote_weights" ? 5 : name === "proposal_count" ? 1 : null);
+  vi.spyOn(XianReadClient.prototype, "call").mockImplementation(async (_contract, method) => {
+    if (method === "get_proposal") return { kind: "state_patch", status: "pending", patch_id: "p1",
+      activation_height: 10, expires_at: time(future) };
+    return [];
+  });
+  const status = vi.spyOn(XianReadClient.prototype, "getChainStatus");
+  for (const [height, eligible] of [[9, true], [10, false], [11, false]] as const) {
+    status.mockResolvedValue({ chainId: "local", latestHeight: height, catchingUp: false, nodeMoniker: null });
+    const service = new GovernanceService([network]);
+    expect((await service.proposal("local", "protocol", 1, "me"))?.viewer?.eligible).toBe(eligible);
+    expect((await service.proposals("local", "me")).proposals[0]?.viewer?.eligible).toBe(eligible);
+  }
+});

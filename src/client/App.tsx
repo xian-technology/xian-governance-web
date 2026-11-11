@@ -46,7 +46,7 @@ import {
   shortHash,
   StatusBadge
 } from "./components";
-import { positiveAmount, shortAddress } from "../shared/format";
+import { isExpiringSoon, positiveAmount, shortAddress } from "../shared/format";
 import {
   computeStatePatchBundleHash,
   parseStatePatchBundle
@@ -628,7 +628,9 @@ function matchesFilters(proposal: ProposalSummary, filters: ProposalFilters): bo
   if (filters.type !== "all" && proposal.type !== filters.type) return false;
   if (filters.needsVote && !proposal.viewer?.eligible) return false;
   if (filters.emergency && !proposal.emergency) return false;
-  if (filters.expiringSoon && !isExpiringSoon(proposal)) return false;
+  if (filters.expiringSoon && !(proposal.status === "pending" && isExpiringSoon(proposal.expiresAt))) {
+    return false;
+  }
   if (filters.search.trim()) {
     const needle = filters.search.trim().toLowerCase();
     const haystack = [
@@ -643,14 +645,6 @@ function matchesFilters(proposal: ProposalSummary, filters: ProposalFilters): bo
     if (!haystack.includes(needle)) return false;
   }
   return true;
-}
-
-function isExpiringSoon(proposal: ProposalSummary): boolean {
-  if (proposal.status !== "pending" || !proposal.expiresAt) return false;
-  const expiresAt = Date.parse(proposal.expiresAt);
-  if (!Number.isFinite(expiresAt)) return false;
-  const delta = expiresAt - Date.now();
-  return delta > 0 && delta <= 48 * 60 * 60 * 1000;
 }
 
 function ProposalList({
@@ -863,7 +857,9 @@ function ViewerStatus({ proposal, account }: { proposal: ProposalDetail; account
   if (viewer.eligible) {
     return <div className="viewer-status eligible">You can vote on this proposal (weight {viewer.weight}).</div>;
   }
-  if (proposal.status !== "pending") {
+  // A weighted, not-yet-voted account is ineligible only because voting closed
+  // (expiry passed or a state patch reached its activation height).
+  if (proposal.status !== "pending" || canExpire(proposal) || BigInt(viewer.weight) > 0n) {
     return <div className="viewer-status muted">Voting is closed for this proposal.</div>;
   }
   return <div className="viewer-status muted">Your account is not eligible to vote on this proposal.</div>;

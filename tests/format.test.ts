@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { extractUrls, titleFromPayload } from "../src/shared/format";
+import { extractUrls, isExpiringSoon, isPastExpiry, titleFromPayload } from "../src/shared/format";
 
 describe("titleFromPayload", () => {
   it("describes contract calls", () => {
@@ -60,5 +60,17 @@ describe("extractUrls", () => {
   it("returns an empty array for empty input", () => {
     expect(extractUrls(null)).toEqual([]);
     expect(extractUrls("")).toEqual([]);
+  });
+});
+
+describe("proposal expiry windows", () => {
+  const now = Date.parse("2026-01-10T00:00:00Z");
+  it("counts only open proposals expiring within 48 hours as expiring soon", () => {
+    expect(isExpiringSoon("2026-01-11T00:00:00Z", now)).toBe(true);
+    expect(isExpiringSoon("2026-01-09T23:59:00Z", now)).toBe(false);
+    expect(isExpiringSoon("2026-01-13T00:00:00Z", now)).toBe(false);
+    expect(isExpiringSoon(null, now)).toBe(false);
+    expect(isPastExpiry("2026-01-10T00:00:00Z", now)).toBe(true);
+    expect(isPastExpiry("2026-01-10T00:00:01Z", now)).toBe(false);
   });
 });
