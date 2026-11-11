@@ -91,6 +91,17 @@ Express serves the built client bundle.
   Object-based callers must pass original JSON text for non-integer numbers or
   integers outside JavaScript’s safe range.
 
+## Contract amounts and votes
+
+The console selects `xian_vm_v2`. In contract-call kwargs and validator-vote
+JSON, write decimal and integer literals directly. The preview, simulator and
+wallet receive the same exact values. A fractional DAO payout can use
+`{"contract_name":"currency","amount":0.000000000000000000000000000001,"to":"..."}`.
+Large integers use `__big_int__` and decimals use `__fixed__` in the call preview.
+The four reward shares must sum to exactly one at the VM’s 30-place scale.
+The API returns decimal strings and preserves large voting weights, token
+bonds and nanosecond timestamps as text.
+
 ## Capabilities
 
 | Area | What the app does |

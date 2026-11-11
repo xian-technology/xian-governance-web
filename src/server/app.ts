@@ -1,3 +1,4 @@
+import { parseContractJson } from "@xian-tech/client";
 import cors from "cors";
 import express from "express";
 import path from "node:path";
@@ -26,12 +27,16 @@ export function createApiApp(
   options: ApiOptions = {},
 ): express.Express {
   const app = express();
+  // RPC replies can contain exact integers beyond the JSON number range.
+  app.set("json replacer", (_key: string, value: unknown) =>
+    typeof value === "bigint" ? { __big_int__: value.toString() } : value
+  );
   const corsOrigins = options.corsOrigins ?? [];
   if (corsOrigins.length > 0) {
     app.use(cors({ origin: corsOrigins.includes("*") ? true : corsOrigins }));
   }
   const exposeErrors = options.exposeErrors ?? process.env.NODE_ENV !== "production";
-  app.use(express.json({ limit: "1mb" }));
+
 
   app.get("/api/health", (_req, res) => {
     res.json({ ok: true });
@@ -64,7 +69,7 @@ export function createApiApp(
       const proposal = await service.proposal(
         param(req, "networkId"),
         layer,
-        Number(param(req, "proposalId")),
+        readProposalId(req),
         queryAccount(req),
       );
       if (!proposal) {
@@ -83,7 +88,7 @@ export function createApiApp(
         votes: await service.proposalVotes(
           param(req, "networkId"),
           layer,
-          Number(param(req, "proposalId")),
+          readProposalId(req),
         )
       });
     }),
@@ -100,19 +105,26 @@ export function createApiApp(
     }),
   );
 
-  app.post("/api/networks/:networkId/simulate", asyncHandler(async (req, res) => {
-    if (!isRecord(req.body)) {
+  app.post("/api/networks/:networkId/simulate", express.text({ type: "application/json", limit: "1mb" }), asyncHandler(async (req, res) => {
+    let body: unknown;
+    try {
+      body = typeof req.body === "string" ? parseContractJson(req.body) : null;
+    } catch (error) {
+      res.status(400).json({ error: error instanceof Error ? error.message : "invalid contract JSON" });
+      return;
+    }
+    if (!isRecord(body)) {
       res.status(400).json({ error: "request body must be an object" });
       return;
     }
-    res.json(await service.simulate(param(req, "networkId"), req.body));
+    res.json(await service.simulate(param(req, "networkId"), body));
   }));
 
   app.use((error: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
     const message = error instanceof Error ? error.message : "unknown error";
     const status = message.startsWith("unknown network")
       ? 404
-      : message.startsWith("unknown governance layer")
+      : message.startsWith("unknown governance layer") || message === "invalid proposal ID"
         ? 400
         : 502;
     if (status >= 500 && !exposeErrors) {
@@ -164,6 +176,13 @@ function parseLayer(value: string): GovernanceLayer {
     return value;
   }
   throw new Error(`unknown governance layer ${value}`);
+}
+
+function readProposalId(req: express.Request): number {
+  const text = param(req, "proposalId");
+  const value = Number(text);
+  if (!/^\d+$/.test(text) || !Number.isSafeInteger(value)) throw new Error("invalid proposal ID");
+  return value;
 }
 
 function param(req: express.Request, name: string): string {

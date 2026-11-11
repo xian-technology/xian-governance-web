@@ -21,7 +21,7 @@ export interface NetworkConfig {
 
 export interface ChainStatus {
   chainId: string | null;
-  latestHeight: number | null;
+  latestHeight: number | string | null;
   catchingUp: boolean | null;
   nodeMoniker: string | null;
 }
@@ -39,10 +39,10 @@ export interface ValidatorRecord {
   lastSlashedAt?: string | null;
   lastEvidenceId?: string | null;
   lastEvidenceType?: string | null;
-  lastEvidenceHeight?: number | null;
+  lastEvidenceHeight?: number | string | null;
   lastEvidenceAt?: string | null;
-  power: number;
-  requestedPower?: number | null;
+  power: number | string;
+  requestedPower?: number | string | null;
   rewardKey?: string | null;
   networkEndpoint?: string | null;
   metadataUri?: string | null;
@@ -51,14 +51,14 @@ export interface ValidatorRecord {
   totalDelegated?: number | string | null;
   totalBond?: number | string | null;
   commissionBps?: number | null;
-  delegatorCount?: number | null;
-  pendingUnbondCount?: number | null;
+  delegatorCount?: number | string | null;
+  pendingUnbondCount?: number | string | null;
   pendingUnbondTotal?: number | string | null;
   nextUnbondUnlockAt?: string | null;
   pendingRegistration?: boolean;
   pendingLeaveAt?: string | null;
-  lastRebalanceEpoch?: number | null;
-  eligibleAtEpoch?: number | null;
+  lastRebalanceEpoch?: number | string | null;
+  eligibleAtEpoch?: number | string | null;
   selectionEligibleAtLastRebalance?: boolean;
   registeredAt?: string | null;
   joinedAt?: string | null;
@@ -70,7 +70,7 @@ export interface VoteRecord {
   layer: GovernanceLayer;
   voter: string;
   vote: "yes" | "no" | null;
-  weight: number;
+  weight: number | string;
   txHash?: string | null;
   blockHeight?: number | null;
   votedAt?: string | null;
@@ -87,7 +87,7 @@ export interface ProposalViewerState {
   eligible: boolean;
   hasVoted: boolean;
   vote: "yes" | "no" | null;
-  weight: number;
+  weight: number | string;
   isProposer: boolean;
 }
 
@@ -119,14 +119,14 @@ export interface ProposalSummary {
   expiresAt?: string | null;
   yesVotes: number;
   noVotes: number;
-  yesWeight: number;
-  noWeight: number;
+  yesWeight: number | string;
+  noWeight: number | string;
   requiredYesVotes: number;
-  requiredYesWeight: number;
-  totalWeightSnapshot: number;
+  requiredYesWeight: number | string;
+  totalWeightSnapshot: number | string;
   emergency?: boolean;
   patchId?: string | null;
-  activationHeight?: number | null;
+  activationHeight?: number | string | null;
   targetContract?: string | null;
   targetFunction?: string | null;
   arg?: unknown;
@@ -156,12 +156,12 @@ export interface StatePatchRecord {
   summary?: string | null;
   uri?: string | null;
   bundleHash?: string | null;
-  activationHeight?: number | null;
+  activationHeight?: number | string | null;
   emergency?: boolean;
   createdAt?: string | null;
   approvedAt?: string | null;
-  appliedAtNanos?: number | null;
-  appliedBlockHeight?: number | null;
+  appliedAtNanos?: number | string | null;
+  appliedBlockHeight?: number | string | null;
   appliedBlockHash?: string | null;
   executionHash?: string | null;
 }
@@ -172,13 +172,13 @@ export interface StatePatchRecord {
  * state-patch activation heights and to display thresholds.
  */
 export interface GovernanceParameters {
-  approvalThresholdNumerator: number | null;
-  approvalThresholdDenominator: number | null;
-  emergencyThresholdNumerator: number | null;
-  emergencyThresholdDenominator: number | null;
-  proposalExpiryDays: number | null;
-  minPatchDelayBlocks: number | null;
-  emergencyPatchDelayBlocks: number | null;
+  approvalThresholdNumerator: number | string | null;
+  approvalThresholdDenominator: number | string | null;
+  emergencyThresholdNumerator: number | string | null;
+  emergencyThresholdDenominator: number | string | null;
+  proposalExpiryDays: number | string | null;
+  minPatchDelayBlocks: number | string | null;
+  emergencyPatchDelayBlocks: number | string | null;
 }
 
 export interface NetworkPolicy {
@@ -193,7 +193,7 @@ export interface GovernanceOverview {
   network: NetworkConfig;
   chain: ChainStatus;
   activeValidators: number;
-  totalVotingWeight: number;
+  totalVotingWeight: number | string;
   pendingProposals: number;
   expiringSoon: number;
   scheduledPatches: number;

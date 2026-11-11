@@ -24,7 +24,7 @@ export function Metric({
   );
 }
 
-export function ProgressBar({ value, max }: { value: number; max: number }) {
+export function ProgressBar({ value, max }: { value: number | string; max: number | string }) {
   const width = percent(value, max);
   return (
     <div className="progress" aria-label={`${Math.round(width)} percent`}>

@@ -45,7 +45,7 @@ export function canVote(
     return proposal.viewer.eligible;
   }
   const record = proposal.votes?.find((vote) => vote.voter === account);
-  return Boolean(record && record.weight > 0 && record.vote === null);
+  return Boolean(record && BigInt(record.weight) > 0n && record.vote === null);
 }
 
 /**

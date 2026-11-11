@@ -115,6 +115,19 @@ function fakeService(): GovernanceService {
 }
 
 describe("api app", () => {
+  it("preserves large integers in simulation replies", async () => {
+    const service = fakeService();
+    const simulate = async () => ({ result: { amount: 9007199254740993n } });
+    const app = createApiApp({ ...service, simulate } as unknown as GovernanceService);
+    await request(app)
+      .post("/api/networks/local/simulate")
+      .send({ contract: "currency", function: "balance_of", kwargs: {} })
+      .expect(200)
+      .expect(({ body }) => {
+        expect(body.result.amount).toEqual({ __big_int__: "9007199254740993" });
+      });
+  });
+
   it("serves overview, proposal detail, votes, and validators", async () => {
     const app = createApiApp(fakeService());
 
@@ -147,4 +160,17 @@ describe("api app", () => {
         expect(body.inactive[0].status).toBe("left");
       });
   });
+});
+
+it("preflights user-authored JSON without rounding nested contract numbers", async () => {
+  const simulate = async (_network: string, payload: unknown) => payload;
+  const app = createApiApp({ ...fakeService(), simulate } as unknown as GovernanceService);
+  const amount = "9007199254740993.000000000000000000000000000001";
+  await request(app).post("/api/networks/local/simulate").type("application/json")
+    .send(`{"kwargs":{"args":[${amount},9007199254740993,"1e-3"]}}`).expect(200)
+    .expect(({body}) => expect(body.kwargs.args).toEqual([
+      {__fixed__: amount}, {__big_int__: "9007199254740993"}, "1e-3"
+    ]));
+  await request(app).post("/api/networks/local/simulate").type("application/json")
+    .send('{"kwargs":{"value":1e-31}}').expect(400);
 });

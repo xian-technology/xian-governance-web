@@ -48,7 +48,7 @@ describe("validator vote arg builder", () => {
 
   it("rejects a zero registration fee that would make register unusable", () => {
     const spec = getVoteTypeSpec("change_registration_fee")!;
-    expect(() => buildValidatorArg(spec, { fee: "0" }, "")).toThrow(/>= 1/);
+    expect(() => buildValidatorArg(spec, { fee: "0" }, "")).toThrow(/positive/);
   });
 
   it("rejects non-positive update_policy fields that must be positive", () => {
@@ -81,10 +81,10 @@ describe("validator vote arg builder", () => {
   it("validates raw vote payloads before simulation or signing", () => {
     const rewards = getVoteTypeSpec("reward_change")!;
     expect(buildValidatorArg(rewards, {}, "[0.70,0,0,0.30]")).toEqual([
-      0.70,
+      { __fixed__: "0.7" },
       0,
       0,
-      0.30
+      { __fixed__: "0.3" }
     ]);
     expect(() => buildValidatorArg(rewards, {}, "[0.5,0.6,-0.1,0]")).toThrow(
       /non-negative numbers/,
@@ -148,4 +148,22 @@ describe("validator vote arg builder", () => {
       expect(present.has(type)).toBe(true);
     }
   });
+});
+
+it("keeps fractional DAO and registration fees exact and checks the final reward unit", () => {
+  const amount = "9007199254740993.123456789012345678901234567891";
+  const dao = buildValidatorArg(getVoteTypeSpec("dao_payout")!, {},
+    `{"contract_name":"currency","amount":${amount},"to":"recipient"}`);
+  expect(dao).toEqual({ contract_name: "currency", amount: { __fixed__: amount }, to: "recipient" });
+  expect(buildValidatorArg(getVoteTypeSpec("change_registration_fee")!, { fee: ".25" }, ""))
+    .toEqual({ __fixed__: "0.25" });
+  const reward = getVoteTypeSpec("reward_change")!;
+  const nearest = "0." + "9".repeat(30);
+  expect(() => buildValidatorArg(reward, {}, `[${nearest},0,0,0]`)).toThrow(/sum to 1/);
+  expect(buildValidatorArg(reward, {}, `[${nearest},1e-30,0,0]`)).toEqual([
+    { __fixed__: nearest }, { __fixed__: "0." + "0".repeat(29) + "1" }, 0, 0
+  ]);
+  expect(buildValidatorArg(getVoteTypeSpec("set_member_power")!,
+    { member: "alice", power: "9007199254740993" }, ""))
+    .toEqual({ member: "alice", power: { __big_int__: "9007199254740993" } });
 });

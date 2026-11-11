@@ -6,7 +6,7 @@ import type {
   XianRecentEventsResult
 } from "@xian-tech/client";
 
-import { isRecord } from "../shared/format.js";
+import { exactInteger, isRecord } from "../shared/format.js";
 import type { ChainStatus, NetworkConfig } from "../shared/types.js";
 
 const READ_RETRY_DELAYS_MS = [250, 750];
@@ -16,6 +16,7 @@ export class XianReadClient {
 
   constructor(readonly network: NetworkConfig) {
     this.client = new XianClient({
+      vmProfile: "xian_vm_v2",
       rpcUrl: network.rpcUrl,
       dashboardUrl: network.dashboardUrl
     });
@@ -26,14 +27,14 @@ export class XianReadClient {
     const result = isRecord(status.result) ? status.result : {};
     const nodeInfo = isRecord(result.node_info) ? result.node_info : {};
     const syncInfo = isRecord(result.sync_info) ? result.sync_info : {};
-    const height = Number(syncInfo.latest_block_height ?? NaN);
+
 
     return {
       chainId:
         typeof nodeInfo.network === "string"
           ? nodeInfo.network
           : this.network.chainId ?? null,
-      latestHeight: Number.isFinite(height) ? height : null,
+      latestHeight: exactInteger(syncInfo.latest_block_height),
       catchingUp:
         typeof syncInfo.catching_up === "boolean" ? syncInfo.catching_up : null,
       nodeMoniker:

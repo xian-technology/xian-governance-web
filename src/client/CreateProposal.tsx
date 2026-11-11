@@ -1,3 +1,4 @@
+import { parseContractJson } from "@xian-tech/client";
 import { useMemo, useState } from "react";
 
 import { simulate } from "./api";
@@ -75,7 +76,7 @@ export function CreateProposal({
     ? overview?.governance.emergencyPatchDelayBlocks ?? null
     : overview?.governance.minPatchDelayBlocks ?? null;
   const minActivationHeight =
-    latestHeight != null && minDelay != null ? latestHeight + minDelay : null;
+    latestHeight != null && minDelay != null ? BigInt(latestHeight) + BigInt(minDelay) : null;
 
   function buildIntent(): CallIntent {
     if (template === "contract_call") {
@@ -95,10 +96,10 @@ export function CreateProposal({
     if (template === "state_patch") {
       if (!patchId.trim()) throw new Error("Patch id is required");
       if (!bundleHash.trim()) throw new Error("Bundle hash is required");
-      const height = Number(activationHeight);
-      if (!Number.isInteger(height) || height <= 0) {
+      if (!/^\d+$/.test(activationHeight) || BigInt(activationHeight) <= 0n) {
         throw new Error("Activation height must be a positive integer");
       }
+      const height = BigInt(activationHeight);
       if (minActivationHeight != null && height < minActivationHeight) {
         throw new Error(
           `Activation height must be ≥ ${minActivationHeight} ` +
@@ -111,7 +112,7 @@ export function CreateProposal({
         kwargs: {
           patch_id: patchId.trim(),
           bundle_hash: bundleHash.trim(),
-          activation_height: height,
+          activation_height: parseContractJson(height.toString()),
           summary,
           uri,
           emergency
@@ -353,7 +354,7 @@ export function CreateProposal({
             </select>
           </label>
           {voteSpec ? <ValidatorVoteFields spec={voteSpec} /> : null}
-          {voteSpec?.shape === "account" || voteSpec?.shape === "int" ? (
+          {voteSpec?.shape === "account" || voteSpec?.shape === "scalar" ? (
             <ScalarField spec={voteSpec.scalar!} value={fieldValues[voteSpec.scalar!.name] ?? ""} onChange={setField} />
           ) : null}
           {voteSpec?.shape === "fields"
@@ -512,8 +513,9 @@ function TemplateCard({
 function parseJsonObject(value: string): Record<string, unknown> {
   let parsed: unknown;
   try {
-    parsed = JSON.parse(value);
-  } catch {
+    parsed = parseContractJson(value);
+  } catch (error) {
+    if (!(error instanceof SyntaxError)) throw error;
     throw new Error("Kwargs must be valid JSON");
   }
   if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed)) {

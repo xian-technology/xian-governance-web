@@ -8,20 +8,29 @@ export function shortAddress(value: string | null | undefined, size = 6): string
   return `${value.slice(0, size)}...${value.slice(-size)}`;
 }
 
+/** JSON-safe form of an integer returned by the V2 client or BDS. */
+export function exactInteger(value: unknown): number | string | null {
+  if (isRecord(value)) value = value.__big_int__;
+  if (typeof value === "number") return Number.isSafeInteger(value) ? value : null;
+  if (typeof value !== "bigint" && !(typeof value === "string" && /^-?\d+$/.test(value))) return null;
+  const integer = BigInt(value);
+  const small = Number(integer);
+  return Number.isSafeInteger(small) ? small : integer.toString();
+}
+
 export function asNumber(value: unknown, fallback = 0): number {
-  if (typeof value === "number" && Number.isFinite(value)) {
-    return value;
-  }
-  if (typeof value === "bigint") {
-    return Number(value);
-  }
-  if (typeof value === "string" && value.trim() !== "") {
-    const parsed = Number(value);
-    if (Number.isFinite(parsed)) {
-      return parsed;
-    }
-  }
-  return fallback;
+  const integer = exactInteger(value);
+  return typeof integer === "number" ? integer : fallback;
+}
+
+export function amountValue(value: unknown): number | string | null {
+  if (isRecord(value)) value = value.__fixed__ ?? value.__big_int__;
+  return typeof value === "string" ? value : exactInteger(value);
+}
+
+export function positiveAmount(value: number | string | null | undefined): boolean {
+  const text = String(value ?? "0");
+  return !text.startsWith("-") && /[1-9]/.test(text);
 }
 
 export function asString(value: unknown): string | null {
@@ -86,7 +95,7 @@ function validatorVoteTitle(type: string, arg: unknown): string {
       return `Slash validator ${shortAddress(argMember(arg), 6)} (${bps} bps)`;
     }
     case "set_member_power": {
-      const power = isRecord(arg) ? asNumber(arg.power) : 0;
+      const power = isRecord(arg) ? exactInteger(arg.power) ?? 0 : 0;
       return `Set power of ${shortAddress(argMember(arg), 6)} to ${power}`;
     }
     case "change_registration_fee":
@@ -177,9 +186,10 @@ export function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
-export function percent(numerator: number, denominator: number): number {
-  if (denominator <= 0) {
-    return 0;
-  }
-  return Math.max(0, Math.min(100, (numerator / denominator) * 100));
+export function percent(numerator: number | string, denominator: number | string): number {
+  const value = BigInt(numerator);
+  const max = BigInt(denominator);
+  if (value <= 0n || max <= 0n) return 0;
+  if (value >= max) return 100;
+  return Number((value * 10000n) / max) / 100;
 }

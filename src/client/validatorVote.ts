@@ -1,3 +1,5 @@
+import { fixed, parseContractJson } from "@xian-tech/client";
+
 // Typed schema + argument builder for `validators.propose_vote`.
 //
 // Each validator-governance vote type expects a differently-shaped `arg`.
@@ -5,7 +7,7 @@
 // validate locally before a wallet signature, instead of forcing operators to
 // hand-write raw JSON that only fails once it reverts on chain.
 
-export type FieldKind = "account" | "int" | "bps" | "text" | "bool" | "enum";
+export type FieldKind = "account" | "amount" | "int" | "bps" | "text" | "bool" | "enum";
 
 export interface FieldSpec {
   name: string;
@@ -18,7 +20,7 @@ export interface FieldSpec {
   max?: number;
 }
 
-export type VoteArgShape = "account" | "int" | "fields" | "raw";
+export type VoteArgShape = "account" | "scalar" | "fields" | "raw";
 
 export interface VoteTypeSpec {
   value: string;
@@ -141,13 +143,12 @@ export const VOTE_TYPE_SPECS: VoteTypeSpec[] = [
     value: "change_registration_fee",
     label: "Change registration fee",
     description: "Set the validator registration fee.",
-    shape: "int",
+    shape: "scalar",
     scalar: {
       name: "fee",
       label: "Registration fee",
-      kind: "int",
-      required: true,
-      min: 1
+      kind: "amount",
+      required: true
     }
   },
   {
@@ -239,7 +240,7 @@ export function buildValidatorArg(
   if (spec.shape === "account") {
     return coerceField(spec.scalar!, values[spec.scalar!.name] ?? "");
   }
-  if (spec.shape === "int") {
+  if (spec.shape === "scalar") {
     return coerceField(spec.scalar!, values[spec.scalar!.name] ?? "");
   }
   const arg: Record<string, unknown> = {};
@@ -265,21 +266,19 @@ function coerceField(field: FieldSpec, rawValue: string): unknown {
     throw new Error(`${field.label} is required`);
   }
   switch (field.kind) {
-    case "int": {
-      const parsed = Number(value);
-      if (!Number.isInteger(parsed)) {
-        throw new Error(`${field.label} must be an integer`);
+    case "amount": {
+      const amount = fixed(value);
+      if (amount.__fixed__ === "0" || amount.__fixed__.startsWith("-")) {
+        throw new Error(`${field.label} must be positive`);
       }
-      validateRange(field, parsed);
-      return parsed;
+      return amount;
     }
+    case "int":
     case "bps": {
-      const parsed = Number(value);
-      if (!Number.isInteger(parsed)) {
-        throw new Error(`${field.label} must be an integer`);
-      }
-      validateRange({ min: 0, max: 10000, ...field }, parsed);
-      return parsed;
+      if (!/^-?\d+$/.test(value)) throw new Error(`${field.label} must be an integer`);
+      const integer = BigInt(value);
+      validateRange(field.kind === "bps" ? { min: 0, max: 10000, ...field } : field, integer);
+      return parseContractJson(integer.toString());
     }
     case "bool":
       if (value !== "true" && value !== "false") {
@@ -302,7 +301,7 @@ function coerceField(field: FieldSpec, rawValue: string): unknown {
   }
 }
 
-function validateRange(field: FieldSpec, value: number): void {
+function validateRange(field: FieldSpec, value: bigint): void {
   const { min, max } = field;
   if (min != null && value < min) {
     throw new Error(`${field.label} must be ${rangeLabel(min, max)}`);
@@ -327,10 +326,22 @@ function rangeLabel(min?: number, max?: number): string {
 
 function parseJson(value: string): unknown {
   try {
-    return JSON.parse(value);
-  } catch {
+    return parseContractJson(value);
+  } catch (error) {
+    if (!(error instanceof SyntaxError)) throw error;
     throw new Error("Argument JSON is not valid JSON");
   }
+}
+
+const UNIT = 10n ** 30n;
+
+function voteAmount(value: unknown): bigint | null {
+  if (typeof value === "number" && Number.isSafeInteger(value)) return BigInt(value) * UNIT;
+  if (!isPlainRecord(value)) return null;
+  if (typeof value.__big_int__ === "string") return BigInt(value.__big_int__) * UNIT;
+  if (typeof value.__fixed__ !== "string") return null;
+  const [whole, fraction = ""] = value.__fixed__.split(".");
+  return BigInt(whole + fraction.padEnd(30, "0"));
 }
 
 function validateRawArgument(type: string, arg: unknown): void {
@@ -338,11 +349,11 @@ function validateRawArgument(type: string, arg: unknown): void {
     if (!Array.isArray(arg) || arg.length !== 4) {
       throw new Error("Reward split must contain exactly four values");
     }
-    if (arg.some((value) => typeof value !== "number" || !Number.isFinite(value) || value < 0)) {
+    const amounts = arg.map(voteAmount);
+    if (!amounts.every((amount): amount is bigint => amount !== null && amount >= 0n)) {
       throw new Error("Reward split values must be non-negative numbers");
     }
-    const total = arg.reduce<number>((sum, value) => sum + Number(value), 0);
-    if (Math.abs(total - 1) > 1e-12) {
+    if (amounts.reduce((sum, amount) => sum + amount, 0n) !== UNIT) {
       throw new Error("Reward split values must sum to 1");
     }
     return;
@@ -358,14 +369,14 @@ function validateRawArgument(type: string, arg: unknown): void {
     }
     requireNonEmptyString(arg.contract_name, "Contract name");
     requireNonEmptyString(arg.to, "DAO recipient");
-    if (typeof arg.amount !== "number" || !Number.isFinite(arg.amount) || arg.amount <= 0) {
+    if ((voteAmount(arg.amount) ?? 0n) <= 0n) {
       throw new Error("DAO amount must be a positive number");
     }
     return;
   }
 
   if (type === "chi_cost_change") {
-    if (typeof arg !== "number" || !Number.isFinite(arg) || arg <= 0) {
+    if ((voteAmount(arg) ?? 0n) <= 0n) {
       throw new Error("Chi cost must be a positive number");
     }
     return;

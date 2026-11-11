@@ -46,7 +46,7 @@ import {
   shortHash,
   StatusBadge
 } from "./components";
-import { shortAddress } from "../shared/format";
+import { positiveAmount, shortAddress } from "../shared/format";
 import {
   computeStatePatchBundleHash,
   parseStatePatchBundle
@@ -886,13 +886,13 @@ function EffectPreview({ proposal }: { proposal: ProposalDetail }) {
 function voteLabel(vote: VoteRecord): string {
   if (vote.vote === "yes") return "yes";
   if (vote.vote === "no") return "no";
-  return vote.weight > 0 ? "not voted" : "ineligible";
+  return BigInt(vote.weight) > 0n ? "not voted" : "ineligible";
 }
 
 function voteClass(vote: VoteRecord): string {
   if (vote.vote === "yes") return "vote-yes";
   if (vote.vote === "no") return "vote-no";
-  return vote.weight > 0 ? "vote-pending" : "vote-ineligible";
+  return BigInt(vote.weight) > 0n ? "vote-pending" : "vote-ineligible";
 }
 
 function ProposalTimeline({
@@ -978,11 +978,11 @@ function ValidatorsView({
     (validator) => validator.status === "leaving" || validator.pendingLeaveAt,
   ).length;
   const pendingUnbondCount = validators.reduce(
-    (total, validator) => total + (validator.pendingUnbondCount ?? 0),
-    0,
+    (total, validator) => total + BigInt(validator.pendingUnbondCount ?? 0),
+    0n,
   );
   const slashHistoryCount = validators.filter(
-    (validator) => Number(validator.totalSlashed ?? 0) > 0 || validator.lastEvidenceId,
+    (validator) => positiveAmount(validator.totalSlashed) || validator.lastEvidenceId,
   ).length;
   return (
     <section className="view-stack">
@@ -1141,10 +1141,10 @@ function validatorAttention(validator: ValidatorRecord): string {
   if (validator.pendingLeaveAt || validator.status === "leaving") {
     return "exit timer";
   }
-  if ((validator.pendingUnbondCount ?? 0) > 0) {
+  if (BigInt(validator.pendingUnbondCount ?? 0) > 0n) {
     return `${validator.pendingUnbondCount} unbond${validator.pendingUnbondCount === 1 ? "" : "s"}`;
   }
-  if (Number(validator.totalSlashed ?? 0) > 0 || validator.lastEvidenceId) {
+  if (positiveAmount(validator.totalSlashed) || validator.lastEvidenceId) {
     return "slash history";
   }
   if (validator.pendingRegistration || validator.status === "pending") {
@@ -1169,7 +1169,7 @@ function validatorNextStep(validator: ValidatorRecord): string {
     const leaveAt = formatDateTime(validator.pendingLeaveAt) ?? "the on-chain leave time";
     return `Call leave() only after ${leaveAt}, then track every pending unbond through its unlock and claim.`;
   }
-  if ((validator.pendingUnbondCount ?? 0) > 0) {
+  if (BigInt(validator.pendingUnbondCount ?? 0) > 0n) {
     const unlockAt = formatDateTime(validator.nextUnbondUnlockAt) ?? "its recorded unlock time";
     return `Track ${validator.pendingUnbondCount} pending unbond record(s) and claim them after ${unlockAt}.`;
   }
@@ -1181,7 +1181,7 @@ function validatorNextStep(validator: ValidatorRecord): string {
       ? "The candidate met the recorded selection gates at the last rebalance; verify the next rebalance and active-set churn limit."
       : `Wait until eligible epoch ${validator.eligibleAtEpoch ?? "—"} and verify bond and jail gates.`;
   }
-  if (Number(validator.totalSlashed ?? 0) > 0 || validator.lastEvidenceId) {
+  if (positiveAmount(validator.totalSlashed) || validator.lastEvidenceId) {
     return "Reconcile the evidence identifier, slash destination, affected stake, and incident record before closing the event."
   }
   if (["left", "removed", "withdrawn"].includes(validator.status ?? "")) {
@@ -1267,6 +1267,7 @@ function PatchDetail({ patch, onClose }: { patch: StatePatchRecord; onClose: () 
         <Metric label="Activation Height" value={patch.activationHeight ?? "—"} />
         <Metric label="Emergency" value={patch.emergency ? "yes" : "no"} />
         <Metric label="Proposal" value={`#${patch.proposalId}`} />
+        {patch.appliedAtNanos != null ? <Metric label="Applied at (ns)" value={patch.appliedAtNanos} /> : null}
         <Metric label="Applied Block" value={patch.appliedBlockHeight ?? "—"} />
         <Metric label="Approved" value={formatDateTime(patch.approvedAt) ?? "—"} />
       </div>

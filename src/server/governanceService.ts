@@ -1,6 +1,6 @@
 import type { XianIndexedEvent } from "@xian-tech/client";
 
-import { asNumber, asString, isRecord, titleFromPayload } from "../shared/format.js";
+import { amountValue, asNumber, asString, exactInteger, isRecord, titleFromPayload } from "../shared/format.js";
 import type {
   GovernanceHistoryEvent,
   GovernanceHistoryResponse,
@@ -95,10 +95,10 @@ export class GovernanceService {
     const protocol = proposals.filter((proposal) => proposal.layer === "protocol");
     const patches = await this.patchRecordsForProtocol(networkId, protocol);
     const activeValidators = validators.active.length;
-    const totalVotingWeight = validators.active.reduce(
-      (sum, validator) => sum + validator.power,
-      0,
-    );
+    const totalVotingWeight = exactInteger(validators.active.reduce(
+      (sum, validator) => sum + BigInt(validator.power),
+      0n,
+    )) ?? 0;
     const pending = proposals.filter(
       (proposal) => proposal.status === "pending",
     );
@@ -129,17 +129,17 @@ export class GovernanceService {
     );
     const byKey = new Map(GOVERNANCE_METADATA_KEYS.map((key, index) => [key, values[index]]));
     return {
-      approvalThresholdNumerator: maybeNumber(byKey.get("approval_threshold_numerator")),
-      approvalThresholdDenominator: maybeNumber(
+      approvalThresholdNumerator: exactInteger(byKey.get("approval_threshold_numerator")),
+      approvalThresholdDenominator: exactInteger(
         byKey.get("approval_threshold_denominator"),
       ),
-      emergencyThresholdNumerator: maybeNumber(byKey.get("emergency_threshold_numerator")),
-      emergencyThresholdDenominator: maybeNumber(
+      emergencyThresholdNumerator: exactInteger(byKey.get("emergency_threshold_numerator")),
+      emergencyThresholdDenominator: exactInteger(
         byKey.get("emergency_threshold_denominator"),
       ),
-      proposalExpiryDays: maybeNumber(byKey.get("proposal_expiry_days")),
-      minPatchDelayBlocks: maybeNumber(byKey.get("min_patch_delay_blocks")),
-      emergencyPatchDelayBlocks: maybeNumber(byKey.get("emergency_patch_delay_blocks"))
+      proposalExpiryDays: exactInteger(byKey.get("proposal_expiry_days")),
+      minPatchDelayBlocks: exactInteger(byKey.get("min_patch_delay_blocks")),
+      emergencyPatchDelayBlocks: exactInteger(byKey.get("emergency_patch_delay_blocks"))
     };
   }
 
@@ -171,9 +171,7 @@ export class GovernanceService {
     return {
       membership: isRecord(membership) ? membership : null,
       governance,
-      registrationFee: typeof registrationFee === "number" || typeof registrationFee === "string"
-        ? registrationFee
-        : null,
+      registrationFee: amountValue(registrationFee),
       voteTypes: stringValues(voteTypes),
       recoveryVoteTypes: stringValues(recoveryVoteTypes)
     };
@@ -416,14 +414,14 @@ export class GovernanceService {
       expiresAt: normalizeDate(raw.expires_at),
       yesVotes: asNumber(raw.yes_votes),
       noVotes: asNumber(raw.no_votes),
-      yesWeight: asNumber(raw.yes_weight),
-      noWeight: asNumber(raw.no_weight),
+      yesWeight: exactInteger(raw.yes_weight) ?? 0,
+      noWeight: exactInteger(raw.no_weight) ?? 0,
       requiredYesVotes: asNumber(raw.required_yes_votes),
-      requiredYesWeight: asNumber(raw.required_yes_weight),
-      totalWeightSnapshot: asNumber(raw.total_weight_snapshot),
+      requiredYesWeight: exactInteger(raw.required_yes_weight) ?? 0,
+      totalWeightSnapshot: exactInteger(raw.total_weight_snapshot) ?? 0,
       emergency: raw.emergency === true,
       patchId: asString(raw.patch_id),
-      activationHeight: maybeNumber(raw.activation_height),
+      activationHeight: exactInteger(raw.activation_height),
       targetContract: asString(raw.target_contract),
       targetFunction: asString(raw.target_function),
       payload
@@ -479,11 +477,11 @@ export class GovernanceService {
           layer: "protocol",
           voter,
           vote: vote === "yes" || vote === "no" ? vote : null,
-          weight: asNumber(weight)
+          weight: exactInteger(weight) ?? 0
         };
       }),
     );
-    return records.filter((record) => record.weight > 0 || record.vote !== null);
+    return records.filter((record) => BigInt(record.weight) > 0n || record.vote !== null);
   }
 
   private async validatorProposals(
@@ -551,11 +549,11 @@ export class GovernanceService {
       expiresAt: normalizeDate(raw.expiry),
       yesVotes: asNumber(raw.yes),
       noVotes: asNumber(raw.no),
-      yesWeight: asNumber(raw.yes_weight),
-      noWeight: asNumber(raw.no_weight),
+      yesWeight: exactInteger(raw.yes_weight) ?? 0,
+      noWeight: exactInteger(raw.no_weight) ?? 0,
       requiredYesVotes: asNumber(raw.required_yes_votes),
-      requiredYesWeight: asNumber(raw.required_yes_weight),
-      totalWeightSnapshot: asNumber(raw.total_weight_snapshot),
+      requiredYesWeight: exactInteger(raw.required_yes_weight) ?? 0,
+      totalWeightSnapshot: exactInteger(raw.total_weight_snapshot) ?? 0,
       arg: raw.arg,
       payload: raw
     });
@@ -807,16 +805,15 @@ function mergeVoteHistory(
     byVoter.set(voter, {
       ...existing,
       vote,
-      weight: existing.weight || asNumber(event.data.weight),
+      weight: existing.weight || (exactInteger(event.data.weight) ?? 0),
       txHash: existing.txHash ?? event.txHash ?? null,
       blockHeight: existing.blockHeight ?? event.blockHeight ?? null,
       votedAt: existing.votedAt ?? event.createdAt ?? null
     });
   }
   return [...byVoter.values()].sort((left, right) => {
-    if (right.weight !== left.weight) {
-      return right.weight - left.weight;
-    }
+    const difference = BigInt(right.weight) - BigInt(left.weight);
+    if (difference !== 0n) return difference > 0n ? 1 : -1;
     return left.voter.localeCompare(right.voter);
   });
 }
@@ -863,14 +860,14 @@ function normalizeProposal(input: {
   expiresAt?: string | null;
   yesVotes: number;
   noVotes: number;
-  yesWeight: number;
-  noWeight: number;
+  yesWeight: number | string;
+  noWeight: number | string;
   requiredYesVotes: number;
-  requiredYesWeight: number;
-  totalWeightSnapshot: number;
+  requiredYesWeight: number | string;
+  totalWeightSnapshot: number | string;
   emergency?: boolean;
   patchId?: string | null;
-  activationHeight?: number | null;
+  activationHeight?: number | string | null;
   targetContract?: string | null;
   targetFunction?: string | null;
   arg?: unknown;
@@ -920,31 +917,31 @@ export function normalizeValidator(
     jailReason: asString(record.jail_reason),
     lastJailedAt: normalizeDate(record.last_jailed_at),
     lastUnjailedAt: normalizeDate(record.last_unjailed_at),
-    totalSlashed: asString(record.total_slashed) ?? maybeNumber(record.total_slashed),
+    totalSlashed: amountValue(record.total_slashed),
     lastSlashedAt: normalizeDate(record.last_slashed_at),
     lastEvidenceId: asString(record.last_evidence_id),
     lastEvidenceType: asString(record.last_evidence_type),
-    lastEvidenceHeight: maybeNumber(record.last_evidence_height),
+    lastEvidenceHeight: exactInteger(record.last_evidence_height),
     lastEvidenceAt: normalizeDate(record.last_evidence_at),
-    power: asNumber(record.power),
-    requestedPower: maybeNumber(record.requested_power),
+    power: exactInteger(record.power) ?? 0,
+    requestedPower: exactInteger(record.requested_power),
     rewardKey: asString(record.reward_key),
     networkEndpoint: asString(record.network_endpoint),
     metadataUri: asString(record.metadata_uri),
-    registrationBond: asString(record.registration_bond) ?? maybeNumber(record.registration_bond),
-    selfBond: asString(record.self_bond) ?? maybeNumber(record.self_bond),
-    totalDelegated: asString(record.total_delegated) ?? maybeNumber(record.total_delegated),
-    totalBond: asString(record.total_bond) ?? maybeNumber(record.total_bond),
+    registrationBond: amountValue(record.registration_bond),
+    selfBond: amountValue(record.self_bond),
+    totalDelegated: amountValue(record.total_delegated),
+    totalBond: amountValue(record.total_bond),
     commissionBps: maybeNumber(record.commission_bps),
-    delegatorCount: maybeNumber(record.delegator_count),
-    pendingUnbondCount: maybeNumber(record.pending_unbond_count),
+    delegatorCount: exactInteger(record.delegator_count),
+    pendingUnbondCount: exactInteger(record.pending_unbond_count),
     pendingUnbondTotal:
-      asString(record.pending_unbond_total) ?? maybeNumber(record.pending_unbond_total),
+      amountValue(record.pending_unbond_total),
     nextUnbondUnlockAt: normalizeDate(record.next_unbond_unlock_at),
     pendingRegistration: record.pending_registration === true,
     pendingLeaveAt: normalizeDate(record.pending_leave_at),
-    lastRebalanceEpoch: maybeNumber(record.last_rebalance_epoch),
-    eligibleAtEpoch: maybeNumber(record.eligible_at_epoch),
+    lastRebalanceEpoch: exactInteger(record.last_rebalance_epoch),
+    eligibleAtEpoch: exactInteger(record.eligible_at_epoch),
     selectionEligibleAtLastRebalance:
       record.selection_eligible_at_last_rebalance === true,
     registeredAt: normalizeDate(record.registered_at),
@@ -975,7 +972,7 @@ function normalizeVoteRecord(
     layer,
     voter: String(record.voter ?? "unknown"),
     vote,
-    weight: asNumber(record.weight)
+    weight: exactInteger(record.weight) ?? 0
   };
 }
 
@@ -990,12 +987,12 @@ function normalizePatch(value: unknown): StatePatchRecord | null {
     summary: asString(value.summary),
     uri: asString(value.uri),
     bundleHash: asString(value.bundle_hash),
-    activationHeight: maybeNumber(value.activation_height),
+    activationHeight: exactInteger(value.activation_height),
     emergency: value.emergency === true,
     createdAt: normalizeDate(value.created_at),
     approvedAt: normalizeDate(value.approved_at),
-    appliedAtNanos: maybeNumber(value.applied_at_nanos),
-    appliedBlockHeight: maybeNumber(value.applied_block_height),
+    appliedAtNanos: exactInteger(value.applied_at_nanos),
+    appliedBlockHeight: exactInteger(value.applied_block_height),
     appliedBlockHash: asString(value.applied_block_hash),
     executionHash: asString(value.execution_hash)
   };
@@ -1055,7 +1052,7 @@ function computeViewer(
   const vote = record?.vote ?? null;
   return {
     account,
-    eligible: proposal.status === "pending" && weight > 0 && vote === null,
+    eligible: proposal.status === "pending" && BigInt(weight) > 0n && vote === null,
     hasVoted: vote !== null,
     vote,
     weight,
