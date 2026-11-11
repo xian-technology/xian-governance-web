@@ -90,6 +90,7 @@ export class XianReadClient {
 
   async scanKeySuffixes(prefix: string, limit = 200): Promise<string[]> {
     const suffixes: string[] = [];
+    const seenCursors = new Set<string>();
     let after: string | null = null;
     for (;;) {
       const parts = [`/keys/${prefix}`, `limit=${limit}`];
@@ -106,6 +107,10 @@ export class XianReadClient {
       if (!result?.has_more || !result.next_after) {
         return suffixes;
       }
+      if (seenCursors.has(result.next_after)) {
+        throw new Error("key pagination returned a repeated cursor");
+      }
+      seenCursors.add(result.next_after);
       after = result.next_after;
     }
   }

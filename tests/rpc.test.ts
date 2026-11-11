@@ -32,7 +32,7 @@ const network = {
 
 describe("XianReadClient", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.resetAllMocks();
   });
 
   it("retries transient read transport failures", async () => {
@@ -58,4 +58,33 @@ describe("XianReadClient", () => {
     );
     expect(mocks.call).toHaveBeenCalledTimes(1);
   });
+
+  it("collects successive key pages until the final cursor", async () => {
+    mocks.abciValue
+      .mockResolvedValueOnce({ items: ["a"], has_more: true, next_after: "a" })
+      .mockResolvedValueOnce({ items: ["b"], has_more: false, next_after: null });
+    const client = new XianReadClient(network);
+
+    await expect(client.scanKeySuffixes("validators.pending:", 1)).resolves.toEqual(["a", "b"]);
+    expect(mocks.abciValue.mock.calls).toEqual([
+      ["/keys/validators.pending:/limit=1"],
+      ["/keys/validators.pending:/limit=1/after=a"]
+    ]);
+  });
+
+  it.each([[["a", "a"], 2], [["a", "b", "a"], 3]] as const)(
+    "rejects a repeated pagination cursor before requesting another page (%j)",
+    async (cursors, requests) => {
+      for (const cursor of cursors) {
+        mocks.abciValue.mockResolvedValueOnce({ items: [cursor], has_more: true, next_after: cursor });
+      }
+      mocks.abciValue.mockRejectedValueOnce(new Error("unbounded repeated page request"));
+      const client = new XianReadClient(network);
+
+      await expect(client.scanKeySuffixes("validators.pending:")).rejects.toThrow(
+        "key pagination returned a repeated cursor"
+      );
+      expect(mocks.abciValue).toHaveBeenCalledTimes(requests);
+    }
+  );
 });

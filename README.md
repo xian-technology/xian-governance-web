@@ -211,6 +211,9 @@ This keeps the app useful against a plain node. Historical event timelines,
 transaction hashes, node readiness attestations, and BDS-backed backfills are
 future indexer work described in `docs/implementation-proposal.md`.
 
+Key pagination rejects repeated cursors. Protocol vote reads then use the
+existing current-member fallback when the node cannot provide a complete scan.
+
 ## Validation
 
 ```bash
