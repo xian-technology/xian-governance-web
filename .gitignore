@@ -6,3 +6,7 @@ dist/
 coverage/
 npm-debug.log*
 graphify-out/
+
+# Quality-tool output (crapper, dryer, mutator)
+.metrics/
+target/
