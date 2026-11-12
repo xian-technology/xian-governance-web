@@ -1,4 +1,4 @@
-import type { ProposalDetail } from "../shared/types";
+import type { ProposalDetail, ProposalViewerState } from "../shared/types";
 import { canExpire } from "./wallet";
 
 export function ViewerStatus({ proposal, account }: { proposal: ProposalDetail; account: string | null }) {
@@ -20,10 +20,16 @@ export function ViewerStatus({ proposal, account }: { proposal: ProposalDetail; 
   if (viewer.eligible) {
     return <div className="viewer-status eligible">You can vote on this proposal (weight {viewer.weight}).</div>;
   }
-  // A weighted, not-yet-voted account is ineligible only because voting closed
-  // (expiry passed or a state patch reached its activation height).
-  if (proposal.status !== "pending" || canExpire(proposal) || BigInt(viewer.weight) > 0n) {
+  if (votingClosed(proposal, viewer)) {
     return <div className="viewer-status muted">Voting is closed for this proposal.</div>;
   }
   return <div className="viewer-status muted">Your account is not eligible to vote on this proposal.</div>;
+}
+
+/**
+ * A weighted, not-yet-voted account is ineligible only because voting closed
+ * (expiry passed or a state patch reached its activation height).
+ */
+function votingClosed(proposal: ProposalDetail, viewer: ProposalViewerState): boolean {
+  return proposal.status !== "pending" || canExpire(proposal) || BigInt(viewer.weight) > 0n;
 }

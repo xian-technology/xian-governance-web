@@ -1077,17 +1077,21 @@ function computeViewer(
   const vote = record?.vote ?? null;
   return {
     account,
-    eligible:
-      proposal.status === "pending" &&
-      !isPastExpiry(proposal.expiresAt) &&
-      !patchActivationReached(proposal, latestHeight) &&
-      BigInt(weight) > 0n &&
-      vote === null,
+    eligible: votingOpen(proposal, latestHeight) && BigInt(weight) > 0n && vote === null,
     hasVoted: vote !== null,
     vote,
     weight,
     isProposer: proposal.proposer === account
   };
+}
+
+/** The chain accepts votes only on a pending, unexpired proposal before patch activation. */
+function votingOpen(proposal: ProposalSummary, latestHeight: number | string | null): boolean {
+  return (
+    proposal.status === "pending" &&
+    !isPastExpiry(proposal.expiresAt) &&
+    !patchActivationReached(proposal, latestHeight)
+  );
 }
 
 /**

@@ -22,26 +22,37 @@ export const DEFAULT_FILTERS: ProposalFilters = {
 };
 
 export function matchesFilters(proposal: ProposalSummary, filters: ProposalFilters): boolean {
-  if (filters.layer !== "all" && proposal.layer !== filters.layer) return false;
-  if (filters.status !== "all" && proposal.status !== filters.status) return false;
-  if (filters.type !== "all" && proposal.type !== filters.type) return false;
-  if (filters.needsVote && !proposal.viewer?.eligible) return false;
-  if (filters.emergency && !proposal.emergency) return false;
-  if (filters.expiringSoon && !(proposal.status === "pending" && isExpiringSoon(proposal.expiresAt))) {
-    return false;
-  }
-  if (filters.search.trim()) {
-    const needle = filters.search.trim().toLowerCase();
-    const haystack = [
-      proposal.title,
-      proposal.type,
-      proposal.proposer ?? "",
-      `#${proposal.proposalId}`,
-      proposal.layer
-    ]
-      .join(" ")
-      .toLowerCase();
-    if (!haystack.includes(needle)) return false;
-  }
-  return true;
+  return (
+    matchesFacet(filters.layer, proposal.layer) &&
+    matchesFacet(filters.status, proposal.status) &&
+    matchesFacet(filters.type, proposal.type) &&
+    matchesToggles(proposal, filters) &&
+    matchesSearch(proposal, filters.search)
+  );
+}
+
+function matchesFacet<T extends string>(wanted: "all" | T, actual: T): boolean {
+  return wanted === "all" || wanted === actual;
+}
+
+function matchesToggles(proposal: ProposalSummary, filters: ProposalFilters): boolean {
+  return (
+    (!filters.needsVote || Boolean(proposal.viewer?.eligible)) &&
+    (!filters.emergency || Boolean(proposal.emergency)) &&
+    (!filters.expiringSoon || (proposal.status === "pending" && isExpiringSoon(proposal.expiresAt)))
+  );
+}
+
+function matchesSearch(proposal: ProposalSummary, search: string): boolean {
+  const needle = search.trim().toLowerCase();
+  const haystack = [
+    proposal.title,
+    proposal.type,
+    proposal.proposer ?? "",
+    `#${proposal.proposalId}`,
+    proposal.layer
+  ]
+    .join(" ")
+    .toLowerCase();
+  return haystack.includes(needle);
 }
