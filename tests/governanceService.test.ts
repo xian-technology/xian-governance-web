@@ -174,3 +174,19 @@ it("has no viewer state for a proposal read without an account", async () => {
   expect(proposal?.viewer).toBeNull();
   expect(status).not.toHaveBeenCalled();
 });
+
+it("keeps an open non-patch proposal votable at any chain height", async () => {
+  const network = { id: "local", name: "Local", rpcUrl: "http://localhost",
+    governanceContract: "governance", membershipContract: "validators" };
+  vi.spyOn(XianReadClient.prototype, "scanKeySuffixes").mockResolvedValue(["me"]);
+  vi.spyOn(XianReadClient.prototype, "listEvents").mockRejectedValue(new Error("no bds"));
+  vi.spyOn(XianReadClient.prototype, "getState").mockImplementation(async (_contract, name) =>
+    name === "proposal_vote_weights" ? 5 : null);
+  vi.spyOn(XianReadClient.prototype, "call").mockImplementation(async (_contract, method) =>
+    method === "get_proposal" ? { kind: "contract_call", status: "pending", activation_height: 10 } : []);
+  vi.spyOn(XianReadClient.prototype, "getChainStatus").mockResolvedValue(
+    { chainId: "local", latestHeight: 50, catchingUp: false, nodeMoniker: null });
+  const service = new GovernanceService([network]);
+  const proposal = await service.proposal("local", "protocol", 1, "me");
+  expect(proposal?.viewer).toMatchObject({ eligible: true, weight: 5 });
+});
