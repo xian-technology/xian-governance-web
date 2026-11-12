@@ -137,3 +137,40 @@ it("closes voting on a state patch once its activation height is reached", async
     expect((await service.proposals("local", "me")).proposals[0]?.viewer?.eligible).toBe(eligible);
   }
 });
+
+it("lists proposals newest first and breaks creation-time ties by proposal id", async () => {
+  const network = { id: "local", name: "Local", rpcUrl: "http://localhost",
+    governanceContract: "governance", membershipContract: "validators" };
+  const created: Record<number, number[]> = { 1: [2026, 1, 1], 2: [2026, 1, 3], 3: [2026, 1, 1] };
+  vi.spyOn(XianReadClient.prototype, "scanKeySuffixes").mockResolvedValue([]);
+  vi.spyOn(XianReadClient.prototype, "listEvents").mockRejectedValue(new Error("no bds"));
+  vi.spyOn(XianReadClient.prototype, "recentEvents").mockRejectedValue(new Error("no bds"));
+  vi.spyOn(XianReadClient.prototype, "getState").mockImplementation(async (_contract, name) =>
+    name === "proposal_count" ? 3 : null);
+  vi.spyOn(XianReadClient.prototype, "call").mockImplementation(async (_contract, method, kwargs) => {
+    const id = Number((kwargs as { proposal_id?: number }).proposal_id);
+    if (method === "get_proposal") {
+      return { kind: "contract_call", status: "approved", created_at: { __time__: [...created[id]!, 0, 0, 0] } };
+    }
+    return [];
+  });
+  const service = new GovernanceService([network]);
+  const { proposals } = await service.proposals("local", null);
+  expect(proposals.map((proposal) => proposal.proposalId)).toEqual([2, 3, 1]);
+  expect(proposals.every((proposal) => proposal.viewer === null)).toBe(true);
+});
+
+it("has no viewer state for a proposal read without an account", async () => {
+  const network = { id: "local", name: "Local", rpcUrl: "http://localhost",
+    governanceContract: "governance", membershipContract: "validators" };
+  vi.spyOn(XianReadClient.prototype, "listEvents").mockRejectedValue(new Error("no bds"));
+  vi.spyOn(XianReadClient.prototype, "getState").mockResolvedValue(null);
+  vi.spyOn(XianReadClient.prototype, "call").mockImplementation(async (_contract, method) =>
+    method === "get_proposal" ? { kind: "contract_call", status: "pending" } : []);
+  const status = vi.spyOn(XianReadClient.prototype, "getChainStatus");
+  const service = new GovernanceService([network]);
+  const proposal = await service.proposal("local", "protocol", 1, null);
+  expect(proposal?.status).toBe("pending");
+  expect(proposal?.viewer).toBeNull();
+  expect(status).not.toHaveBeenCalled();
+});

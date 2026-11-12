@@ -116,6 +116,28 @@ describe("wallet governance call outcomes", () => {
   });
 });
 
+describe("vote eligibility from the vote matrix", () => {
+  const open = { ...baseProposal, expiresAt: new Date(Date.now() + 60_000).toISOString() };
+  const voter = (weight: string, vote: "yes" | "no" | null) =>
+    ({ proposalId: 7, layer: "protocol" as const, voter: "me", weight, vote });
+
+  it("lets a weighted account that has not voted vote when no viewer state is attached", () => {
+    expect(canVote({ ...open, votes: [voter("3", null)] }, "me")).toBe(true);
+  });
+
+  it("refuses accounts that already voted, hold no weight or are not in the matrix", () => {
+    expect(canVote({ ...open, votes: [voter("3", "yes")] }, "me")).toBe(false);
+    expect(canVote({ ...open, votes: [voter("0", null)] }, "me")).toBe(false);
+    expect(canVote({ ...open, votes: [] }, "me")).toBe(false);
+    expect(canVote({ ...open, votes: [voter("3", null)] }, null)).toBe(false);
+  });
+
+  it("uses the matrix when the attached viewer state is for another account", () => {
+    const viewer = { account: "other", eligible: true, hasVoted: false, vote: null, weight: 1, isProposer: false };
+    expect(canVote({ ...open, viewer, votes: [voter("0", null)] }, "me")).toBe(false);
+  });
+});
+
 describe("signing chain pinning", () => {
   it("signs only for the chain the console is reading", () => {
     expect(resolveSigningChainId("chain-a", "chain-a")).toBe("chain-a");
