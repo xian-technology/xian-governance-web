@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { OUT_OF_CHI_MESSAGE } from "@xian-tech/web-kit";
 
 import {
   canExpire,
@@ -88,7 +89,10 @@ describe("wallet governance call outcomes", () => {
     ["fails on-chain", { submitted: true, accepted: true, finalized: true, txHash: "abc",
       receipt: { success: false, message: "Proposal expired." } }, "Proposal expired."],
     ["is rejected by CheckTx", { submitted: true, accepted: false, finalized: false,
-      message: "Nonce too low" }, "Nonce too low"]
+      message: "Nonce too low" }, "Nonce too low"],
+    ["runs out of chi after the state changed", { submitted: true, accepted: true, finalized: true,
+      txHash: "abc", receipt: { success: false, message: "'Out of chi.'" } },
+      OUT_OF_CHI_MESSAGE]
   ];
 
   for (const [label, outcome, message] of cases) {
