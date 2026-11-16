@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: ${{ github.repository_owner }}/xian-js
-          ref: c7619c6574bb76845b1bcb63dca3f71508c2bdaa
+          ref: 13011470c8c8d2c1faf02525795d5390fbf900ae
           path: xian-js
 
       - name: Checkout compiler workspace dependency
