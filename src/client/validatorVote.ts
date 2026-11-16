@@ -159,7 +159,7 @@ export const VOTE_TYPE_SPECS: VoteTypeSpec[] = [
     shape: "fields",
     fields: [
       { name: "selection_mode", label: "Selection mode", kind: "enum", options: SELECTION_MODES },
-      { name: "max_validators", label: "Max validators", kind: "int", min: 1 },
+      { name: "max_validators", label: "Max validators", kind: "int", min: 1, max: 64 },
       { name: "power_mode", label: "Power mode", kind: "enum", options: POWER_MODES },
       { name: "rebalance_interval", label: "Rebalance interval", kind: "int", min: 1 },
       { name: "activation_delay_epochs", label: "Activation delay (epochs)", kind: "int", min: 0 },

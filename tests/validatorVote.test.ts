@@ -54,7 +54,15 @@ describe("validator vote arg builder", () => {
   it("rejects non-positive update_policy fields that must be positive", () => {
     const spec = getVoteTypeSpec("update_policy")!;
     expect(() => buildValidatorArg(spec, { max_validators: "0" }, "")).toThrow(
-      />= 1/,
+      /between 1 and 64/,
+    );
+  });
+
+  it("allows the validator-set cap of 64 and rejects a policy above it", () => {
+    const spec = getVoteTypeSpec("update_policy")!;
+    expect(buildValidatorArg(spec, { max_validators: "64" }, "")).toEqual({ max_validators: 64 });
+    expect(() => buildValidatorArg(spec, { max_validators: "65" }, "")).toThrow(
+      /between 1 and 64/,
     );
   });
 
