@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: ${{ github.repository_owner }}/xian-js
-          ref: c388192447d3882a79c32ce83147f231fc88d028
+          ref: 39ee606d475ea34790fb60199822ca705310bb00
           path: xian-js
 
       - name: Checkout compiler workspace dependency
@@ -30,6 +30,16 @@ jobs:
           repository: ${{ github.repository_owner }}/xian-contracting
           ref: d9875fc947168f114e70c77ca0b640c1948d03e9
           path: xian-contracting
+
+      - name: Checkout workspace reporting tools
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ github.repository_owner }}/xian-meta
+          ref: 9d309fce2430a9b732d3a7fab7782a1fdd09fefd
+          path: xian-meta
+
+      - name: Report resolved sibling SHAs
+        run: python3 xian-meta/scripts/report_workspace_shas.py --workspace-root .
 
       - name: Set up Node.js
         uses: actions/setup-node@v6
