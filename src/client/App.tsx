@@ -293,6 +293,7 @@ export function App() {
             candidates={validators.data?.candidates ?? []}
             inactive={validators.data?.inactive ?? []}
             loading={validators.isLoading}
+            error={validators.error}
           />
         ) : null}
 
@@ -861,15 +862,25 @@ function ValidatorsView({
   active,
   candidates,
   inactive,
-  loading
+  loading,
+  error
 }: {
   active: ValidatorRecord[];
   candidates: ValidatorRecord[];
   inactive: ValidatorRecord[];
   loading: boolean;
+  error: unknown;
 }) {
   const [selected, setSelected] = useState<ValidatorRecord | null>(null);
   const validators = [...active, ...candidates, ...inactive];
+  const errorNotice = error ? (
+    <div className="notice error" role="alert">
+      Validator list unavailable. {validators.length > 0
+        ? "Showing previously loaded records."
+        : "The node could not provide a complete registry."}
+    </div>
+  ) : null;
+  if (error && validators.length === 0) return errorNotice;
   const jailedCount = validators.filter((validator) => validator.jailed).length;
   const leavingCount = validators.filter(
     (validator) => validator.status === "leaving" || validator.pendingLeaveAt,
@@ -883,6 +894,7 @@ function ValidatorsView({
   ).length;
   return (
     <section className="view-stack">
+      {errorNotice}
       {selected ? <ValidatorDetail validator={selected} onClose={() => setSelected(null)} /> : null}
       <section className="panel">
         <div className="panel-title">

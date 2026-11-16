@@ -202,9 +202,9 @@ The service currently uses a direct-RPC strategy:
 - validator proposals from `validators.total_votes` and
   `/validators_vote/<id>`
 - validator vote records from `/validators_vote_records/<id>`
-- complete validator registry from `validators.get_validators()`, with
-  active/candidate fallbacks from `/validators_active` and
-  `/validators_candidates` for older nodes
+- validator registry from `validators.get_validator_count()` and
+  `validators.get_validators_page()` in 25-record requests; active/candidate
+  fallbacks use `/validators_active` and `/validators_candidates`
 - state-patch metadata from `governance.get_patch`
 
 This keeps the app useful against a plain node. Historical event timelines,
@@ -213,6 +213,17 @@ future indexer work described in `docs/implementation-proposal.md`.
 
 Key pagination rejects repeated cursors. Protocol vote reads then use the
 existing current-member fallback when the node cannot provide a complete scan.
+
+Validator registry reads capture the initial append-only registry count and
+return that prefix, so registrations during the scan do not extend it. Invalid,
+incomplete, repeated or failed pages fail the request instead of reporting an
+empty inactive list. The console displays an unavailable notice and marks any
+previously loaded records as stale. The membership contract must expose both
+registry methods; an active/candidate subset is not a substitute for a failed
+registry read. Each chain request is bounded; the existing
+HTTP response and browser table still contain the complete captured registry
+and use memory proportional to its size. HTTP and table pagination remain
+future work for very large lifetime registries.
 
 ## Validation
 

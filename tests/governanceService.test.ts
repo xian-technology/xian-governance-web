@@ -83,6 +83,7 @@ it("returns the full consensus timestamp and sums validator weights as integers"
   vi.spyOn(XianReadClient.prototype, "call").mockImplementation(async (_contract, method) => {
     if (method === "get_proposal") return { kind: "state_patch", patch_id: "patch-1" };
     if (method === "get_patch") return { patch_id: "patch-1", applied_at_nanos: nanos };
+    if (method === "get_validator_count") return 0;
     if (method === "get_active_validators") return [
       { account: "one", power: 9007199254740992n }, { account: "two", power: 1 }
     ];

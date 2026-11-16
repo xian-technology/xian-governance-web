@@ -30,6 +30,7 @@ import type {
   VoteRecord
 } from "../shared/types.js";
 import { XianReadClient } from "./rpc.js";
+import { readValidatorRegistry } from "./validatorRegistry.js";
 
 /**
  * Cap how many proposal lookups run at once so a large governance history
@@ -267,9 +268,7 @@ export class GovernanceService {
         .catch(() =>
           client.abciValue<unknown[]>("/validators_candidates").catch(() => []),
         ),
-      client
-        .call<unknown[]>(network.membershipContract, "get_validators", {})
-        .catch(() => [])
+      readValidatorRegistry(client, network.membershipContract)
     ]);
     const active = Array.isArray(activeRaw)
       ? activeRaw.map((record) => normalizeValidator(record, true))
@@ -277,9 +276,7 @@ export class GovernanceService {
     const candidates = Array.isArray(candidatesRaw)
       ? candidatesRaw.map((record) => normalizeValidator(record, false))
       : [];
-    const complete = Array.isArray(allRaw) && allRaw.length > 0
-      ? allRaw.map((record) => normalizeValidator(record, false))
-      : mergeValidators(active, candidates);
+    const complete = allRaw.map((record) => normalizeValidator(record, false));
     const visibleAccounts = new Set(
       [...active, ...candidates].map((validator) => validator.account),
     );
@@ -971,16 +968,6 @@ export function normalizeValidator(
     joinedAt: normalizeDate(record.joined_at),
     leftAt: normalizeDate(record.left_at)
   };
-}
-
-function mergeValidators(...groups: ValidatorRecord[][]): ValidatorRecord[] {
-  const validators = new Map<string, ValidatorRecord>();
-  for (const group of groups) {
-    for (const validator of group) {
-      validators.set(validator.account, validator);
-    }
-  }
-  return [...validators.values()];
 }
 
 function normalizeVoteRecord(

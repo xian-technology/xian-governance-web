@@ -221,6 +221,55 @@ describe("App", () => {
     expect(screen.getByText("Timeline")).toBeInTheDocument();
   });
 
+  it("reports an unavailable registry instead of presenting successful empty validator tables", async () => {
+    const original = vi.mocked(fetch).getMockImplementation()!;
+    vi.mocked(fetch).mockImplementation(async (input, init) =>
+      String(input) === "/api/networks/local/validators"
+        ? json({ error: "upstream chain request failed" }, 502)
+        : original(input, init));
+    renderApp();
+
+    fireEvent.click(screen.getByRole("button", { name: "Validators" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("Validator list unavailable");
+    expect(screen.getByRole("alert")).toHaveTextContent("The node could not provide a complete registry");
+    expect(screen.queryByText("No validators found.")).not.toBeInTheDocument();
+    expect(screen.queryByText("Operational Attention")).not.toBeInTheDocument();
+  });
+
+  it("renders a legitimate empty registry without an unavailable notice", async () => {
+    const original = vi.mocked(fetch).getMockImplementation()!;
+    vi.mocked(fetch).mockImplementation(async (input, init) =>
+      String(input) === "/api/networks/local/validators"
+        ? json({ active: [], candidates: [], inactive: [] })
+        : original(input, init));
+    renderApp();
+
+    fireEvent.click(screen.getByRole("button", { name: "Validators" }));
+
+    expect(await screen.findAllByText("No validators found.")).toHaveLength(3);
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
+  it("marks retained validator records stale when a registry refresh fails", async () => {
+    const original = vi.mocked(fetch).getMockImplementation()!;
+    vi.mocked(fetch).mockImplementation(async (input, init) =>
+      String(input) === "/api/networks/local/validators"
+        ? json({ error: "upstream chain request failed" }, 502)
+        : original(input, init));
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    queryClient.setQueryData(["validators", "local"], {
+      active: [{ account: "cached-node", moniker: "cached-validator", active: true, power: 10 }],
+      candidates: [], inactive: [],
+    });
+    render(<QueryClientProvider client={queryClient}><App /></QueryClientProvider>);
+
+    fireEvent.click(screen.getByRole("button", { name: "Validators" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("Showing previously loaded records");
+    expect(screen.getByText("cached-validator")).toBeInTheDocument();
+  });
+
   it("shows actionable validator lifecycle, evidence, and unbond state", async () => {
     renderApp();
 
