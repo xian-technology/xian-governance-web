@@ -17,7 +17,13 @@ actions through the injected Xian browser wallet provider.
   patches, policy, history, and simulation.
 - `src/client/App.tsx`: React operations console, proposal workflows,
   validator views, state-patch verification, and wallet-backed actions.
-- `src/client/wallet.ts`: injected wallet discovery and request submission.
+- `src/client/wallet.ts`: injected wallet discovery, request submission, and
+  structured transaction failure receipts.
+- `src/client/ProposalVoteActions.tsx`: vote controls scoped to the current
+  account, chain, network, and proposal. A confirmed out-of-chi vote exposes an
+  explicit retry; changing the signing context cancels pending retry preflight.
+- `src/client/voteRetry.ts`: current eligibility checks and simulation for the
+  same vote choice, using the SDK chi estimate margin before wallet approval.
 - `src/shared/`: normalized API types, formatting helpers, and state-patch hash
   logic shared by client and server.
 

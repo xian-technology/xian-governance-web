@@ -1,5 +1,5 @@
 import {
-  assertSendCallSucceeded,
+  sendCallFailureMessage,
   useXianWallet,
   type CallIntent,
   type SendCallResult,
@@ -113,8 +113,24 @@ export async function sendGovernanceCall(
     mode: "checktx",
     waitForTx: true
   })) as SendCallResult;
-  assertSendCallSucceeded(result);
+  const message = sendCallFailureMessage(result);
+  if (message) throw new GovernanceCallError(message, result);
   return result;
+}
+
+/** Retain the receipt so retry eligibility never depends on error wording alone. */
+export class GovernanceCallError extends Error {
+  constructor(message: string, readonly result: SendCallResult) {
+    super(message);
+    this.name = "GovernanceCallError";
+  }
+}
+
+export function isConfirmedOutOfChi(error: unknown): boolean {
+  if (!(error instanceof GovernanceCallError)) return false;
+  const result = error.result;
+  return result.accepted === true && result.finalized === true &&
+    result.receipt?.success === false && /out of chi/i.test(String(result.receipt.message));
 }
 
 export async function submitVote(
@@ -139,7 +155,7 @@ export async function submitExpire(
   return sendGovernanceCall(wallet, { chainId, ...call });
 }
 
-function voteCallFor(
+export function voteCallFor(
   layer: GovernanceLayer,
   proposalId: number,
   support: boolean,

@@ -1384,3 +1384,12 @@ select {
   .kv-row { grid-template-columns: 1fr; gap: 4px; }
   .filter-search { min-width: 0; }
 }
+
+.vote-actions {
+  display: grid;
+  gap: 8px;
+}
+
+.vote-actions .action-row { justify-content: flex-end; }
+.vote-actions .notice { margin: 0; display: block; }
+.vote-actions .notice p { margin: 0 0 8px; }

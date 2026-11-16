@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Activity,
-  Check,
   ChevronRight,
   Clock,
   FileJson,
@@ -10,8 +9,7 @@ import {
   Settings as SettingsIcon,
   ShieldCheck,
   Users,
-  Vote,
-  X
+  Vote
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { ReactNode } from "react";
@@ -28,14 +26,12 @@ import {
 } from "./api";
 import {
   canExpire,
-  canVote,
-  ChainMismatchError,
   resolveGovernanceContracts,
   resolveSigningChainId,
   submitExpire,
-  submitVote,
   useXianWallet
 } from "./wallet";
+import { ProposalVoteActions } from "./ProposalVoteActions";
 import { CreateProposal } from "./CreateProposal";
 import {
   CopyButton,
@@ -134,23 +130,6 @@ export function App() {
       queryClient.invalidateQueries({ queryKey: ["overview", networkId] })
     ]);
   }
-
-  const voteMutation = useMutation({
-    mutationFn: async ({ proposal, support }: { proposal: ProposalDetail; support: boolean }) => {
-      if (!wallet.wallet) {
-        throw new Error("connect wallet first");
-      }
-      const chainId = resolveSigningChainId(wallet.chainId, overview.data?.chain.chainId);
-      return submitVote(
-        wallet.wallet,
-        chainId,
-        resolveGovernanceContracts(overview.data?.network),
-        proposal,
-        support,
-      );
-    },
-    onSuccess: invalidateProposalData
-  });
 
   const expireMutation = useMutation({
     mutationFn: async ({ proposal }: { proposal: ProposalDetail }) => {
@@ -296,11 +275,15 @@ export function App() {
             detail={proposalDetail.data}
             detailLoading={proposalDetail.isLoading}
             account={wallet.account}
-            onVote={(proposal, support) => voteMutation.mutate({ proposal, support })}
             onExpire={(proposal) => expireMutation.mutate({ proposal })}
-            voting={voteMutation.isPending}
             expiring={expireMutation.isPending}
-            actionError={voteMutation.error ?? expireMutation.error}
+            actionError={expireMutation.error}
+            voteActions={proposalDetail.data ? <ProposalVoteActions
+              proposal={proposalDetail.data} networkId={networkId}
+              networkChainId={overview.data?.chain.chainId}
+              contracts={resolveGovernanceContracts(overview.data?.network)}
+              session={wallet} onSuccess={invalidateProposalData}
+            /> : null}
           />
         ) : null}
 
@@ -474,9 +457,8 @@ function ProposalsView({
   detail,
   detailLoading,
   account,
-  onVote,
   onExpire,
-  voting,
+  voteActions,
   expiring,
   actionError
 }: {
@@ -487,9 +469,8 @@ function ProposalsView({
   detail?: ProposalDetail;
   detailLoading: boolean;
   account: string | null;
-  onVote: (proposal: ProposalDetail, support: boolean) => void;
   onExpire: (proposal: ProposalDetail) => void;
-  voting: boolean;
+  voteActions: ReactNode;
   expiring: boolean;
   actionError: unknown;
 }) {
@@ -512,9 +493,8 @@ function ProposalsView({
           proposal={detail}
           account={account}
           loading={detailLoading}
-          onVote={onVote}
           onExpire={onExpire}
-          voting={voting}
+          voteActions={voteActions}
           expiring={expiring}
           actionError={actionError}
         />
@@ -703,18 +683,16 @@ function ProposalDetailPanel({
   proposal,
   account,
   loading,
-  onVote,
   onExpire,
-  voting,
+  voteActions,
   expiring,
   actionError
 }: {
   proposal?: ProposalDetail;
   account: string | null;
   loading: boolean;
-  onVote: (proposal: ProposalDetail, support: boolean) => void;
   onExpire: (proposal: ProposalDetail) => void;
-  voting: boolean;
+  voteActions: ReactNode;
   expiring: boolean;
   actionError: unknown;
 }) {
@@ -724,7 +702,6 @@ function ProposalDetailPanel({
   if (!proposal) {
     return <section className="panel detail-panel">Select a proposal.</section>;
   }
-  const eligible = canVote(proposal, account);
   const expirable = canExpire(proposal);
   return (
     <section className="panel detail-panel">
@@ -740,12 +717,6 @@ function ProposalDetailPanel({
           </p>
         </div>
         <div className="action-row">
-          <button type="button" disabled={!eligible || voting} className="success" onClick={() => onVote(proposal, true)}>
-            <Check size={16} /> Yes
-          </button>
-          <button type="button" disabled={!eligible || voting} className="danger" onClick={() => onVote(proposal, false)}>
-            <X size={16} /> No
-          </button>
           {expirable ? (
             <button type="button" disabled={expiring} className="ghost" onClick={() => onExpire(proposal)}>
               <Clock size={16} /> Mark expired
@@ -754,6 +725,7 @@ function ProposalDetailPanel({
         </div>
       </div>
 
+      {voteActions}
       <ViewerStatus proposal={proposal} account={account} />
       <EffectPreview proposal={proposal} />
       {actionError instanceof Error ? <div className="notice error">{actionError.message}</div> : null}

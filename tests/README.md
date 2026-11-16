@@ -10,6 +10,8 @@ client helpers, wallet integration, and the canonical state-patch hash.
 - `api.test.ts`, `rpc.test.ts`, `config.test.ts` — server API,
   environment configuration, and node-read behavior.
 - `App.test.tsx` — client rendering and view behavior.
+- `ProposalVoteActions.test.tsx` — confirmed out-of-chi retries, current
+  eligibility and chi estimates, wallet context changes, and fresh approval.
 - `wallet.test.ts`, `validatorVote.test.ts` — injected-wallet flows and vote
   submission payloads.
 - `statePatchHash.test.ts` — canonical bundle hashing; guards the chain-side
