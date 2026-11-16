@@ -35,7 +35,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: ${{ github.repository_owner }}/xian-meta
-          ref: ffe3a677933512f73e8dc7adc6eed4181062755f
+          ref: af21086f9845e6685361ead293b2828555721d5c
           path: xian-meta
 
       - name: Report resolved sibling SHAs
