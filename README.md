@@ -115,6 +115,12 @@ bonds and nanosecond timestamps as text.
 | Network settings | Shows governance parameters, validator-set policy (`validators.get_policy_config`), registration fee, and allowed vote types. |
 | Simulation | Exposes a backend `/simulate` endpoint for read-only preflight calls through the configured Xian node. |
 
+Pending unbonds with no `next_unbond_unlock_at` remain visible as **Awaiting
+time anchor**. The console waits for a later finalized block to provide their
+unlock time and never derives one from creation time or the local clock. A dated
+next unlock applies to the earliest dated record; check each record's own time
+before claiming.
+
 ## Configuration
 
 Copy `.env.example` to `.env` when the local defaults are not enough:

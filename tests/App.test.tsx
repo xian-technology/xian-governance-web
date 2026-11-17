@@ -285,6 +285,28 @@ describe("App", () => {
     expect(screen.getByText("Evidence height")).toBeInTheDocument();
   });
 
+  it.each([0, 2])("distinguishes pending time anchors from no unbonds (count %s)", async (count) => {
+    const originalFetch = globalThis.fetch;
+    vi.stubGlobal("fetch", vi.fn(async (input: RequestInfo | URL) => {
+      const response = await originalFetch(input);
+      if (String(input) !== "/api/networks/local/validators") return response;
+      const payload = await response.json();
+      payload.inactive[0].pendingUnbondCount = count;
+      payload.inactive[0].nextUnbondUnlockAt = null;
+      return json(payload);
+    }));
+    renderApp();
+    fireEvent.click(screen.getByRole("button", { name: "Validators" }));
+    fireEvent.click(await screen.findByText("retired-validator"));
+    if (count > 0) {
+      expect(screen.getByText("Awaiting time anchor")).toBeInTheDocument();
+      expect(screen.getByText(/wait for a later finalized block/i)).toBeInTheDocument();
+      expect(screen.queryByText(/claim them after/i)).not.toBeInTheDocument();
+    } else {
+      expect(screen.queryByText("Awaiting time anchor")).not.toBeInTheDocument();
+    }
+  });
+
   it("identifies immutable recovery vote types in network settings", async () => {
     renderApp();
 

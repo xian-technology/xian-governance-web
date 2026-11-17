@@ -54,6 +54,24 @@ describe("validator read model", () => {
   });
 });
 
+it.each([
+  { microsecond: 0, fraction: "" },
+  { microsecond: 1, fraction: ".000001" },
+  { microsecond: 123456, fraction: ".123456" },
+  { microsecond: 999999, fraction: ".999999" }
+])("preserves exact microsecond unbond times ($microsecond)", ({ microsecond, fraction }) => {
+  expect(normalizeValidator({
+    account: "validator", pending_unbond_count: 1,
+    next_unbond_unlock_at: { __time__: [2026, 1, 9, 3, 4, 5, microsecond] }
+  }, false).nextUnbondUnlockAt).toBe(`2026-01-09T03:04:05${fraction}Z`);
+});
+
+it("preserves an unanchored pending unlock instead of making up a date", () => {
+  expect(normalizeValidator({
+    account: "validator", pending_unbond_count: 2, next_unbond_unlock_at: null
+  }, false)).toMatchObject({ pendingUnbondCount: 2, nextUnbondUnlockAt: null });
+});
+
 it("keeps exact validator powers, bonds and slashed amounts through the API model", () => {
   const units = 9007199254740993n;
   const fraction = "0.000000000000000000000000000001";

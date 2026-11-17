@@ -43,6 +43,7 @@ import {
   StatusBadge
 } from "./components";
 import { positiveAmount, shortAddress } from "../shared/format";
+import { unbondUnlockPresentation } from "./validatorUnbonds";
 import { DEFAULT_FILTERS, matchesFilters, type ProposalFilters } from "./proposalFilters";
 import { ViewerStatus } from "./ViewerStatus";
 import {
@@ -1025,7 +1026,7 @@ function ValidatorDetail({
         <KeyValue label="Joined" value={formatDateTime(validator.joinedAt) ?? "—"} />
         <KeyValue label="Pending leave" value={formatDateTime(validator.pendingLeaveAt) ?? "—"} />
         <KeyValue label="Left" value={formatDateTime(validator.leftAt) ?? "—"} />
-        <KeyValue label="Next unbond unlock" value={formatDateTime(validator.nextUnbondUnlockAt) ?? "—"} />
+        <KeyValue label="Next unbond unlock" value={unbondUnlockPresentation(validator).label} />
         <KeyValue label="Last jailed" value={formatDateTime(validator.lastJailedAt) ?? "—"} />
         <KeyValue label="Last unjailed" value={formatDateTime(validator.lastUnjailedAt) ?? "—"} />
         <KeyValue label="Last slash" value={formatDateTime(validator.lastSlashedAt) ?? "—"} />
@@ -1078,10 +1079,8 @@ function validatorNextStep(validator: ValidatorRecord): string {
     const leaveAt = formatDateTime(validator.pendingLeaveAt) ?? "the on-chain leave time";
     return `Call leave() only after ${leaveAt}, then track every pending unbond through its unlock and claim.`;
   }
-  if (BigInt(validator.pendingUnbondCount ?? 0) > 0n) {
-    const unlockAt = formatDateTime(validator.nextUnbondUnlockAt) ?? "its recorded unlock time";
-    return `Track ${validator.pendingUnbondCount} pending unbond record(s) and claim them after ${unlockAt}.`;
-  }
+  const unbondStep = unbondUnlockPresentation(validator).nextStep;
+  if (unbondStep) return unbondStep;
   if (validator.pendingRegistration || validator.status === "pending") {
     return "Confirm profile, bond gates, and selection mode; then obtain governance approval or wait for the eligible rebalance epoch."
   }

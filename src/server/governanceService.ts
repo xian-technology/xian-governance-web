@@ -1139,10 +1139,11 @@ function normalizeDate(value: unknown): string | null {
     return value;
   }
   if (isRecord(value) && Array.isArray(value.__time__)) {
-    const [year, month, day, hour, minute, second] = value.__time__;
+    const [year, month, day, hour, minute, second, microsecond] = value.__time__;
+    const fraction = microsecond ? `.${String(microsecond).padStart(6, "0")}` : "";
     return `${year}-${pad(month)}-${pad(day)}T${pad(hour)}:${pad(minute)}:${pad(
       second,
-    )}Z`;
+    )}${fraction}Z`;
   }
   return null;
 }
