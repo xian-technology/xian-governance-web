@@ -102,6 +102,11 @@ The four reward shares must sum to exactly one at the VM’s 30-place scale.
 The API returns decimal strings and preserves large voting weights, token
 bonds and nanosecond timestamps as text.
 
+Contract datetime strings without an offset represent UTC. The API adds an
+explicit `Z` to these timestamps, preserving their microseconds, so proposal
+expiry and validator lifecycle times have the same instant in every timezone.
+Offset-aware timestamps retain their supplied offset; absent times remain null.
+
 ## Capabilities
 
 | Area | What the app does |

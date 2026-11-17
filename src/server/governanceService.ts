@@ -1136,7 +1136,8 @@ function normalizeStatus(value: unknown): ProposalStatus {
 
 function normalizeDate(value: unknown): string | null {
   if (typeof value === "string") {
-    return value;
+    const utc = /^(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?)$/.exec(value);
+    return utc ? `${utc[1]}T${utc[2]}Z` : value;
   }
   if (isRecord(value) && Array.isArray(value.__time__)) {
     const [year, month, day, hour, minute, second, microsecond] = value.__time__;
