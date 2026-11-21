@@ -59,6 +59,8 @@ it.each(dates)(
 
 it.each([
   ["2026-12-01T13:00:00Z", true],
+  ["2026-12-01T13:39:14.585Z", true],
+  ["2026-12-01T13:39:14.586Z", false],
   ["2026-12-01T14:00:00Z", false]
 ])("keeps UTC proposal expiry and voting eligibility at %s", async (now, eligible) => {
   vi.spyOn(Date, "now").mockReturnValue(Date.parse(String(now)));

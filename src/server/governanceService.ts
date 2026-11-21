@@ -8,6 +8,7 @@ import {
   isExpiringSoon,
   isPastExpiry,
   isRecord,
+  timestampMicros,
   titleFromPayload
 } from "../shared/format.js";
 import type {
@@ -206,12 +207,7 @@ export class GovernanceService {
     );
     return {
       proposals: proposals.sort((left, right) => {
-        const leftTime = Date.parse(left.createdAt ?? "") || 0;
-        const rightTime = Date.parse(right.createdAt ?? "") || 0;
-        if (leftTime !== rightTime) {
-          return rightTime - leftTime;
-        }
-        return right.proposalId - left.proposalId;
+        return compareTimestamps(right.createdAt, left.createdAt) || right.proposalId - left.proposalId;
       })
     };
   }
@@ -852,7 +848,7 @@ function compareHistoryEventsAsc(
   if (leftId !== rightId) {
     return leftId - rightId;
   }
-  return sortableTimestamp(left.createdAt) - sortableTimestamp(right.createdAt);
+  return compareTimestamps(left.createdAt, right.createdAt);
 }
 
 function compareHistoryEventsDesc(
@@ -862,9 +858,8 @@ function compareHistoryEventsDesc(
   return -compareHistoryEventsAsc(left, right);
 }
 
-function sortableTimestamp(value?: string | null): number {
-  const parsed = Date.parse(value ?? "");
-  return Number.isFinite(parsed) ? parsed : 0;
+function compareTimestamps(left?: string | null, right?: string | null): number {
+  return Number((timestampMicros(left) ?? 0n) - (timestampMicros(right) ?? 0n));
 }
 
 function normalizeProposal(input: {

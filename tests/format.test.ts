@@ -73,4 +73,13 @@ describe("proposal expiry windows", () => {
     expect(isPastExpiry("2026-01-10T00:00:00Z", now)).toBe(true);
     expect(isPastExpiry("2026-01-10T00:00:01Z", now)).toBe(false);
   });
+
+  it("preserves microseconds around both expiry boundaries", () => {
+    const expiresAt = "2026-01-10T01:00:00.000001+01:00";
+    expect(isPastExpiry(expiresAt, now)).toBe(false);
+    expect(isPastExpiry(expiresAt, now + 1)).toBe(true);
+    expect(isExpiringSoon(expiresAt, now)).toBe(true);
+    expect(isExpiringSoon("2026-01-12T00:00:00Z", now)).toBe(true);
+    expect(isExpiringSoon("2026-01-12T00:00:00.000001Z", now)).toBe(false);
+  });
 });

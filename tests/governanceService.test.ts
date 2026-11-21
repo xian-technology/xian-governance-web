@@ -160,7 +160,7 @@ it("closes voting on a state patch once its activation height is reached", async
 it("lists proposals newest first and breaks creation-time ties by proposal id", async () => {
   const network = { id: "local", name: "Local", rpcUrl: "http://localhost",
     governanceContract: "governance", membershipContract: "validators" };
-  const created: Record<number, number[]> = { 1: [2026, 1, 1], 2: [2026, 1, 3], 3: [2026, 1, 1] };
+  const created: Record<number, number> = { 1: 1, 2: 2, 3: 1 };
   vi.spyOn(XianReadClient.prototype, "scanKeySuffixes").mockResolvedValue([]);
   vi.spyOn(XianReadClient.prototype, "listEvents").mockRejectedValue(new Error("no bds"));
   vi.spyOn(XianReadClient.prototype, "recentEvents").mockRejectedValue(new Error("no bds"));
@@ -169,7 +169,7 @@ it("lists proposals newest first and breaks creation-time ties by proposal id", 
   vi.spyOn(XianReadClient.prototype, "call").mockImplementation(async (_contract, method, kwargs) => {
     const id = Number((kwargs as { proposal_id?: number }).proposal_id);
     if (method === "get_proposal") {
-      return { kind: "contract_call", status: "approved", created_at: { __time__: [...created[id]!, 0, 0, 0] } };
+      return { kind: "contract_call", status: "approved", created_at: { __time__: [2026, 1, 1, 0, 0, 0, created[id]] } };
     }
     return [];
   });

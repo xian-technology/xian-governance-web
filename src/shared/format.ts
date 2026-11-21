@@ -33,18 +33,27 @@ export function positiveAmount(value: number | string | null | undefined): boole
   return !text.startsWith("-") && /[1-9]/.test(text);
 }
 
+export function timestampMicros(value: string | null | undefined): bigint | null {
+  if (!value) return null;
+  const milliseconds = Date.parse(value);
+  if (!Number.isFinite(milliseconds)) return null;
+  // Date.parse resolves offsets but truncates fractional seconds to milliseconds.
+  const fraction = /\d{2}:\d{2}:\d{2}\.(\d+)/.exec(value)?.[1] ?? "";
+  return BigInt(milliseconds) * 1_000n + BigInt(fraction.padEnd(6, "0").slice(3, 6));
+}
+
 /** True once an ISO expiry timestamp has been reached (the chain rejects votes from then on). */
 export function isPastExpiry(expiresAt: string | null | undefined, now = Date.now()): boolean {
-  const expiry = Date.parse(expiresAt ?? "");
-  return Number.isFinite(expiry) && expiry <= now;
+  const expiry = timestampMicros(expiresAt);
+  return expiry !== null && expiry <= now * 1_000;
 }
 
 const EXPIRING_SOON_MS = 48 * 60 * 60 * 1000;
 
 /** True while an expiry is still ahead but within the next 48 hours. */
 export function isExpiringSoon(expiresAt: string | null | undefined, now = Date.now()): boolean {
-  const expiry = Date.parse(expiresAt ?? "");
-  return Number.isFinite(expiry) && expiry > now && expiry - now <= EXPIRING_SOON_MS;
+  const expiry = timestampMicros(expiresAt);
+  return expiry !== null && expiry > now * 1_000 && expiry <= (now + EXPIRING_SOON_MS) * 1_000;
 }
 
 export function asString(value: unknown): string | null {
