@@ -168,7 +168,7 @@ export const VOTE_TYPE_SPECS: VoteTypeSpec[] = [
       { name: "min_total_bond", label: "Min total bond", kind: "int", min: 0 },
       { name: "max_commission_bps", label: "Max commission (bps)", kind: "bps", min: 0, max: 10000 },
       { name: "max_active_set_churn", label: "Max active-set churn", kind: "int", min: 0 },
-      { name: "min_bond_margin_bps", label: "Min bond margin (bps)", kind: "bps", min: 0, max: 10000 },
+      { name: "min_bond_margin_bps", label: "Min bond margin (bps)", kind: "int", min: 0 },
       { name: "manual_override_enabled", label: "Manual override enabled", kind: "bool" },
       { name: "slash_destination", label: "Slash destination", kind: "text" },
       { name: "duplicate_vote_slash_bps", label: "Duplicate-vote slash (bps)", kind: "bps", min: 0, max: 10000 },
@@ -180,7 +180,11 @@ export const VOTE_TYPE_SPECS: VoteTypeSpec[] = [
         min: 0,
         max: 10000
       },
-      { name: "light_client_attack_jail", label: "Light-client-attack jail", kind: "bool" }
+      { name: "light_client_attack_jail", label: "Light-client-attack jail", kind: "bool" },
+      { name: "max_new_power_bps", label: "Max new voting power (bps)", kind: "bps" },
+      { name: "downtime_jail_blocks", label: "Consecutive missed blocks before jail", kind: "int", min: 1 },
+      { name: "downtime_slash_bps", label: "Downtime slash (bps)", kind: "bps" },
+      { name: "downtime_unjail_cooldown_hours", label: "Downtime unjail cooldown (hours)", kind: "int", min: 0 }
     ]
   },
   {

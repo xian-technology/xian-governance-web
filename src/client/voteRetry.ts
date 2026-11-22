@@ -20,15 +20,8 @@ export async function prepareVoteRetry(
   return { ...call, chiSupplied: retryChi(simulation) };
 }
 
-function retryChi(simulation: unknown): number {
-  if (typeof simulation !== "object" || simulation === null) {
-    throw new Error("Vote simulation returned an invalid response.");
-  }
-  const result = simulation as Record<string, unknown>;
-  if (result.status !== 0) {
-    throw new Error(String(result.result ?? "Vote simulation failed."));
-  }
-  const chi = result.chi_used;
+function retryChi(simulation: Record<string, unknown>): number {
+  const chi = simulation.chi_used;
   if (typeof chi !== "number" || !Number.isSafeInteger(chi) || chi < 0) {
     throw new Error("Vote simulation returned an invalid chi estimate.");
   }

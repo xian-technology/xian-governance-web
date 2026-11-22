@@ -126,6 +126,11 @@ unlock time and never derives one from creation time or the local clock. A dated
 next unlock applies to the earliest dated record; check each record's own time
 before claiming.
 
+In **Validator Governance**, **Update policy** can set the limit on new voting
+power, the consecutive-miss jail threshold, the downtime slash, and the
+downtime unjail cooldown. A rejected preflight shows the chain's error before
+the operator decides whether to submit.
+
 ## Configuration
 
 Copy `.env.example` to `.env` when the local defaults are not enough:

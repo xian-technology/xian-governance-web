@@ -80,6 +80,31 @@ describe("validator vote arg builder", () => {
     });
   });
 
+  it("builds admission and downtime updates exposed by validators", () => {
+    const spec = getVoteTypeSpec("update_policy")!;
+    expect(buildValidatorArg(spec, {
+      power_mode: "equal",
+      max_new_power_bps: "2000",
+      downtime_jail_blocks: "500",
+      downtime_slash_bps: "0",
+      downtime_unjail_cooldown_hours: "24"
+    }, "")).toEqual({
+      power_mode: "equal",
+      max_new_power_bps: 2000,
+      downtime_jail_blocks: 500,
+      downtime_slash_bps: 0,
+      downtime_unjail_cooldown_hours: 24
+    });
+    expect(() => buildValidatorArg(spec, { downtime_jail_blocks: "0" }, "")).toThrow(/>= 1/);
+  });
+
+  it("accepts a bond margin above 100 percent as allowed by the chain", () => {
+    const spec = getVoteTypeSpec("update_policy")!;
+    expect(buildValidatorArg(spec, { min_bond_margin_bps: "15000" }, "")).toEqual({
+      min_bond_margin_bps: 15000
+    });
+  });
+
   it("parses raw JSON for raw-shaped votes", () => {
     const spec = getVoteTypeSpec("change_types")!;
     const requested = [...RECOVERY_VOTE_TYPES, "topic_vote"];

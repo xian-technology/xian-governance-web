@@ -121,6 +121,10 @@ export function createApiApp(
   }));
 
   app.use((error: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+    if (isRecord(error) && error.type === "entity.too.large") {
+      res.status(413).json({ error: "Simulation request body is too large" });
+      return;
+    }
     const message = error instanceof Error ? error.message : "unknown error";
     const status = message.startsWith("unknown network")
       ? 404

@@ -10,6 +10,7 @@ import type {
   ValidatorListResponse,
   VoteRecord
 } from "../shared/types";
+import { isRecord } from "../shared/format";
 
 export async function apiGet<T>(path: string): Promise<T> {
   const response = await fetch(path);
@@ -86,6 +87,13 @@ export function getStatePatches(networkId: string) {
   return apiGet<StatePatchListResponse>(`/api/networks/${networkId}/state-patches`);
 }
 
-export function simulate(networkId: string, body: unknown) {
-  return apiPost<unknown>(`/api/networks/${networkId}/simulate`, body);
+export async function simulate(networkId: string, body: unknown) {
+  const result = await apiPost<unknown>(`/api/networks/${networkId}/simulate`, body);
+  if (!isRecord(result)) {
+    throw new Error("Simulation returned an invalid response.");
+  }
+  if (result.status !== 0) {
+    throw new Error(String(result.result ?? "Simulation failed."));
+  }
+  return result;
 }

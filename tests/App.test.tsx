@@ -38,7 +38,8 @@ describe("App", () => {
             totalVotingWeight: 20,
             pendingProposals: 1,
             expiringSoon: 0,
-            scheduledPatches: 0
+            scheduledPatches: 0,
+            governance: { minPatchDelayBlocks: 20, emergencyPatchDelayBlocks: 5 }
           });
         }
         if (url === "/api/networks/local/proposals") {
@@ -305,6 +306,26 @@ describe("App", () => {
     } else {
       expect(screen.queryByText("Awaiting time anchor")).not.toBeInTheDocument();
     }
+  });
+
+  it("shows a simulated proposal revert as a failure", async () => {
+    const originalFetch = globalThis.fetch;
+    vi.stubGlobal("fetch", vi.fn(async (input: RequestInfo | URL) => {
+      if (String(input) === "/api/networks/local/simulate") {
+        return json({ status: 1, result: "Only a validator may propose this vote." });
+      }
+      return originalFetch(input);
+    }));
+
+    renderApp();
+    fireEvent.click(screen.getByRole("button", { name: "Create" }));
+    fireEvent.click(screen.getByRole("button", { name: /Validator Governance/ }));
+    fireEvent.change(screen.getByRole("textbox", { name: /topic/i }), {
+      target: { value: "test proposal" }
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Simulate" }));
+    expect(await screen.findByText("Only a validator may propose this vote.")).toBeInTheDocument();
+    expect(screen.queryByText("Simulation ok")).not.toBeInTheDocument();
   });
 
   it("identifies immutable recovery vote types in network settings", async () => {

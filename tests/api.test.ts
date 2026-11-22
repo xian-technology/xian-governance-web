@@ -115,6 +115,23 @@ function fakeService(): GovernanceService {
 }
 
 describe("api app", () => {
+  it("reports an oversized simulation as a client error without calling the node", async () => {
+    let simulated = false;
+    const service = fakeService();
+    service.simulate = async () => {
+      simulated = true;
+      return { result: "ok" };
+    };
+    await request(createApiApp(service, { exposeErrors: false }))
+      .post("/api/networks/local/simulate")
+      .send({ kwargs: { source: "x".repeat(1024 * 1024) } })
+      .expect(413)
+      .expect(({ body }) => {
+        expect(body.error).toMatch(/too large/i);
+      });
+    expect(simulated).toBe(false);
+  });
+
   it("preserves large integers in simulation replies", async () => {
     const service = fakeService();
     const simulate = async () => ({ result: { amount: 9007199254740993n } });
