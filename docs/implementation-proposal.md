@@ -1,5 +1,8 @@
 # Xian Governance Web - Product And Technical Proposal
 
+Original design proposal. See the [README](../README.md) for implemented
+capabilities, configuration and API, and [the backlog](BACKLOG.md) for open work.
+
 ## Goal
 
 Build a governance website for Xian validators and observers that makes on-chain
